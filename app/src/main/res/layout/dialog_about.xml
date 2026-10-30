@@ -45,6 +45,26 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_marginTop="@dimen/spacing_normal"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:text="@string/fork_credit"/>
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:gravity="center"
+        android:text="@string/fork_description"/>
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:autoLink="web"
+        android:text="@string/fork_link"/>
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="@dimen/spacing_normal"
         android:text="@string/licence_name"/>
 
     <TextView

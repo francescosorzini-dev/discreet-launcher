@@ -3,9 +3,10 @@
 > This is a personal fork of the archived [falzonv/discreet-launcher](https://github.com/falzonv/discreet-launcher).
 > Changes in this fork:
 > - **v7.9.0** — app search matches any part of the name (e.g. `rome` finds *Chrome*), case and accent insensitive; names starting with the search are listed first.
+> - **v7.9.1** — About dialog mentions the fork; APKs always signed with the same key.
 >
-> Debug APKs are built automatically on every push to `main` and published in [Releases](https://github.com/francescosorzini-dev/discreet-launcher/releases).
-> They are signed with a debug key: uninstall the F-Droid version first (export your settings before).
+> APKs are built automatically on every push to `main` and published in [Releases](https://github.com/francescosorzini-dev/discreet-launcher/releases).
+> They are signed with the fork's own key: uninstall the F-Droid version first (export your settings before); later builds update in place.
 
 > [!WARNING]
 > ## Archival of the project *(Archivage du projet)*

@@ -1,0 +1,4 @@
+v7.9.1 (74) - 30/10/2026
+AMÉLIORATIONS
+   - La fenêtre "À propos" mentionne ce fork et renvoie vers son dépôt
+   - Les APK sont maintenant toujours signés avec la même clé, les nouvelles versions mettent donc à jour l'application installée

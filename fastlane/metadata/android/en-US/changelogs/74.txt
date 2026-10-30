@@ -1,0 +1,4 @@
+v7.9.1 (74) - 30/10/2026
+IMPROVEMENTS
+   - About dialog mentions this fork and links to its repository
+   - APKs are now always signed with the same key, so new builds update the installed app
