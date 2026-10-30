@@ -29,8 +29,10 @@ import android.view.View ;
 import android.widget.Filter ;
 import android.widget.Filterable ;
 import com.vincent_falzon.discreetlauncher.core.Application ;
-import java.text.Collator ;
+import java.text.Normalizer ;
 import java.util.ArrayList ;
+import java.util.Locale ;
+import java.util.regex.Pattern ;
 
 /**
  * Fill a RecyclerView with a list of applications filtered with a search result.
@@ -39,7 +41,7 @@ public class SearchAdapter extends RecyclerAdapter implements Filterable
 {
 	// Attributes
 	private final ArrayList<Application> initialApplicationsList ;
-	private final Collator collator ;
+	private static final Pattern DIACRITICS = Pattern.compile("\\p{M}+") ;
 
 
 	/**
@@ -52,8 +54,6 @@ public class SearchAdapter extends RecyclerAdapter implements Filterable
 
 		// Initializations
 		initialApplicationsList = applicationsList ;
-		collator = Collator.getInstance() ;
-		collator.setStrength(Collator.PRIMARY) ;
 	}
 
 
@@ -77,14 +77,19 @@ public class SearchAdapter extends RecyclerAdapter implements Filterable
 					else
 					{
 						// Filter results based on the search pattern ignoring case and accents
-						applicationsList = new ArrayList<>() ;
-						int search_length = search.length() ;
+						// Matches at the start of the name come first, then matches anywhere in the name
+						ArrayList<Application> prefixMatches = new ArrayList<>() ;
+						ArrayList<Application> containsMatches = new ArrayList<>() ;
+						String normalized_search = normalize(search) ;
 						for(Application application : initialApplicationsList)
 						{
-							String app_name = application.getDisplayName() ;
-							if(collator.equals(app_name.substring(0, Math.min(search_length, app_name.length())), search))
-								applicationsList.add(application) ;
+							String app_name = normalize(application.getDisplayName()) ;
+							int index = app_name.indexOf(normalized_search) ;
+							if(index == 0) prefixMatches.add(application) ;
+								else if(index > 0) containsMatches.add(application) ;
 						}
+						applicationsList = prefixMatches ;
+						applicationsList.addAll(containsMatches) ;
 					}
 
 				// Prepare the filter results
@@ -106,6 +111,16 @@ public class SearchAdapter extends RecyclerAdapter implements Filterable
 				notifyDataSetChanged() ;
 			}
 		} ;
+	}
+
+
+	/**
+	 * Lowercase a string and strip its accents to allow case/accent insensitive substring search.
+	 */
+	private static String normalize(String text)
+	{
+		if(text == null) return "" ;
+		return DIACRITICS.matcher(Normalizer.normalize(text, Normalizer.Form.NFD)).replaceAll("").toLowerCase(Locale.ROOT) ;
 	}
 
 
