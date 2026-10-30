@@ -35,6 +35,18 @@ jobs:
           "$SDKM" --sdk_root="$SDK" "platform-tools" "platforms;android-34" "build-tools;34.0.0"
           echo "ANDROID_HOME=$SDK" >> "$GITHUB_ENV"
           echo "ANDROID_SDK_ROOT=$SDK" >> "$GITHUB_ENV"
+      - name: Install fixed signing key
+        env:
+          DEBUG_KEYSTORE_B64: ${{ secrets.DEBUG_KEYSTORE_B64 }}
+        run: |
+          set -euo pipefail
+          # Without a fixed key every runner generates a new one and the APK cannot update the installed app
+          if [ -z "${DEBUG_KEYSTORE_B64:-}" ]; then
+            echo "::error::Secret DEBUG_KEYSTORE_B64 missing: add it in Settings > Secrets and variables > Actions"
+            exit 1
+          fi
+          mkdir -p ~/.android
+          echo "$DEBUG_KEYSTORE_B64" | base64 -d > ~/.android/debug.keystore
       - name: Build debug APK
         run: |
           chmod +x gradlew
