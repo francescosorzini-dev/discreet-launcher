@@ -18,8 +18,8 @@ android
         targetSdkVersion var_compile_sdk
 
         // Versioning
-        versionCode 72
-        versionName "v7.8.4"
+        versionCode 73
+        versionName "v7.9.0"
     }
 
     buildTypes

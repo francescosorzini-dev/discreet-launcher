@@ -39,17 +39,33 @@ jobs:
         run: |
           chmod +x gradlew
           ./gradlew assembleDebug
+      - name: Read version and changelog
+        id: meta
+        run: |
+          set -euo pipefail
+          VERSION=$(grep -oP 'versionName "\K[^"]+' app/build.gradle)
+          CODE=$(grep -oP 'versionCode \K[0-9]+' app/build.gradle)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "code=$CODE" >> "$GITHUB_OUTPUT"
+          {
+            echo "## Changelog"
+            echo '```'
+            cat "app/src/main/assets/changelog-en/$CODE.txt" 2>/dev/null || echo "(no changelog for $CODE)"
+            echo '```'
+            echo
+            echo "Debug build ${{ github.run_number }} from ${{ github.sha }}"
+          } > release_notes.md
       - name: Rename APK
-        run: cp app/build/outputs/apk/debug/app-debug.apk discreet-launcher-build${{ github.run_number }}.apk
+        run: cp app/build/outputs/apk/debug/app-debug.apk discreet-launcher-${{ steps.meta.outputs.version }}-build${{ github.run_number }}.apk
       - name: Upload APK as workflow artifact
         uses: actions/upload-artifact@v4
         with:
           name: discreet-launcher-debug
-          path: discreet-launcher-build*.apk
+          path: discreet-launcher-*.apk
       - name: Publish APK as GitHub release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: build-${{ github.run_number }}
-          name: Build ${{ github.run_number }}
-          body: Debug build from ${{ github.sha }}
-          files: discreet-launcher-build*.apk
+          tag_name: ${{ steps.meta.outputs.version }}-build${{ github.run_number }}
+          name: ${{ steps.meta.outputs.version }} (build ${{ github.run_number }})
+          body_path: release_notes.md
+          files: discreet-launcher-*.apk

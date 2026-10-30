@@ -1,0 +1,3 @@
+v7.9.0 (73) - 30/10/2026
+AMÉLIORATIONS
+   - Recherche des applications par n'importe quelle partie de leur nom, pas seulement par le début (les résultats commençant par la recherche apparaissent en premier)
