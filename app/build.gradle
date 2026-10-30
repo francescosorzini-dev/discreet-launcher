@@ -22,10 +22,29 @@ android
         versionName "v7.9.0"
     }
 
+    // Fixed signing key provided by CI (DL_KEYSTORE), so that every build can update the installed app
+    def fixedKeystore = System.getenv("DL_KEYSTORE")
+    signingConfigs
+    {
+        if(fixedKeystore)
+        {
+            fixed
+            {
+                storeFile file(fixedKeystore)
+                storePassword "android"
+                keyAlias "androiddebugkey"
+                keyPassword "android"
+            }
+        }
+    }
+
     buildTypes
     {
         debug
         {
+            // Use the fixed key when available, otherwise the default local debug key
+            if(fixedKeystore) signingConfig signingConfigs.fixed
+
             // Allow usage of the version name in XML
             resValue "string", "app_version", "${defaultConfig.versionName}.dbg"
         }

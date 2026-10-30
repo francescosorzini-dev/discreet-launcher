@@ -45,12 +45,21 @@ jobs:
             echo "::error::Secret DEBUG_KEYSTORE_B64 missing: add it in Settings > Secrets and variables > Actions"
             exit 1
           fi
-          mkdir -p ~/.android
-          echo "$DEBUG_KEYSTORE_B64" | base64 -d > ~/.android/debug.keystore
+          KS="$RUNNER_TEMP/fixed.keystore"
+          echo "$DEBUG_KEYSTORE_B64" | base64 -d > "$KS"
+          echo "DL_KEYSTORE=$KS" >> "$GITHUB_ENV"
       - name: Build debug APK
         run: |
           chmod +x gradlew
           ./gradlew assembleDebug
+      - name: Verify APK is signed with the fixed key
+        run: |
+          set -euo pipefail
+          EXPECTED=$(keytool -list -v -keystore "$DL_KEYSTORE" -storepass android | grep -m1 'SHA256:' | awk '{print $2}' | tr -d ':' | tr 'A-F' 'a-f')
+          ACTUAL=$("$ANDROID_HOME/build-tools/34.0.0/apksigner" verify --print-certs app/build/outputs/apk/debug/app-debug.apk | grep -m1 'SHA-256 digest' | awk '{print $NF}')
+          echo "Expected: $EXPECTED"
+          echo "Actual:   $ACTUAL"
+          if [ "$EXPECTED" != "$ACTUAL" ]; then echo "::error::APK not signed with the fixed key"; exit 1; fi
       - name: Read version and changelog
         id: meta
         run: |
