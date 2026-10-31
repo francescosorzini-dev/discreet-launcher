@@ -1,0 +1,3 @@
+v7.12.5 (85) - 31/10/2026
+AMÉLIORATIONS
+   - Ouverture de la recherche : les résultats montent depuis le clavier jusqu'à leur place avec un mouvement ralenti

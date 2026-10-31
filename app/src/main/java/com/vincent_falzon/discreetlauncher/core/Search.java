@@ -37,6 +37,7 @@ import android.view.LayoutInflater ;
 import android.view.MotionEvent ;
 import android.view.View ;
 import android.view.ViewGroup ;
+import android.view.animation.DecelerateInterpolator ;
 import android.view.inputmethod.EditorInfo ;
 import android.view.inputmethod.InputMethod ;
 import android.view.inputmethod.InputMethodManager ;
@@ -163,12 +164,15 @@ public class Search extends Application
 		final float density = context.getResources().getDisplayMetrics().density ;
 		final LinearLayoutManager layoutManager = (LinearLayoutManager)recycler.getLayoutManager() ;
 		final int[] initial_bottom = { -1 } ;
+		final int[] rise = { Math.round(48 * density) } ;
 		final boolean[] moved = { false } ;
 		final boolean[] revealed = { false } ;
 		final Runnable reveal = () -> {
+				// Slide up from the top of the keyboard to the final place, slowing down at the end
 				if(revealed[0]) return ;
 				revealed[0] = true ;
-				popupView.animate().alpha(1).setDuration(150).start() ;
+				popupView.setTranslationY(rise[0]) ;
+				popupView.animate().alpha(1).translationY(0).setDuration(350).setInterpolator(new DecelerateInterpolator(2f)).start() ;
 			} ;
 
 		// Detect when the popup has been moved above the keyboard
@@ -178,7 +182,12 @@ public class Search extends Application
 				popupView.getLocationOnScreen(location) ;
 				int bottom = location[1] + popupView.getHeight() ;
 				if(initial_bottom[0] < 0) initial_bottom[0] = bottom ;
-					else if(bottom < initial_bottom[0] - 50 * density) moved[0] = true ;
+					else if(bottom < initial_bottom[0] - 50 * density)
+					{
+						// The distance covered by the popup is the height of the keyboard
+						rise[0] = initial_bottom[0] - bottom ;
+						moved[0] = true ;
+					}
 			}) ;
 
 		// Just before drawing, reveal only once the first result is completely displayed
