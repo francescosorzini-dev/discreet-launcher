@@ -44,6 +44,8 @@ import android.view.inputmethod.InputMethodManager ;
 import android.widget.EditText ;
 import android.widget.LinearLayout ;
 import android.widget.PopupWindow ;
+import androidx.core.view.ViewCompat ;
+import androidx.core.view.WindowInsetsCompat ;
 import androidx.preference.PreferenceManager ;
 import androidx.recyclerview.widget.LinearLayoutManager ;
 import androidx.recyclerview.widget.RecyclerView ;
@@ -126,11 +128,6 @@ public class Search extends Application
 		recycler.setLayoutManager(new FlexibleGridLayout(context, ActivityMain.getApplicationWidth(), !one_handed.equals("off"))) ;
 		recycler.setLayoutDirection(one_handed.equals("right") ? View.LAYOUT_DIRECTION_RTL : View.LAYOUT_DIRECTION_LTR) ;
 
-		// When the available height changes (keyboard opening), show the best result again
-		recycler.addOnLayoutChangeListener((view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
-				// (posted: a scroll requested during the layout pass would be ignored)
-				if((bottom - top) != (oldBottom - oldTop)) recycler.post(() -> recycler.scrollToPosition(0)) ;
-			}) ;
 		recycler.setMinimumHeight(0) ;
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
 			recycler.setOverScrollMode(View.OVER_SCROLL_NEVER) ;
@@ -157,58 +154,88 @@ public class Search extends Application
 		// Fix popup not closing on press back with API 21
 		popup.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT)) ;
 
-		// The popup is first laid out before the keyboard opens, then resized when it has opened, and
-		// the list is brought back to the best result: keep it invisible during all these steps and
-		// fade it in only when it is above the keyboard with the first result already in place
+		// The popup is laid out before the keyboard opens, then moved and resized by the system (once
+		// or several times: keyboard opening, suggestions bar...). Every move is animated: the popup
+		// stays invisible until it is above the keyboard, then each move of its bottom edge is first
+		// compensated and then slowly cancelled, so that nothing ever jumps on screen
 		popupView.setAlpha(0) ;
 		final float density = context.getResources().getDisplayMetrics().density ;
+		final long slide_duration = 1400 ;
 		final LinearLayoutManager layoutManager = (LinearLayoutManager)recycler.getLayoutManager() ;
+		final int[] last_bottom = { -1 } ;
 		final int[] initial_bottom = { -1 } ;
-		final int[] rise = { Math.round(48 * density) } ;
 		final boolean[] moved = { false } ;
 		final boolean[] revealed = { false } ;
+		final boolean[] user_scrolled = { false } ;
+		final int[] skipped_frames = { 0 } ;
+
+		// Slide the popup from its current offset to its place, slowing down at the end
+		final Runnable slide = () -> {
+				popupView.animate().cancel() ;
+				popupView.animate().alpha(1).translationY(0).setDuration(slide_duration).setInterpolator(new DecelerateInterpolator(2f)).start() ;
+			} ;
 		final Runnable reveal = () -> {
-				// Slide up from the top of the keyboard to the final place, slowing down at the end
 				if(revealed[0]) return ;
 				revealed[0] = true ;
-				popupView.setTranslationY(rise[0]) ;
-				popupView.animate().alpha(1).translationY(0).setDuration(1400).setInterpolator(new DecelerateInterpolator(2f)).start() ;
+				if(moved[0] && (initial_bottom[0] > last_bottom[0])) popupView.setTranslationY(initial_bottom[0] - last_bottom[0]) ;
+					else popupView.setTranslationY(48 * density) ;
+				slide.run() ;
 			} ;
 
-		// Detect when the popup has been moved above the keyboard
+		// Follow the position of the bottom edge of the popup (where the search bar is)
 		popupView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-				if(moved[0]) return ;
 				int[] location = new int[2] ;
 				popupView.getLocationOnScreen(location) ;
-				int bottom = location[1] + popupView.getHeight() ;
+				// (position given by the system, without the translation of the running animation)
+				int bottom = location[1] - Math.round(popupView.getTranslationY()) + popupView.getHeight() ;
 				if(initial_bottom[0] < 0) initial_bottom[0] = bottom ;
-					else if(bottom < initial_bottom[0] - 50 * density)
+				if((last_bottom[0] >= 0) && (bottom != last_bottom[0]) && revealed[0])
 					{
-						// The distance covered by the popup is the height of the keyboard
-						rise[0] = initial_bottom[0] - bottom ;
-						moved[0] = true ;
+						// Moved by the system while visible: keep it visually in place, then slide
+						popupView.setTranslationY(popupView.getTranslationY() + (last_bottom[0] - bottom)) ;
+						slide.run() ;
 					}
+				last_bottom[0] = bottom ;
+				if(!moved[0] && (bottom < initial_bottom[0] - 50 * density)) moved[0] = true ;
 			}) ;
 
-		// Just before drawing, reveal only once the first result is completely displayed
+		// Stop forcing the first result once the user scrolls the list by hand
+		recycler.addOnScrollListener(new RecyclerView.OnScrollListener()
+			{
+				@Override
+				public void onScrollStateChanged(RecyclerView view, int state)
+				{
+					if(state == RecyclerView.SCROLL_STATE_DRAGGING) user_scrolled[0] = true ;
+				}
+			}) ;
+
+		// Just before drawing: if the list lost the first result (resize), fix it and skip this frame,
+		// then reveal the popup only once it is above the keyboard with the first result in place
 		popupView.getViewTreeObserver().addOnPreDrawListener(() -> {
-				if(!revealed[0] && moved[0])
+				boolean first_in_place = (adapter.getItemCount() == 0) || (layoutManager == null)
+						|| (layoutManager.findFirstCompletelyVisibleItemPosition() == 0) ;
+				if(!first_in_place && !user_scrolled[0] && (skipped_frames[0] < 3))
 					{
-						boolean first_in_place = (adapter.getItemCount() == 0) || (layoutManager == null)
-								|| (layoutManager.findFirstCompletelyVisibleItemPosition() == 0) ;
-						if(first_in_place) reveal.run() ;
-							else recycler.scrollToPosition(0) ;
+						skipped_frames[0]++ ;
+						recycler.scrollToPosition(0) ;
+						return false ;
 					}
+				skipped_frames[0] = 0 ;
+				if(!revealed[0] && moved[0]) reveal.run() ;
 				return true ;
 			}) ;
 
-		// Without keyboard movement (hardware keyboard, keyboard already open), continue anyway
+		// Without keyboard (hardware keyboard), reveal in place; while it is still opening, wait for it
 		popupView.postDelayed(() -> {
-				moved[0] = true ;
-				recycler.scrollToPosition(0) ;
-				popupView.invalidate() ;
+				WindowInsetsCompat insets = ViewCompat.getRootWindowInsets(popupView) ;
+				boolean keyboard = (insets != null) && insets.isVisible(WindowInsetsCompat.Type.ime()) ;
+				if(!keyboard)
+					{
+						moved[0] = true ;
+						popupView.invalidate() ;
+					}
 			}, 700) ;
-		popupView.postDelayed(reveal, 1500) ;
+		popupView.postDelayed(reveal, 2500) ;
 
 		// Display the popup and the keyboard
 		popup.showAtLocation(parent, Gravity.BOTTOM, 0, 0) ;
