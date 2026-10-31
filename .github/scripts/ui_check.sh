@@ -310,11 +310,16 @@ adb shell input swipe $((W / 2)) $((H / 4)) $((W / 2)) $((H * 3 / 4)) 700 ; slee
 echo "long pull: $(pull_state) (expected closed)" >> "$OUT/pull_to_close.txt"
 shot 61_after_long_pull
 
-# ---------- Delay before the results list appears ----------
+# ---------- Delay before the results list appears (logged by the app) ----------
 adb shell am force-stop "$PKG" ; adb shell input keyevent KEYCODE_HOME ; sleep 4 ; adb shell input tap $((W - 5)) $((H / 2)) ; sleep 1
-echo "first opening: $(list_delay)" >> "$OUT/list_delay.txt"
-echo "second opening: $(list_delay)" >> "$OUT/list_delay.txt"
-echo "third opening: $(list_delay)" >> "$OUT/list_delay.txt"
+P=$(center_of "Search…")
+adb logcat -c
+for N in 1 2 3 4 ; do
+	[ -n "$P" ] && adb shell input tap $P
+	sleep 3
+	adb shell input keyevent KEYCODE_BACK ; adb shell input keyevent KEYCODE_BACK ; sleep 2
+done
+adb logcat -d -s DLSearch:I | grep "results list" > "$OUT/list_delay.txt"
 
 # Crash check
 adb logcat -d -b crash > "$OUT/crash.log" || true

@@ -30,6 +30,8 @@ import android.graphics.Color ;
 import android.graphics.drawable.ColorDrawable ;
 import android.graphics.drawable.Drawable ;
 import android.os.Build ;
+import android.os.SystemClock ;
+import android.util.Log ;
 import android.text.Editable ;
 import android.text.TextWatcher ;
 import android.view.Gravity ;
@@ -169,9 +171,12 @@ public class Search extends Application
 		final int[] skipped_frames = { 0 } ;
 
 		// Add the results list (once)
+		final long start_time = SystemClock.uptimeMillis() ;
+		final String[] list_reason = { "cap 0.4 s" } ;
 		final Runnable showList = () -> {
 				if(list_shown[0]) return ;
 				list_shown[0] = true ;
+				Log.i("DLSearch", "results list shown after " + (SystemClock.uptimeMillis() - start_time) + " ms (" + list_reason[0] + ")") ;
 				recycler.setVisibility(View.VISIBLE) ;
 				recycler.scrollToPosition(0) ;
 			} ;
@@ -201,7 +206,11 @@ public class Search extends Application
 					if(keyboard && (bottom == last_seen)) stable_checks++ ;
 						else stable_checks = 0 ;
 					last_seen = bottom ;
-					if(stable_checks >= 2) showList.run() ;
+					if(stable_checks >= 2)
+						{
+							list_reason[0] = "keyboard detected" ;
+							showList.run() ;
+						}
 						else popupView.postDelayed(this, 30) ;
 				}
 			} ;
