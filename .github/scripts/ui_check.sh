@@ -94,7 +94,8 @@ fi
 PREFS="shared_prefs/${PKG}_preferences.xml"
 set_string() { adb shell "run-as $PKG sed -i 's#<string name=\"$1\">[^<]*</string>#<string name=\"$1\">$2</string>#' $PREFS" ; }
 set_bool() { adb shell "run-as $PKG sed -i 's#<boolean name=\"$1\" value=\"[a-z]*\" />#<boolean name=\"$1\" value=\"$2\" />#' $PREFS" ; }
-restart_home() { adb shell am force-stop "$PKG" ; sleep 1 ; adb shell input keyevent KEYCODE_HOME ; sleep 4 ; }
+# Key events leave touch mode (the focused view gets a highlight): touch an empty spot like a user would
+restart_home() { adb shell am force-stop "$PKG" ; sleep 1 ; adb shell input keyevent KEYCODE_HOME ; sleep 4 ; adb shell input tap $((W - 5)) $((H / 2)) ; sleep 1 ; }
 tap_field() {
 	local P
 	P=$(center_of "Search…")
