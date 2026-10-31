@@ -1,0 +1,3 @@
+v7.12.2 (82) - 31/10/2026
+CORRECTIONS
+   - Utilisation à une main : toucher une application dans les résultats de recherche (recherche vide) déplaçait la liste sans ouvrir l'application ; le retour visuel d'un toucher ne modifie plus la mise en page

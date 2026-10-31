@@ -11,6 +11,7 @@
 > - **v7.11.1** — option to reset the app usage statistics; new texts translated in all 13 languages of the app.
 > - **v7.12.0** — one-handed use (off / right hand / left hand): search results start from the bottom on the side of the hand; right hand fills the app list rows from the right.
 > - **v7.12.1** — search closes before launching the app, so results no longer jump when touched in one-handed mode.
+> - **v7.12.2** — touch feedback no longer relayouts the list: in one-handed mode the touched app now opens instead of the list jumping.
 >
 > APKs are built automatically on every push to `main` and published in [Releases](https://github.com/francescosorzini-dev/discreet-launcher/releases).
 > They are signed with the fork's own key: uninstall the F-Droid version first (export your settings before); later builds update in place.

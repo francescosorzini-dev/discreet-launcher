@@ -176,23 +176,28 @@ for HAND in right left ; do
 	shot 42_${HAND}_drawer
 	adb shell input keyevent KEYCODE_BACK
 done
-# ---------- Tap on a result in one-handed mode: record the screen to see any movement ----------
-set_string one_handed right
-restart_home
-P=$(center_of "Search…")
-if [ -n "$P" ] ; then
-	adb shell input tap $P ; sleep 3
-	shot 50_tap_before
-	T=$(center_of "Calendar")
-	echo "calendar at: $T"
-	adb shell "screenrecord --time-limit 4 /sdcard/tap.mp4" &
-	REC=$!
-	sleep 1
-	[ -n "$T" ] && adb shell input tap $T
-	wait $REC
-	adb pull /sdcard/tap.mp4 "$OUT/51_tap.mp4" > /dev/null 2>&1
+# ---------- Finger-like tap (press, hold, release) on a result in one-handed mode ----------
+# An instant "input tap" hides problems that a real finger shows: the press lasts a while and the
+# click is lost if the item moves under the finger. Check that the app really opens.
+for HAND in right left ; do
+	set_string one_handed $HAND
+	restart_home
+	P=$(center_of "Search…")
+	if [ -n "$P" ] ; then
+		adb shell input tap $P ; sleep 3
+		T=$(center_of "Calendar")
+		echo "calendar at: $T"
+		if [ -n "$T" ] ; then
+			read -r TX TY <<< "$T"
+			adb shell input swipe "$TX" "$TY" "$TX" "$TY" 250
+			sleep 3
+			TOP=$(adb shell dumpsys activity activities | grep -m1 -E "mResumedActivity|topResumedActivity")
+			echo "$HAND: $TOP" >> "$OUT/finger_tap.txt"
+			shot 52_${HAND}_after_finger_tap
+		fi
+	fi
 	adb shell input keyevent KEYCODE_HOME
-fi
+done
 set_string one_handed off
 set_string clock_format none
 adb shell "run-as $PKG cat $PREFS" > "$OUT/prefs.xml" || true

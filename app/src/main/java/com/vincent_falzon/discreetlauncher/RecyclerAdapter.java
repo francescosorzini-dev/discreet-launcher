@@ -36,7 +36,6 @@ import android.content.SharedPreferences ;
 import android.content.pm.PackageManager ;
 import android.content.pm.ResolveInfo ;
 import android.graphics.PorterDuff ;
-import android.graphics.Typeface ;
 import android.net.Uri ;
 import android.view.LayoutInflater ;
 import android.view.MotionEvent ;
@@ -247,15 +246,18 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Applic
 		 */
 		private void setVisualFeedback(Context context, boolean display)
 		{
+			// Only change how the text is painted: changing the typeface would request a new layout of
+			// the whole list during the touch, which moves the items in a list laid out from the bottom
+			// (one-handed use) so the finger leaves the item and the click is lost
+			name.getPaint().setFakeBoldText(display) ;
+			name.invalidate() ;
 			if(display)
 				{
-					name.setTypeface(Typeface.DEFAULT_BOLD) ;
 					name.setShadowLayer(15, 0, 0, ContextCompat.getColor(context, R.color.for_visual_feedback_shadow)) ;
 					name.getCompoundDrawables()[1].setColorFilter(ContextCompat.getColor(context, R.color.for_visual_feedback_drawable), PorterDuff.Mode.SRC_ATOP) ;
 				}
 				else
 				{
-					name.setTypeface(Typeface.DEFAULT) ;
 					name.setShadowLayer(0, 0, 0, 0) ;
 					name.getCompoundDrawables()[1].clearColorFilter() ;
 				}

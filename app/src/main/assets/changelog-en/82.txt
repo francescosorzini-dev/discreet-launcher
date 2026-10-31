@@ -1,0 +1,3 @@
+v7.12.2 (82) - 31/10/2026
+CORRECTIONS
+   - One-handed use: touching an app in the search results (empty search) moved the list and did not open the app; the visual feedback of a touch no longer changes the layout
