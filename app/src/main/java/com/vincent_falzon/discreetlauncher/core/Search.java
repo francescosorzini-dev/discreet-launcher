@@ -123,7 +123,8 @@ public class Search extends Application
 
 		// When the available height changes (keyboard opening), show the best result again
 		recycler.addOnLayoutChangeListener((view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
-				if((bottom - top) != (oldBottom - oldTop)) recycler.scrollToPosition(0) ;
+				// (posted: a scroll requested during the layout pass would be ignored)
+				if((bottom - top) != (oldBottom - oldTop)) recycler.post(() -> recycler.scrollToPosition(0)) ;
 			}) ;
 		recycler.setMinimumHeight(0) ;
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
