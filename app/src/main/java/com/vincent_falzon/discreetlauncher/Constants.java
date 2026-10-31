@@ -78,6 +78,7 @@ public interface Constants
 	String REVERSE_INTERFACE = "reverse_interface" ;
 	String IMMERSIVE_MODE = "immersive_mode" ;
 	String TOUCH_TARGETS = "touch_targets" ;
+	String HOME_SEARCH_FIELD = "home_search_field" ;
 	String INTERACTIVE_CLOCK = "interactive_clock" ;
 	String CLOCK_APP = "clock_app" ;
 	String HIDE_MENU_BUTTON = "hide_menu_button" ;

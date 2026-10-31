@@ -29,10 +29,12 @@ import android.view.View ;
 import android.widget.Filter ;
 import android.widget.Filterable ;
 import com.vincent_falzon.discreetlauncher.core.Application ;
-import java.text.Normalizer ;
+import com.vincent_falzon.discreetlauncher.core.Folder ;
+import com.vincent_falzon.discreetlauncher.core.UsageTracker ;
 import java.util.ArrayList ;
-import java.util.Locale ;
-import java.util.regex.Pattern ;
+import java.util.IdentityHashMap ;
+import java.util.List ;
+import java.util.Map ;
 
 /**
  * Fill a RecyclerView with a list of applications filtered with a search result.
@@ -41,7 +43,7 @@ public class SearchAdapter extends RecyclerAdapter implements Filterable
 {
 	// Attributes
 	private final ArrayList<Application> initialApplicationsList ;
-	private static final Pattern DIACRITICS = Pattern.compile("\\p{M}+") ;
+	private final ArrayList<SearchMatcher.Entry<Application>> entries ;
 
 
 	/**
@@ -54,6 +56,31 @@ public class SearchAdapter extends RecyclerAdapter implements Filterable
 
 		// Initializations
 		initialApplicationsList = applicationsList ;
+
+		// Find the folders containing each application, so that folder names act as labels
+		Map<Application, List<String>> folderNames = new IdentityHashMap<>() ;
+		if(ActivityMain.getApplicationsList() != null)
+			for(Folder folder : ActivityMain.getApplicationsList().getFolders())
+				for(Application application : folder.getApplications())
+				{
+					List<String> names = folderNames.get(application) ;
+					if(names == null)
+						{
+							names = new ArrayList<>() ;
+							folderNames.put(application, names) ;
+						}
+					names.add(folder.getDisplayName()) ;
+				}
+
+		// Prepare the searchable entries with the current usage scores
+		Map<String, Double> scores = UsageTracker.getScores(context) ;
+		entries = new ArrayList<>() ;
+		for(int i = 0 ; i < applicationsList.size() ; i++)
+		{
+			Application application = applicationsList.get(i) ;
+			Double score = scores.get(application.getComponentInfo()) ;
+			entries.add(new SearchMatcher.Entry<>(application, application.getDisplayName(), folderNames.get(application), (score == null) ? 0 : score, i)) ;
+		}
 	}
 
 
@@ -66,35 +93,20 @@ public class SearchAdapter extends RecyclerAdapter implements Filterable
 		return new Filter()
 		{
 			/**
-			 * Retrieve the results after the filter is applied.
+			 * Retrieve the results after the filter is applied (runs in a background thread).
 			 */
 			@Override
 			protected FilterResults performFiltering(CharSequence filter)
 			{
-				// Check if there is a search pattern
+				// Without search pattern display all applications, otherwise rank the matching ones
 				String search = filter.toString() ;
-				if(search.isEmpty()) applicationsList = initialApplicationsList ;
-					else
-					{
-						// Filter results based on the search pattern ignoring case and accents
-						// Matches at the start of the name come first, then matches anywhere in the name
-						ArrayList<Application> prefixMatches = new ArrayList<>() ;
-						ArrayList<Application> containsMatches = new ArrayList<>() ;
-						String normalized_search = normalize(search) ;
-						for(Application application : initialApplicationsList)
-						{
-							String app_name = normalize(application.getDisplayName()) ;
-							int index = app_name.indexOf(normalized_search) ;
-							if(index == 0) prefixMatches.add(application) ;
-								else if(index > 0) containsMatches.add(application) ;
-						}
-						applicationsList = prefixMatches ;
-						applicationsList.addAll(containsMatches) ;
-					}
+				ArrayList<Application> results ;
+				if(search.isEmpty()) results = initialApplicationsList ;
+					else results = SearchMatcher.rank(entries, search) ;
 
 				// Prepare the filter results
 				FilterResults filterResults = new FilterResults() ;
-				filterResults.values = applicationsList ;
+				filterResults.values = results ;
 				return filterResults ;
 			}
 
@@ -115,21 +127,14 @@ public class SearchAdapter extends RecyclerAdapter implements Filterable
 
 
 	/**
-	 * Lowercase a string and strip its accents to allow case/accent insensitive substring search.
-	 */
-	private static String normalize(String text)
-	{
-		if(text == null) return "" ;
-		return DIACRITICS.matcher(Normalizer.normalize(text, Normalizer.Form.NFD)).replaceAll("").toLowerCase(Locale.ROOT) ;
-	}
-
-
-	/**
 	 * Launch the first app currently displayed in the adapter (if any).
 	 */
 	public void launchFirstApp(View view)
 	{
 		if(getItemCount() >= 1)
-			applicationsList.get(0).start(view) ;
+			{
+				Application application = applicationsList.get(0) ;
+				if(application.start(view)) UsageTracker.recordLaunch(view.getContext(), application) ;
+			}
 	}
 }

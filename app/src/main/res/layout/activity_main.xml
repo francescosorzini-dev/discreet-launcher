@@ -4,8 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:fitsSystemWindows="true">
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/status_bar_scrim"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
 
     <RelativeLayout
         android:id="@+id/home_screen"
@@ -99,6 +103,21 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"/>
 
+            <TextView
+                android:id="@+id/home_search_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/spacing_normal"
+                android:text="@string/home_search_hint"
+                android:textSize="@dimen/text_size_big"
+                android:textColor="@color/for_text_on_shadow"
+                android:shadowColor="@color/for_shadow"
+                android:shadowRadius="@dimen/shadow_radius"
+                android:alpha="0.6"
+                android:visibility="gone"
+                tools:visibility="visible"/>
+
         </LinearLayout>
 
     </RelativeLayout>
@@ -121,5 +140,10 @@
         android:paddingHorizontal="@dimen/spacing_small"
         android:visibility="gone"
         android:background="@color/for_overlay"/>
+
+    <View
+        android:id="@+id/navigation_bar_scrim"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
 
 </LinearLayout>

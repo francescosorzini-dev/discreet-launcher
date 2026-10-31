@@ -29,6 +29,7 @@ import android.content.Context ;
 import android.content.Intent ;
 import android.content.SharedPreferences ;
 import android.content.pm.ActivityInfo ;
+import android.graphics.Color ;
 import android.graphics.drawable.Drawable ;
 import android.os.Build ;
 import android.os.Bundle ;
@@ -39,14 +40,19 @@ import androidx.appcompat.app.AppCompatActivity ;
 import androidx.appcompat.app.AppCompatDelegate ;
 import androidx.appcompat.content.res.AppCompatResources ;
 import androidx.core.content.ContextCompat ;
+import androidx.core.graphics.Insets ;
 import androidx.core.graphics.drawable.DrawableCompat ;
 import androidx.core.view.GestureDetectorCompat ;
+import androidx.core.view.ViewCompat ;
+import androidx.core.view.WindowCompat ;
+import androidx.core.view.WindowInsetsCompat ;
 import androidx.preference.PreferenceManager ;
 import androidx.recyclerview.widget.GridLayoutManager ;
 import androidx.recyclerview.widget.RecyclerView ;
 import android.view.GestureDetector ;
 import android.view.MotionEvent ;
 import android.view.View ;
+import android.view.ViewGroup ;
 import android.widget.ImageView ;
 import android.widget.RelativeLayout ;
 import android.widget.TextView ;
@@ -96,6 +102,13 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 	private TextView targetApplications ;
 	private TextView defaultLauncherButton ;
 	private View infoTouchTarget ;
+	private TextView homeSearchField ;
+	private Search homeSearch ;
+	private GestureDetector homeSearchTapDetector ;
+
+	// Attributes related to the system bars (drawn by the app since edge-to-edge is enforced on Android 15)
+	private View statusBarScrim ;
+	private View navigationBarScrim ;
 
 	// Attributes related to the drawer
 	private RecyclerView drawer ;
@@ -153,6 +166,12 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 		targetApplications.setOnClickListener(this) ;
 		defaultLauncherButton.setOnClickListener(this) ;
 		gestureDetector = new GestureDetectorCompat(this, new GestureListener(homeScreen)) ;
+
+		// Draw behind the system bars and color them with views sized from the window insets
+		setupSystemBars() ;
+
+		// Prepare the search field fixed on the home screen
+		setupHomeSearchField() ;
 
 		// Starting with Android 12, disable the elastic animation on favorites and drawer
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
@@ -392,13 +411,13 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 					{
 						// Reversed interface
 						tab_shape = AppCompatResources.getDrawable(this, R.drawable.shape_tab_reverse) ;
-						getWindow().setNavigationBarColor(background_color) ;
+						setNavigationBarColor(background_color) ;
 					}
 					else
 					{
 						// Classic interface
 						tab_shape = AppCompatResources.getDrawable(this, R.drawable.shape_tab) ;
-						getWindow().setStatusBarColor(background_color) ;
+						setStatusBarColor(background_color) ;
 					}
 
 				// Color the menu button and favorites panel
@@ -437,11 +456,11 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 
 				// If the option is selected, make the status bar fully transparent
 				if(settings.getBoolean(Constants.TRANSPARENT_STATUS_BAR, true))
-						getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.transparent)) ;
-					else getWindow().setStatusBarColor(Utils.getColor(settings, Constants.BACKGROUND_COLOR_FAVORITES, Constants.COLOR_FOR_OVERLAY)) ;
+						setStatusBarColor(ContextCompat.getColor(this, R.color.transparent)) ;
+					else setStatusBarColor(Utils.getColor(settings, Constants.BACKGROUND_COLOR_FAVORITES, Constants.COLOR_FOR_OVERLAY)) ;
 
 				// Make the navigation bar transparent
-				getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.transparent)) ;
+				setNavigationBarColor(ContextCompat.getColor(this, R.color.transparent)) ;
 			}
 	}
 
@@ -462,8 +481,8 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 				// Color the system bars and the drawer background
 				int background_color = Utils.getColor(settings, Constants.BACKGROUND_COLOR_DRAWER, Constants.COLOR_FOR_OVERLAY) ;
 				drawer.setBackgroundColor(background_color) ;
-				getWindow().setStatusBarColor(background_color) ;
-				getWindow().setNavigationBarColor(background_color) ;
+				setStatusBarColor(background_color) ;
+				setNavigationBarColor(background_color) ;
 
 				// Display the applications drawer
 				if(reverse_interface) scroll_position = applicationsList.getDrawer().size() - 1 ;
@@ -488,14 +507,113 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 
 				// If the option is selected, make the status bar fully transparent
 				if(settings.getBoolean(Constants.TRANSPARENT_STATUS_BAR, true))
-						getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.transparent)) ;
-					else getWindow().setStatusBarColor(favorites_background_color) ;
+						setStatusBarColor(ContextCompat.getColor(this, R.color.transparent)) ;
+					else setStatusBarColor(favorites_background_color) ;
 
 				// Make the navigation bar transparent, unless in reverse interface with favorites always shown
 				if(reverse_interface && settings.getBoolean(Constants.ALWAYS_SHOW_FAVORITES, false))
-						getWindow().setNavigationBarColor(favorites_background_color) ;
-					else getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.transparent)) ;
+						setNavigationBarColor(favorites_background_color) ;
+					else setNavigationBarColor(ContextCompat.getColor(this, R.color.transparent)) ;
 			}
+	}
+
+
+	/**
+	 * Draw the interface behind the system bars and size the bar backgrounds from the window insets.
+	 * Starting with Android 15, the system no longer colors the bars for apps targeting API 35.
+	 */
+	@SuppressWarnings("deprecation")
+	private void setupSystemBars()
+	{
+		// Let the app handle the system bars areas on all Android versions for a consistent display
+		WindowCompat.setDecorFitsSystemWindows(getWindow(), false) ;
+		getWindow().setStatusBarColor(Color.TRANSPARENT) ;
+		getWindow().setNavigationBarColor(Color.TRANSPARENT) ;
+
+		// Size the scrims according to the system bars and display cutout
+		statusBarScrim = findViewById(R.id.status_bar_scrim) ;
+		navigationBarScrim = findViewById(R.id.navigation_bar_scrim) ;
+		View root = (View)statusBarScrim.getParent() ;
+		ViewCompat.setOnApplyWindowInsetsListener(root, (view, insets) -> {
+				// Use stable insets so that the layout does not jump when immersive bars appear
+				Insets bars = insets.getInsetsIgnoringVisibility(WindowInsetsCompat.Type.systemBars()) ;
+				Insets cutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout()) ;
+				Insets total = Insets.max(bars, cutout) ;
+				setHeight(statusBarScrim, total.top) ;
+				setHeight(navigationBarScrim, total.bottom) ;
+				view.setPadding(total.left, 0, total.right, 0) ;
+				return WindowInsetsCompat.CONSUMED ;
+			}) ;
+	}
+
+
+	/**
+	 * Set the height of a view in pixels.
+	 */
+	private static void setHeight(View view, int height)
+	{
+		ViewGroup.LayoutParams params = view.getLayoutParams() ;
+		if(params.height == height) return ;
+		params.height = height ;
+		view.setLayoutParams(params) ;
+	}
+
+
+	/**
+	 * Color the status bar area.
+	 */
+	private void setStatusBarColor(int color)
+	{
+		statusBarScrim.setBackgroundColor(color) ;
+	}
+
+
+	/**
+	 * Color the navigation bar area.
+	 */
+	private void setNavigationBarColor(int color)
+	{
+		navigationBarScrim.setBackgroundColor(color) ;
+	}
+
+
+	/**
+	 * Prepare the search field fixed on the home screen.
+	 * A tap opens the search (and the keyboard), swipes keep working as on the rest of the home screen.
+	 */
+	@SuppressLint("ClickableViewAccessibility")
+	private void setupHomeSearchField()
+	{
+		homeSearchField = findViewById(R.id.home_search_field) ;
+		homeSearch = new Search(getString(R.string.search_app_name), null) ;
+		homeSearchTapDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener()
+			{
+				@Override
+				public boolean onSingleTapUp(@NonNull MotionEvent event)
+				{
+					return true ;
+				}
+			}) ;
+		homeSearchField.setOnClickListener(view -> homeSearch.start(homeSearchField)) ;
+		homeSearchField.setOnTouchListener((view, event) -> {
+				// Forward the event to the home screen gestures (swipes, double tap)
+				gestureDetector.onTouchEvent(event) ;
+
+				// Open the search only on a single tap
+				if(homeSearchTapDetector.onTouchEvent(event)) view.performClick() ;
+				return true ;
+			}) ;
+		updateHomeSearchField() ;
+	}
+
+
+	/**
+	 * Show or hide the search field on the home screen according to the settings.
+	 */
+	private void updateHomeSearchField()
+	{
+		if(homeSearchField == null) return ;
+		homeSearchField.setVisibility(settings.getBoolean(Constants.HOME_SEARCH_FIELD, true) ? View.VISIBLE : View.GONE) ;
 	}
 
 
@@ -515,11 +633,12 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 
 		// Check if the system bars must be hidden (immersive mode)
 		int immersive_mode_flag = View.SYSTEM_UI_FLAG_LAYOUT_STABLE ;
+		int layout_flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION ;
 		if(!force_display && settings.getBoolean(Constants.IMMERSIVE_MODE, false))
 			immersive_mode_flag = View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION ;
 
 		// Update the system bars flags
-		getWindow().getDecorView().setSystemUiVisibility(immersive_mode_flag | dark_icons_flag) ;
+		getWindow().getDecorView().setSystemUiVisibility(layout_flags | immersive_mode_flag | dark_icons_flag) ;
 	}
 
 
@@ -647,6 +766,7 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 		maybeForceOrientation() ;
 		toggleTouchTargets() ;
 		maybeHideSystemBars(false) ;
+		updateHomeSearchField() ;
 		if(settings.getBoolean(Constants.ALWAYS_SHOW_FAVORITES, false)) displayFavorites(true) ;
 
 		// Update the favorites panel and applications drawer display if needed
@@ -678,6 +798,7 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 		maybeHideSystemBars(true) ;
 
 		// Hide popups if some are still opened
+		if(homeSearch != null) homeSearch.closePopup() ;
 		for(Application application : applicationsList.getDrawer())
 		{
 			if(application instanceof Folder) ((Folder)application).closePopup() ;
@@ -735,6 +856,10 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 							else Utils.displayLongToast(this, getString(R.string.set_notification_warning_disabled)) ;
 					}
 					else notification.hide() ;
+				break ;
+			case Constants.HOME_SEARCH_FIELD :
+				// Show or hide the search field on the home screen
+				updateHomeSearchField() ;
 				break ;
 			case Constants.REVERSE_INTERFACE :
 				// Change the interface direction

@@ -205,6 +205,9 @@
     <!-- Touch targets ("\n" creates a new line so that targets have more surface) -->
     <string name="set_touch_targets">Elementi premibili (accessibilità)</string>
     <string name="set_touch_targets_help">Elementi premibili sulla schermata principale</string>
+    <string name="home_search_hint">Cerca…</string>
+    <string name="set_home_search_field">Campo di ricerca nella schermata home</string>
+    <string name="set_home_search_field_help">Tocca il fondo della schermata home per cercare un\'app</string>
     <string name="target_open_favorites">Apri\npreferiti</string>
     <string name="target_close_favorites">Chiudi\npreferiti</string>
     <string name="target_open_apps">Apri\napplicazioni</string>
@@ -246,7 +249,7 @@
     <string name="help_folders_title">Cartelle</string>
     <string name="help_folders">Gestisci le cartelle o aggiungile ai preferiti dal pulsante menu, oppure clicca il titolo di una cartella aperta per creare, rinominare, e inserirci applicazioni.\nRimuovere cartelle ricolloca tutte le applicazioni contenute nella lista principale.</string>
     <string name="help_search_title">Cerca</string>
-    <string name="help_search">Trova qualsiasi applicazione tramite l\'icona cerca. Può anche essere inserita tra i preferiti in modo da essere disponibile nella notifica permanente, oppure nascosta.\n\nPremere \"Invio\" apre il primo risultato di ricerca.</string>
+    <string name="help_search">Trova qualsiasi applicazione tramite l\'icona cerca o il campo di ricerca in fondo alla schermata home. Può anche essere inserita tra i preferiti in modo da essere disponibile nella notifica permanente, oppure nascosta.\n\nLa ricerca trova qualsiasi parte del nome, le iniziali delle parole (\"gm\" per Google Maps) e il nome delle cartelle che contengono l\'app. Le app che apri più spesso compaiono per prime.\n\nPremere \"Invio\" apre il primo risultato di ricerca.</string>
 
 
     <!-- ========== Changelog ========== -->

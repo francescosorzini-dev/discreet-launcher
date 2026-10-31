@@ -46,6 +46,7 @@ import android.view.inputmethod.EditorInfo ;
 import android.widget.EditText ;
 import android.widget.TextView ;
 import com.vincent_falzon.discreetlauncher.core.Application ;
+import com.vincent_falzon.discreetlauncher.core.UsageTracker ;
 import com.vincent_falzon.discreetlauncher.core.Folder ;
 import com.vincent_falzon.discreetlauncher.core.Search ;
 import com.vincent_falzon.discreetlauncher.core.Shortcut ;
@@ -255,6 +256,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Applic
 					final Context context = view.getContext() ;
 					Utils.displayLongToast(context, context.getString(R.string.error_app_not_found, application.getDisplayName())) ;
 				}
+				else UsageTracker.recordLaunch(view.getContext(), application) ;
 		}
 
 
