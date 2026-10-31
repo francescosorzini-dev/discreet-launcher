@@ -169,6 +169,7 @@ public class Search extends Application
 		final boolean[] revealed = { false } ;
 		final boolean[] user_scrolled = { false } ;
 		final int[] skipped_frames = { 0 } ;
+		final boolean[] force_reveal = { false } ;
 
 		// Add the results list (once)
 		final long start_time = SystemClock.uptimeMillis() ;
@@ -181,9 +182,8 @@ public class Search extends Application
 				recycler.scrollToPosition(0) ;
 			} ;
 
-		// The keyboard is detected by polling the position of the popup: when the keyboard opens the
-		// small popup is only moved (not laid out again), which triggers no layout event. The list is
-		// added once the popup is above the keyboard and has not moved for two checks in a row
+		// The keyboard is detected by polling (no layout event happens while it opens over the small
+		// popup). The list is added once the keyboard is detected in two checks in a row
 		final View screen = parent.getRootView() ;
 		final Runnable pollKeyboard = new Runnable()
 			{
@@ -201,12 +201,10 @@ public class Search extends Application
 					screen.getLocationOnScreen(screen_location) ;
 					int screen_bottom = screen_location[1] + screen.getHeight() ;
 					WindowInsetsCompat insets = ViewCompat.getRootWindowInsets(popupView) ;
-					boolean keyboard = (bottom < screen_bottom - 120 * density)
-							|| ((insets != null) && insets.isVisible(WindowInsetsCompat.Type.ime()) && (bottom < screen_bottom - 50 * density)) ;
-					Log.i("DLSearch", "poll t=" + (SystemClock.uptimeMillis() - start_time) + " popup_top=" + location[1] + " h=" + popupView.getHeight()
-							+ " bottom=" + bottom + " screen_bottom=" + screen_bottom + " screen_h=" + screen.getHeight()
-							+ " ime=" + ((insets != null) && insets.isVisible(WindowInsetsCompat.Type.ime()))
-							+ " ime_h=" + ((insets != null) ? insets.getInsets(WindowInsetsCompat.Type.ime()).bottom : -1)) ;
+					// The small popup (search bar only) is not moved by the system: the keyboard covers it.
+					// So rely on the keyboard reported visible, or on a popup already above the keyboard
+					boolean keyboard = ((insets != null) && insets.isVisible(WindowInsetsCompat.Type.ime()))
+							|| (bottom < screen_bottom - 120 * density) ;
 					if(keyboard && (bottom == last_seen)) stable_checks++ ;
 						else stable_checks = 0 ;
 					last_seen = bottom ;
@@ -260,6 +258,10 @@ public class Search extends Application
 						return false ;
 					}
 				skipped_frames[0] = 0 ;
+				WindowInsetsCompat popup_insets = ViewCompat.getRootWindowInsets(popupView) ;
+				boolean covered = (popup_insets != null) && popup_insets.isVisible(WindowInsetsCompat.Type.ime())
+						&& (popup_insets.getInsets(WindowInsetsCompat.Type.ime()).bottom > 0) ;
+				if(covered && !force_reveal[0]) return true ;
 				if(!revealed[0])
 					{
 						revealed[0] = true ;
@@ -271,6 +273,12 @@ public class Search extends Application
 		// Start watching for the keyboard, and in any case show the list after 0.4 s at most
 		popupView.post(pollKeyboard) ;
 		popupView.postDelayed(showList, 400) ;
+
+		// If the system never moves the popup above the keyboard, reveal it anyway
+		popupView.postDelayed(() -> {
+				force_reveal[0] = true ;
+				popupView.invalidate() ;
+			}, 800) ;
 
 		// Display the popup and the keyboard
 		popup.showAtLocation(parent, Gravity.BOTTOM, 0, 0) ;
