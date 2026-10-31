@@ -264,8 +264,9 @@ for line in open(sys.argv[1], encoding="utf-8", errors="ignore"):
     if c not in seen: seen.append(c)
 print("\n".join(seen))
 PYEOF
-adb push "$OUT/favorites_input.txt" /data/local/tmp/favorites.txt > /dev/null
-adb shell "run-as $PKG sh -c 'cat /data/local/tmp/favorites.txt > files/favorites.txt'" || adb shell "cat /data/local/tmp/favorites.txt | run-as $PKG sh -c 'cat > files/favorites.txt'"
+# (the app data folder cannot read /data/local/tmp: pass the content inline, base64 encoded)
+FAV_B64=$(base64 -w0 "$OUT/favorites_input.txt")
+adb shell "run-as $PKG sh -c 'mkdir -p files && echo $FAV_B64 | base64 -d > files/favorites.txt'"
 echo "favorites: $(adb shell "run-as $PKG sh -c 'wc -l < files/favorites.txt'")" >> "$OUT/favorites_pull.txt"
 restart_home
 fav_state() { if [ -n "$(center_of "Menu")" ] ; then echo open ; else echo closed ; fi ; }
