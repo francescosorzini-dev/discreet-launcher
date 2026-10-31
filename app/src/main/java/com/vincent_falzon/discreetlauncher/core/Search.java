@@ -154,49 +154,51 @@ public class Search extends Application
 		// Fix popup not closing on press back with API 21
 		popup.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT)) ;
 
-		// The popup is laid out before the keyboard opens, then moved and resized by the system (once
-		// or several times: keyboard opening, suggestions bar...). Every move is animated: the popup
-		// stays invisible until it is above the keyboard, then each move of its bottom edge is first
-		// compensated and then slowly cancelled, so that nothing ever jumps on screen
+		// Open the keyboard first, with an invisible popup reduced to the search bar. Only once the
+		// keyboard is open and has stopped moving, add the results list (the popup is resized while
+		// still invisible), make sure the first result is in place, then make it appear slowly
 		popupView.setAlpha(0) ;
+		recycler.setVisibility(View.GONE) ;
 		final float density = context.getResources().getDisplayMetrics().density ;
-		final long slide_duration = 1400 ;
 		final LinearLayoutManager layoutManager = (LinearLayoutManager)recycler.getLayoutManager() ;
 		final int[] last_bottom = { -1 } ;
-		final int[] initial_bottom = { -1 } ;
-		final boolean[] moved = { false } ;
+		final boolean[] list_shown = { false } ;
 		final boolean[] revealed = { false } ;
 		final boolean[] user_scrolled = { false } ;
 		final int[] skipped_frames = { 0 } ;
 
-		// Slide the popup from its current offset to its place, slowing down at the end
-		final Runnable slide = () -> {
-				popupView.animate().cancel() ;
-				popupView.animate().alpha(1).translationY(0).setDuration(slide_duration).setInterpolator(new DecelerateInterpolator(2f)).start() ;
-			} ;
-		final Runnable reveal = () -> {
-				if(revealed[0]) return ;
-				revealed[0] = true ;
-				if(moved[0] && (initial_bottom[0] > last_bottom[0])) popupView.setTranslationY(initial_bottom[0] - last_bottom[0]) ;
-					else popupView.setTranslationY(48 * density) ;
-				slide.run() ;
+		// Add the results list (once)
+		final Runnable showList = () -> {
+				if(list_shown[0]) return ;
+				list_shown[0] = true ;
+				recycler.setVisibility(View.VISIBLE) ;
+				recycler.scrollToPosition(0) ;
 			} ;
 
-		// Follow the position of the bottom edge of the popup (where the search bar is)
+		// The keyboard is considered settled when it is visible and the popup has not moved for a while
+		final Runnable checkKeyboardSettled = () -> {
+				WindowInsetsCompat insets = ViewCompat.getRootWindowInsets(popupView) ;
+				if((insets != null) && insets.isVisible(WindowInsetsCompat.Type.ime())) showList.run() ;
+			} ;
 		popupView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
 				int[] location = new int[2] ;
 				popupView.getLocationOnScreen(location) ;
-				// (position given by the system, without the translation of the running animation)
 				int bottom = location[1] - Math.round(popupView.getTranslationY()) + popupView.getHeight() ;
-				if(initial_bottom[0] < 0) initial_bottom[0] = bottom ;
-				if((last_bottom[0] >= 0) && (bottom != last_bottom[0]) && revealed[0])
+				if(bottom != last_bottom[0])
 					{
-						// Moved by the system while visible: keep it visually in place, then slide
-						popupView.setTranslationY(popupView.getTranslationY() + (last_bottom[0] - bottom)) ;
-						slide.run() ;
+						// Moved by the system after the appearance (ex: suggestions bar): follow slowly
+						if(revealed[0] && (last_bottom[0] >= 0))
+							{
+								popupView.setTranslationY(popupView.getTranslationY() + (last_bottom[0] - bottom)) ;
+								popupView.animate().cancel() ;
+								popupView.animate().alpha(1).translationY(0).setDuration(Utils.SLOW_APPEAR_DURATION).setInterpolator(new DecelerateInterpolator(2f)).start() ;
+							}
+						last_bottom[0] = bottom ;
+
+						// Wait until the position is stable before adding the list
+						popupView.removeCallbacks(checkKeyboardSettled) ;
+						if(!list_shown[0]) popupView.postDelayed(checkKeyboardSettled, 150) ;
 					}
-				last_bottom[0] = bottom ;
-				if(!moved[0] && (bottom < initial_bottom[0] - 50 * density)) moved[0] = true ;
 			}) ;
 
 		// Stop forcing the first result once the user scrolls the list by hand
@@ -209,9 +211,10 @@ public class Search extends Application
 				}
 			}) ;
 
-		// Just before drawing: if the list lost the first result (resize), fix it and skip this frame,
-		// then reveal the popup only once it is above the keyboard with the first result in place
+		// Just before drawing: keep the first result in place (skipping a wrong frame), then make
+		// the popup appear slowly once the list is there
 		popupView.getViewTreeObserver().addOnPreDrawListener(() -> {
+				if(!list_shown[0]) return true ;
 				boolean first_in_place = (adapter.getItemCount() == 0) || (layoutManager == null)
 						|| (layoutManager.findFirstCompletelyVisibleItemPosition() == 0) ;
 				if(!first_in_place && !user_scrolled[0] && (skipped_frames[0] < 3))
@@ -221,21 +224,20 @@ public class Search extends Application
 						return false ;
 					}
 				skipped_frames[0] = 0 ;
-				if(!revealed[0] && moved[0]) reveal.run() ;
+				if(!revealed[0])
+					{
+						revealed[0] = true ;
+						Utils.slowAppear(popupView, 1) ;
+					}
 				return true ;
 			}) ;
 
-		// Without keyboard (hardware keyboard), reveal in place; while it is still opening, wait for it
+		// Without keyboard (hardware keyboard) or with a very slow one, show the list anyway
 		popupView.postDelayed(() -> {
 				WindowInsetsCompat insets = ViewCompat.getRootWindowInsets(popupView) ;
-				boolean keyboard = (insets != null) && insets.isVisible(WindowInsetsCompat.Type.ime()) ;
-				if(!keyboard)
-					{
-						moved[0] = true ;
-						popupView.invalidate() ;
-					}
-			}, 700) ;
-		popupView.postDelayed(reveal, 2500) ;
+				if((insets == null) || !insets.isVisible(WindowInsetsCompat.Type.ime())) showList.run() ;
+			}, 1500) ;
+		popupView.postDelayed(showList, 2500) ;
 
 		// Display the popup and the keyboard
 		popup.showAtLocation(parent, Gravity.BOTTOM, 0, 0) ;

@@ -1,0 +1,4 @@
+v7.13.0 (88) - 31/10/2026
+AMÉLIORATIONS
+   - Recherche : le clavier s'ouvre d'abord, la liste des résultats n'est ajoutée qu'une fois le clavier ouvert, puis apparaît lentement
+   - Même apparition lente pour le panneau des favoris, la liste des applications et les dossiers

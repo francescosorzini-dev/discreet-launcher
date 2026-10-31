@@ -392,6 +392,7 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 	 */
 	private void displayFavorites(boolean display)
 	{
+		boolean was_visible = favorites.getVisibility() == View.VISIBLE ;
 		if(display)
 			{
 				// Update the recyclers (favorites panel and applications drawer) if needed
@@ -450,6 +451,13 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 				scroll_close_gesture = 0 ;
 				favorites.setVisibility(View.VISIBLE) ;
 				targetFavorites.setText(R.string.target_close_favorites) ;
+
+				// Slow appearance from its side of the screen (top, or bottom in reversed interface)
+				if(!was_visible)
+					{
+						Utils.slowAppear(favoritesScroll, reverse_interface ? 1 : -1) ;
+						Utils.slowAppear(reverse_interface ? navigationBarScrim : statusBarScrim, 0) ;
+					}
 			}
 			else
 			{
@@ -457,6 +465,9 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 				if(settings.getBoolean(Constants.ALWAYS_SHOW_FAVORITES, false)) return ;
 
 				// Hide the favorites panel
+				Utils.resetAppear(favoritesScroll) ;
+				Utils.resetAppear(statusBarScrim) ;
+				Utils.resetAppear(navigationBarScrim) ;
 				favorites.setVisibility(View.GONE) ;
 				menuButton.setVisibility(View.GONE) ;
 				noFavoritesYet.setVisibility(View.GONE) ;
@@ -498,15 +509,27 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 					else scroll_position = 0 ;
 				scroll_last_position = scroll_position ;
 				scroll_close_gesture = 0 ;
+				boolean drawer_was_visible = drawer.getVisibility() == View.VISIBLE ;
 				homeScreen.setVisibility(View.GONE) ;
 				drawer.setVisibility(View.VISIBLE) ;
 				targetApplications.setText(R.string.target_close_apps) ;
+
+				// Slow appearance from its side of the screen (bottom, or top in reversed interface)
+				if(!drawer_was_visible)
+					{
+						Utils.slowAppear(drawer, reverse_interface ? -1 : 1) ;
+						Utils.slowAppear(statusBarScrim, 0) ;
+						Utils.slowAppear(navigationBarScrim, 0) ;
+					}
 			}
 			else
 			{
 				// Hide the applications drawer
 				if(reverse_interface) drawer.scrollToPosition(applicationsList.getDrawer().size() - 1) ;
 					else drawer.scrollToPosition(0) ;
+				Utils.resetAppear(drawer) ;
+				Utils.resetAppear(statusBarScrim) ;
+				Utils.resetAppear(navigationBarScrim) ;
 				homeScreen.setVisibility(View.VISIBLE) ;
 				drawer.setVisibility(View.GONE) ;
 				targetApplications.setText(R.string.target_open_apps) ;

@@ -31,6 +31,7 @@ import android.util.Log ;
 import android.view.Gravity ;
 import android.view.View ;
 import android.view.ViewGroup ;
+import android.view.animation.DecelerateInterpolator ;
 import android.widget.FrameLayout ;
 import android.widget.Toast ;
 import androidx.core.content.ContextCompat ;
@@ -212,5 +213,37 @@ public abstract class Utils
 			} ;
 		actionBar.addOnLayoutChangeListener(overlapFixer) ;
 		content.addOnLayoutChangeListener(overlapFixer) ;
+	}
+
+
+	// Slow appearance shared by the search, the favorites panel, the app drawer and the folders
+	public static final long SLOW_APPEAR_DURATION = 1400 ;
+	public static final float SLOW_APPEAR_DISTANCE_DP = 48 ;
+
+
+	/**
+	 * Make a view appear slowly: fade in while sliding from <code>direction</code> (1 = from below,
+	 * -1 = from above, 0 = in place) to its place, slowing down at the end.
+	 */
+	public static void slowAppear(View view, int direction)
+	{
+		if(view == null) return ;
+		float distance = SLOW_APPEAR_DISTANCE_DP * view.getResources().getDisplayMetrics().density ;
+		view.animate().cancel() ;
+		view.setAlpha(0) ;
+		view.setTranslationY(direction * distance) ;
+		view.animate().alpha(1).translationY(0).setDuration(SLOW_APPEAR_DURATION).setInterpolator(new DecelerateInterpolator(2f)).start() ;
+	}
+
+
+	/**
+	 * Stop a slow appearance and put the view back in its normal state (used when hiding it).
+	 */
+	public static void resetAppear(View view)
+	{
+		if(view == null) return ;
+		view.animate().cancel() ;
+		view.setAlpha(1) ;
+		view.setTranslationY(0) ;
 	}
 }

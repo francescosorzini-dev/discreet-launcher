@@ -1,0 +1,4 @@
+v7.13.0 (88) - 31/10/2026
+IMPROVEMENTS
+   - Search: the keyboard opens first, the results list is added only once the keyboard is open, then appears slowly
+   - Same slow appearance for the favorites panel, the app list and the folders

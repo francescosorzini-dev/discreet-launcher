@@ -200,8 +200,9 @@ public class Folder extends Application
 		// Fix popup not closing on press back with API 21
 		popup.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT)) ;
 
-		// Display the popup
+		// Display the popup with the same slow appearance as the rest of the launcher
 		popup.showAtLocation(parent, Gravity.CENTER, 0, 0) ;
+		Utils.slowAppear(popupView, 1) ;
 		return true ;
 	}
 
