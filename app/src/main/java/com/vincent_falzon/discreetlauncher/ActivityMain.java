@@ -233,6 +233,11 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 		drawerLayout = new FlexibleGridLayout(this, application_width) ;
 		drawer.setLayoutManager(drawerLayout) ;
 		drawer.addOnScrollListener(new ScrollListener(Constants.APP_DRAWER)) ;
+
+		// Close the drawer and the favorites panel by pulling them beyond the edge of their list
+		drawer.addOnItemTouchListener(new PullToClose(drawer, reverse_interface ? -1 : 1, () -> displayDrawer(false), drawer)) ;
+		favorites.addOnItemTouchListener(new PullToClose(findViewById(R.id.favorites_scroll), reverse_interface ? 1 : -1,
+				() -> displayFavorites(false), favorites, findViewById(R.id.favorites_scroll))) ;
 		applyOneHandedDrawer() ;
 
 		// Load the favorites panel if it should always be shown
@@ -1263,35 +1268,7 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 			// Wait for the gesture to be finished
 			if(newState == RecyclerView.SCROLL_STATE_IDLE)
 				{
-					// Check if this was a complete closure gesture
-					if(scroll_close_gesture == 3)
-						{
-							// Check if the scrolling is stuck
-							if(scroll_last_position == scroll_position)
-								{
-									// Check if we are listening the scroll of the favorites panel or the app drawer
-									if(target == Constants.FAVORITES_PANEL)
-										{
-											// If the scrolling is stuck on top, close the favorites panel
-											if(scroll_position == 0) displayFavorites(false) ;
-										}
-										else
-										{
-											// If the scrolling is stuck on bottom/top (based on layout), close the app drawer
-											if(reverse_interface)
-												{
-													if(scroll_position == (applicationsList.getDrawer().size() - 1)) displayDrawer(false) ;
-												}
-												else
-												{
-													if(scroll_position == 0) displayDrawer(false) ;
-												}
-										}
-								}
-
-							// Reset the closure gesture tracking
-							scroll_close_gesture = 0 ;
-						}
+					// (Closing by scrolling is now done by pulling the panel beyond the edge, see PullToClose)
 
 					// Update the last position to detect the stuck state
 					scroll_last_position = scroll_position ;

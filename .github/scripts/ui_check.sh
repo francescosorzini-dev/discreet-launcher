@@ -230,6 +230,23 @@ if adb shell cmd locale set-app-locales "$PKG" --locales de-DE ; then
 	adb shell cmd locale set-app-locales "$PKG" --locales "" || true
 fi
 
+# ---------- Pull and release on the app drawer (normal interface) ----------
+restart_home
+pull_state() { if [ -n "$(center_of "Calendar")" ] ; then echo open ; else echo closed ; fi ; }
+adb shell input swipe $((W / 2)) $((H * 2 / 3)) $((W / 2)) $((H / 4)) 150 ; sleep 2
+echo "after opening: $(pull_state)" >> "$OUT/pull_to_close.txt"
+# Small slide of the thumb while tapping (fast, 40 px towards the edge)
+adb shell input swipe $((W / 2)) $((H / 3)) $((W / 2)) $((H / 3 + 40)) 60 ; sleep 2
+echo "small slide: $(pull_state) (expected open)" >> "$OUT/pull_to_close.txt"
+# Short pull below the threshold
+adb shell input swipe $((W / 2)) $((H / 3)) $((W / 2)) $((H / 3 + 80)) 400 ; sleep 2
+echo "short pull: $(pull_state) (expected open)" >> "$OUT/pull_to_close.txt"
+shot 60_after_short_pull
+# Long pull beyond the threshold
+adb shell input swipe $((W / 2)) $((H / 4)) $((W / 2)) $((H * 3 / 4)) 700 ; sleep 2
+echo "long pull: $(pull_state) (expected closed)" >> "$OUT/pull_to_close.txt"
+shot 61_after_long_pull
+
 # Crash check
 adb logcat -d -b crash > "$OUT/crash.log" || true
 rm -f "$OUT/ui.xml"

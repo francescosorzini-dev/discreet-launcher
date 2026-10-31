@@ -1,0 +1,3 @@
+v7.14.0 (90) - 31/10/2026
+AMÉLIORATIONS
+   - La liste des applications et le panneau des favoris se ferment en les tirant au-delà du bord de leur liste puis en relâchant : le panneau suit le doigt, se ferme au-delà d'un seuil et revient en place sinon. Les petits glissements du doigt en touchant une application ne les ferment plus

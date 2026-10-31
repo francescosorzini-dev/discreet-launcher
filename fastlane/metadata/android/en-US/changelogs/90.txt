@@ -1,0 +1,3 @@
+v7.14.0 (90) - 31/10/2026
+IMPROVEMENTS
+   - The app list and the favorites panel close by pulling them beyond the edge of their list and releasing: the panel follows the finger, closes beyond a threshold and goes back in place otherwise. Small slides of the finger while tapping an app no longer close them

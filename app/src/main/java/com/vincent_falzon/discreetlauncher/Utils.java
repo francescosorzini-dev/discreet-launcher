@@ -247,7 +247,7 @@ public abstract class Utils
 		if(view == null) return ;
 		float distance = SLOW_APPEAR_DISTANCE_DP * view.getResources().getDisplayMetrics().density ;
 		view.animate().cancel() ;
-		view.animate().alpha(0).translationY(direction * distance).setDuration(SLOW_APPEAR_DURATION).setInterpolator(new AccelerateInterpolator(2f))
+		view.animate().alpha(0).translationY(view.getTranslationY() + direction * distance).setDuration(SLOW_APPEAR_DURATION).setInterpolator(new AccelerateInterpolator(2f))
 			.withEndAction(endAction).start() ;
 	}
 
