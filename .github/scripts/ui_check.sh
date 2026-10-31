@@ -319,7 +319,7 @@ for N in 1 2 3 4 ; do
 	sleep 3
 	adb shell input keyevent KEYCODE_BACK ; adb shell input keyevent KEYCODE_BACK ; sleep 2
 done
-adb logcat -d -s DLSearch:I | grep "results list" > "$OUT/list_delay.txt"
+adb logcat -d -s DLSearch:I > "$OUT/list_delay.txt"
 
 # Crash check
 adb logcat -d -b crash > "$OUT/crash.log" || true

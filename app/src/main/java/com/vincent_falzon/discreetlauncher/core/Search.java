@@ -203,6 +203,10 @@ public class Search extends Application
 					WindowInsetsCompat insets = ViewCompat.getRootWindowInsets(popupView) ;
 					boolean keyboard = (bottom < screen_bottom - 120 * density)
 							|| ((insets != null) && insets.isVisible(WindowInsetsCompat.Type.ime()) && (bottom < screen_bottom - 50 * density)) ;
+					Log.i("DLSearch", "poll t=" + (SystemClock.uptimeMillis() - start_time) + " popup_top=" + location[1] + " h=" + popupView.getHeight()
+							+ " bottom=" + bottom + " screen_bottom=" + screen_bottom + " screen_h=" + screen.getHeight()
+							+ " ime=" + ((insets != null) && insets.isVisible(WindowInsetsCompat.Type.ime()))
+							+ " ime_h=" + ((insets != null) ? insets.getInsets(WindowInsetsCompat.Type.ime()).bottom : -1)) ;
 					if(keyboard && (bottom == last_seen)) stable_checks++ ;
 						else stable_checks = 0 ;
 					last_seen = bottom ;
