@@ -207,7 +207,7 @@
     <string name="set_touch_targets_help">Indications cliquables sur l\'écran d\'accueil</string>
     <string name="home_search_hint">Rechercher…</string>
     <string name="set_home_search_field">Champ de recherche sur l\'écran d\'accueil</string>
-    <string name="set_home_search_field_help">Touchez le bas de l\'écran d\'accueil pour rechercher une application</string>
+    <string name="set_home_search_field_help">Sous l\'horloge, ou en bas de l\'écran d\'accueil sans horloge</string>
     <string name="target_open_favorites">Ouvrir les\nfavoris</string>
     <string name="target_close_favorites">Fermer les\nfavoris</string>
     <string name="target_open_apps">Ouvrir les\napplications</string>
@@ -249,7 +249,7 @@
     <string name="help_folders_title">Dossiers</string>
     <string name="help_folders">Gérez les dossiers ou mettez les en favoris depuis le bouton de menu, ou cliquez sur le titre d\'un dossier ouvert pour créer, renommer, et mettre des applications dedans.\nLa suppression d\'un dossier remet toutes ses applications dans la liste principale.</string>
     <string name="help_search_title">Recherche</string>
-    <string name="help_search">Trouvez n\'importe quelle application depuis l\'icône de recherche ou depuis le champ de recherche en bas de l\'écran d\'accueil. Elle peut aussi être ajoutée aux favoris pour être disponible depuis la notification, ou masquée.\n\nLa recherche trouve n\'importe quelle partie du nom, les initiales de ses mots (\"gm\" pour Google Maps) et le nom des dossiers contenant l\'application. Les applications ouvertes souvent apparaissent en premier.\n\nAppuyer sur \"Entrée\" ouvre le premier résultat de recherche.</string>
+    <string name="help_search">Trouvez n\'importe quelle application depuis l\'icône de recherche ou depuis le champ de recherche de l\'écran d\'accueil. Elle peut aussi être ajoutée aux favoris pour être disponible depuis la notification, ou masquée.\n\nLa recherche trouve n\'importe quelle partie du nom, les initiales de ses mots (\"gm\" pour Google Maps) et le nom des dossiers contenant l\'application. Les applications ouvertes souvent apparaissent en premier.\n\nAppuyer sur \"Entrée\" ouvre le premier résultat de recherche.</string>
 
 
     <!-- ========== Changelog ========== -->

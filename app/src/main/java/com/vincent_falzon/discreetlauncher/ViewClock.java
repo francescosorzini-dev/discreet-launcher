@@ -67,6 +67,27 @@ public class ViewClock extends View implements View.OnTouchListener
 	private final Rect rect_time ;
 	private boolean clock_disabled ;
 
+	// Attributes allowing other views to be placed under the clock
+	private ContentListener contentListener ;
+	private int bottom_reserve ;
+	private final Rect last_content ;
+	private boolean last_disabled ;
+	private String last_alignment ;
+
+
+	/**
+	 * Receive the area covered by the clock content each time it changes.
+	 */
+	public interface ContentListener
+	{
+		/**
+		 * @param disabled  <code>true</code> if no clock is displayed
+		 * @param content   area covered by the clock (in this view coordinates)
+		 * @param alignment horizontal alignment: "left", "right" or "center"
+		 */
+		void onClockContentChanged(boolean disabled, Rect content, String alignment) ;
+	}
+
 
 	/**
 	 * Constructor.
@@ -126,6 +147,10 @@ public class ViewClock extends View implements View.OnTouchListener
 		// Other initializations
 		rect_date = new Rect() ;
 		rect_time = new Rect() ;
+		last_content = new Rect() ;
+		last_disabled = false ;
+		last_alignment = null ;
+		bottom_reserve = 0 ;
 		setOnTouchListener(this) ;
 	}
 
@@ -139,6 +164,68 @@ public class ViewClock extends View implements View.OnTouchListener
 		// Let the parent actions be performed
 		super.onDraw(canvas) ;
 
+		// Draw the clock and inform the listener if its content area changed
+		drawClock(canvas) ;
+		notifyContentListener() ;
+	}
+
+
+	/**
+	 * Set the listener informed of the area covered by the clock content.
+	 */
+	public void setContentListener(ContentListener listener)
+	{
+		contentListener = listener ;
+		last_alignment = null ;
+		invalidate() ;
+	}
+
+
+	/**
+	 * Keep some space (in pixels) under the clock when it is at the bottom of the screen.
+	 */
+	public void setBottomReserve(int reserve)
+	{
+		if(reserve == bottom_reserve) return ;
+		bottom_reserve = reserve ;
+		invalidate() ;
+	}
+
+
+	/**
+	 * Inform the listener of the area covered by the clock, only when it changed.
+	 */
+	private void notifyContentListener()
+	{
+		if(contentListener == null) return ;
+
+		// Compute the area covered by the time and date
+		Rect content = new Rect() ;
+		if(!clock_disabled)
+			{
+				if(!rect_time.isEmpty()) content.union(rect_time) ;
+				if(!rect_date.isEmpty()) content.union(rect_date) ;
+			}
+		String clock_position = settings.getString(Constants.CLOCK_POSITION, "middle") ;
+		String alignment = clock_position.endsWith("left") ? "left" : (clock_position.endsWith("right") ? "right" : "center") ;
+
+		// Do not continue if nothing changed
+		if((clock_disabled == last_disabled) && content.equals(last_content) && alignment.equals(last_alignment)) return ;
+		last_disabled = clock_disabled ;
+		last_content.set(content) ;
+		last_alignment = alignment ;
+
+		// Inform the listener outside of the drawing pass
+		final boolean disabled = clock_disabled ;
+		post(() -> { if(contentListener != null) contentListener.onClockContentChanged(disabled, new Rect(content), alignment) ; }) ;
+	}
+
+
+	/**
+	 * Draw the clock according to the settings.
+	 */
+	private void drawClock(@NonNull Canvas canvas)
+	{
 		// Do not continue if the clock is not enabled
 		String clock_format = settings.getString(Constants.CLOCK_FORMAT, Constants.NONE) ;
 		clock_disabled = clock_format.equals(Constants.NONE) ;
@@ -158,6 +245,9 @@ public class ViewClock extends View implements View.OnTouchListener
 		int shadow_color = Utils.getColor(settings, Constants.CLOCK_SHADOW_COLOR, Constants.COLOR_FOR_OVERLAY) ;
 		String clock_position = settings.getString(Constants.CLOCK_POSITION, "middle") ;
 		String clock_size = settings.getString(Constants.CLOCK_SIZE, "medium") ;
+
+		// When at the bottom, keep the reserved space under the clock
+		if(clock_position.startsWith("bottom")) view_height -= bottom_reserve ;
 
 		// Retrieve the current date and time
 		Calendar current_time = Calendar.getInstance() ;

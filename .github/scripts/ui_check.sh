@@ -90,6 +90,50 @@ if [ -n "$POS" ] ; then
 	shot 08_search_3buttons
 fi
 
+# ---------- Search field placement with different clock settings ----------
+PREFS="shared_prefs/${PKG}_preferences.xml"
+set_string() { adb shell "run-as $PKG sed -i 's#<string name=\"$1\">[^<]*</string>#<string name=\"$1\">$2</string>#' $PREFS" ; }
+set_bool() { adb shell "run-as $PKG sed -i 's#<boolean name=\"$1\" value=\"[a-z]*\" />#<boolean name=\"$1\" value=\"$2\" />#' $PREFS" ; }
+restart_home() { adb shell am force-stop "$PKG" ; sleep 1 ; adb shell input keyevent KEYCODE_HOME ; sleep 4 ; }
+tap_field() {
+	local P
+	P=$(center_of "Search…")
+	echo "field at: $P"
+	[ -n "$P" ] && adb shell input tap $P && sleep 2 && adb shell input text "ma"
+}
+
+set_string clock_format datetime
+set_string clock_position middle
+restart_home
+shot 09_clock_middle
+tap_field
+shot 10_clock_middle_search
+adb shell input keyevent KEYCODE_BACK
+adb shell input keyevent KEYCODE_BACK
+
+set_string clock_position bottom
+restart_home
+shot 11_clock_bottom
+
+set_string clock_position top-left
+restart_home
+shot 12_clock_top_left
+
+set_string clock_position middle
+set_bool reverse_interface true
+set_bool touch_targets true
+restart_home
+shot 13_reverse_targets_clock_middle
+
+set_string clock_format none
+restart_home
+shot 14_reverse_targets_no_clock
+
+set_bool reverse_interface false
+set_bool touch_targets false
+set_string clock_format none
+adb shell "run-as $PKG cat $PREFS" > "$OUT/prefs.xml" || true
+
 # Crash check
 adb logcat -d -b crash > "$OUT/crash.log" || true
 rm -f "$OUT/ui.xml"

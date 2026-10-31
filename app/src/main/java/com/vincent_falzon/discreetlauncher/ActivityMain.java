@@ -29,7 +29,9 @@ import android.content.Context ;
 import android.content.Intent ;
 import android.content.SharedPreferences ;
 import android.content.pm.ActivityInfo ;
+import android.content.res.ColorStateList ;
 import android.graphics.Color ;
+import android.graphics.Rect ;
 import android.graphics.drawable.Drawable ;
 import android.os.Build ;
 import android.os.Bundle ;
@@ -46,6 +48,7 @@ import androidx.core.view.GestureDetectorCompat ;
 import androidx.core.view.ViewCompat ;
 import androidx.core.view.WindowCompat ;
 import androidx.core.view.WindowInsetsCompat ;
+import androidx.core.widget.TextViewCompat ;
 import androidx.preference.PreferenceManager ;
 import androidx.recyclerview.widget.GridLayoutManager ;
 import androidx.recyclerview.widget.RecyclerView ;
@@ -105,6 +108,11 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 	private TextView homeSearchField ;
 	private Search homeSearch ;
 	private GestureDetector homeSearchTapDetector ;
+	private ViewClock homeClock ;
+	private View favoritesScroll ;
+	private boolean clock_disabled ;
+	private final Rect clock_content = new Rect() ;
+	private String clock_alignment = "center" ;
 
 	// Attributes related to the system bars (drawn by the app since edge-to-edge is enforced on Android 15)
 	private View statusBarScrim ;
@@ -585,7 +593,30 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 	private void setupHomeSearchField()
 	{
 		homeSearchField = findViewById(R.id.home_search_field) ;
+		homeClock = findViewById(R.id.home_clock) ;
+		favoritesScroll = findViewById(R.id.favorites_scroll) ;
 		homeSearch = new Search(getString(R.string.search_app_name), null) ;
+
+		// Follow the clock: its content area defines where the field goes
+		homeClock.setContentListener((disabled, content, alignment) -> {
+				clock_disabled = disabled ;
+				clock_content.set(content) ;
+				clock_alignment = alignment ;
+				positionHomeSearchField() ;
+			}) ;
+
+		// Update the reserved space and position when the field or the home screen size changes
+		homeSearchField.addOnLayoutChangeListener((view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+				if((bottom - top) != (oldBottom - oldTop) || (right - left) != (oldRight - oldLeft))
+					{
+						updateClockBottomReserve() ;
+						positionHomeSearchField() ;
+					}
+			}) ;
+		homeScreen.addOnLayoutChangeListener((view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+				if((bottom - top) != (oldBottom - oldTop) || (right - left) != (oldRight - oldLeft))
+					positionHomeSearchField() ;
+			}) ;
 		homeSearchTapDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener()
 			{
 				@Override
@@ -608,12 +639,78 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 
 
 	/**
-	 * Show or hide the search field on the home screen according to the settings.
+	 * Show or hide the search field according to the settings, and give it the clock colors.
 	 */
 	private void updateHomeSearchField()
 	{
 		if(homeSearchField == null) return ;
-		homeSearchField.setVisibility(settings.getBoolean(Constants.HOME_SEARCH_FIELD, true) ? View.VISIBLE : View.GONE) ;
+		boolean display = settings.getBoolean(Constants.HOME_SEARCH_FIELD, true) ;
+		homeSearchField.setVisibility(display ? View.VISIBLE : View.GONE) ;
+
+		// Use the clock colors (text, magnifying glass and shadow)
+		int clock_color = Utils.getColor(settings, Constants.CLOCK_COLOR, Constants.COLOR_FOR_TEXT_ON_OVERLAY) ;
+		int shadow_color = Utils.getColor(settings, Constants.CLOCK_SHADOW_COLOR, Constants.COLOR_FOR_OVERLAY) ;
+		homeSearchField.setTextColor(clock_color) ;
+		homeSearchField.setShadowLayer(getResources().getDimension(R.dimen.spacing_normal), 0, 0, shadow_color) ;
+		TextViewCompat.setCompoundDrawableTintList(homeSearchField, ColorStateList.valueOf(clock_color)) ;
+
+		// Keep space under the clock when it is at the bottom, then place the field
+		updateClockBottomReserve() ;
+		homeClock.invalidate() ;
+		positionHomeSearchField() ;
+	}
+
+
+	/**
+	 * Ask the clock to keep space for the search field when it is displayed.
+	 */
+	private void updateClockBottomReserve()
+	{
+		int reserve = 0 ;
+		if(homeSearchField.getVisibility() == View.VISIBLE) reserve = homeSearchField.getHeight() ;
+		homeClock.setBottomReserve(reserve) ;
+	}
+
+
+	/**
+	 * Place the search field under the clock, or at the bottom of the home screen without clock.
+	 */
+	private void positionHomeSearchField()
+	{
+		// Do not continue if the field is hidden or not measured yet
+		if(homeSearchField.getVisibility() != View.VISIBLE) return ;
+		int field_width = homeSearchField.getWidth() ;
+		int field_height = homeSearchField.getHeight() ;
+		int home_width = homeScreen.getWidth() ;
+		int home_height = homeScreen.getHeight() ;
+		if((field_width == 0) || (home_height == 0))
+			{
+				homeSearchField.post(this::positionHomeSearchField) ;
+				return ;
+			}
+
+		float x ;
+		float y ;
+		if(clock_disabled || clock_content.isEmpty())
+			{
+				// Without clock, at the bottom of the home screen (above the favorites in reversed interface)
+				int bottom_limit = home_height ;
+				if(reverse_interface && (favoritesScroll.getHeight() > 0)) bottom_limit = Math.min(bottom_limit, favoritesScroll.getTop()) ;
+				x = (home_width - field_width) / 2f ;
+				y = bottom_limit - field_height ;
+			}
+			else
+			{
+				// Under the clock, aligned like the clock (the field padding is kept outside the alignment)
+				if(clock_alignment.equals("left")) x = clock_content.left - homeSearchField.getPaddingStart() ;
+					else if(clock_alignment.equals("right")) x = clock_content.right - field_width + homeSearchField.getPaddingEnd() ;
+					else x = clock_content.centerX() - field_width / 2f ;
+				y = clock_content.bottom ;
+			}
+
+		// Keep the field inside the home screen
+		homeSearchField.setX(Math.max(0, Math.min(x, home_width - field_width))) ;
+		homeSearchField.setY(Math.max(0, Math.min(y, home_height - field_height))) ;
 	}
 
 
@@ -858,6 +955,11 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 					else notification.hide() ;
 				break ;
 			case Constants.HOME_SEARCH_FIELD :
+			case Constants.CLOCK_COLOR :
+			case Constants.CLOCK_SHADOW_COLOR :
+			case Constants.CLOCK_FORMAT :
+			case Constants.CLOCK_POSITION :
+			case Constants.CLOCK_SIZE :
 				// Show or hide the search field on the home screen
 				updateHomeSearchField() ;
 				break ;

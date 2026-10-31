@@ -208,7 +208,7 @@
     <string name="set_touch_targets_help">Clickable labels on the home screen</string>
     <string name="home_search_hint">Search…</string>
     <string name="set_home_search_field">Search field on the home screen</string>
-    <string name="set_home_search_field_help">Tap the bottom of the home screen to search an app</string>
+    <string name="set_home_search_field_help">Under the clock, or at the bottom of the home screen without clock</string>
     <string name="target_open_favorites">Open\nfavorites</string>
     <string name="target_close_favorites">Close\nfavorites</string>
     <string name="target_open_apps">Open\napps</string>
@@ -250,7 +250,7 @@
     <string name="help_folders_title">Folders</string>
     <string name="help_folders">Manage folders or favorite them from the menu button, or click the title of an open folder to create, rename, and put apps in it.\nRemoving folders puts all apps in them back in the main list.</string>
     <string name="help_search_title">Search</string>
-    <string name="help_search">Find any app from the search icon or from the search field at the bottom of the home screen. It can also be favorited to be available from the notification, or hidden.\n\nThe search matches any part of the name, the initials of its words (\"gm\" for Google Maps) and the name of the folders containing the app. Apps you open often come first.\n\nPressing \"Enter\" opens the first search result.</string>
+    <string name="help_search">Find any app from the search icon or from the search field of the home screen. It can also be favorited to be available from the notification, or hidden.\n\nThe search matches any part of the name, the initials of its words (\"gm\" for Google Maps) and the name of the folders containing the app. Apps you open often come first.\n\nPressing \"Enter\" opens the first search result.</string>
 
 
     <!-- ========== Changelog ========== -->
