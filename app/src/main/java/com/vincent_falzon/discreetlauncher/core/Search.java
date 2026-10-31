@@ -172,7 +172,7 @@ public class Search extends Application
 				if(revealed[0]) return ;
 				revealed[0] = true ;
 				popupView.setTranslationY(rise[0]) ;
-				popupView.animate().alpha(1).translationY(0).setDuration(350).setInterpolator(new DecelerateInterpolator(2f)).start() ;
+				popupView.animate().alpha(1).translationY(0).setDuration(1400).setInterpolator(new DecelerateInterpolator(2f)).start() ;
 			} ;
 
 		// Detect when the popup has been moved above the keyboard
