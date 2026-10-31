@@ -250,11 +250,22 @@ shot 61_after_long_pull
 # ---------- Favorites panel with many favorites: tap with drift and pull and release ----------
 adb shell am force-stop "$PKG"
 adb shell "run-as $PKG sh -c 'rm -f files/favorites.txt'"
-adb shell cmd package query-activities --brief -a android.intent.action.MAIN -c android.intent.category.LAUNCHER | tr -d '\r' | grep '/' | grep -v "$PKG" | while read -r C ; do
-	P_NAME=${C%%/*} ; CLS=${C#*/}
-	case "$CLS" in .*) CLS="$P_NAME$CLS" ;; esac
-	adb shell "run-as $PKG sh -c 'echo \"{$P_NAME/$CLS}\" >> files/favorites.txt'" < /dev/null
-done
+adb shell cmd package query-activities --brief -a android.intent.action.MAIN -c android.intent.category.LAUNCHER > "$OUT/launcher_activities.txt" 2>&1
+# Build the favorites file locally ({package/full.class.Name} per line), then copy it in the app data
+python3 - "$OUT/launcher_activities.txt" "$PKG" > "$OUT/favorites_input.txt" <<'PYEOF'
+import re, sys
+seen = []
+for line in open(sys.argv[1], encoding="utf-8", errors="ignore"):
+    m = re.search(r"([A-Za-z0-9_.]+)/([A-Za-z0-9_.$]+)", line)
+    if not m or m.group(1) == sys.argv[2]: continue
+    pkg, cls = m.group(1), m.group(2)
+    if cls.startswith("."): cls = pkg + cls
+    c = "{" + pkg + "/" + cls + "}"
+    if c not in seen: seen.append(c)
+print("\n".join(seen))
+PYEOF
+adb push "$OUT/favorites_input.txt" /data/local/tmp/favorites.txt > /dev/null
+adb shell "run-as $PKG sh -c 'cat /data/local/tmp/favorites.txt > files/favorites.txt'" || adb shell "cat /data/local/tmp/favorites.txt | run-as $PKG sh -c 'cat > files/favorites.txt'"
 echo "favorites: $(adb shell "run-as $PKG sh -c 'wc -l < files/favorites.txt'")" >> "$OUT/favorites_pull.txt"
 restart_home
 fav_state() { if [ -n "$(center_of "Menu")" ] ; then echo open ; else echo closed ; fi ; }
