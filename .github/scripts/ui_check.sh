@@ -202,51 +202,6 @@ set_string one_handed off
 set_string clock_format none
 adb shell "run-as $PKG cat $PREFS" > "$OUT/prefs.xml" || true
 
-# ---------- Optimized (R8) release APK: smoke test ----------
-if [ -n "$RELEASE_APK" ] ; then
-	adb install -r "$RELEASE_APK" && echo "release installed"
-	adb shell am force-stop "$PKG"
-	adb shell input keyevent KEYCODE_HOME
-	sleep 4
-	adb shell input tap $((W - 5)) $((H / 2))
-	shot 20_release_home
-	tap_field
-	shot 21_release_search
-	adb shell input keyevent KEYCODE_BACK
-	adb shell input keyevent KEYCODE_BACK
-	adb shell dumpsys package "$PKG" | grep -m2 -E "versionName|flags=" > "$OUT/release_package.txt" || true
-fi
-
-# ---------- Another language (per-app locale, Android 13+) ----------
-if adb shell cmd locale set-app-locales "$PKG" --locales de-DE ; then
-	adb shell am force-stop "$PKG"
-	adb shell input keyevent KEYCODE_HOME
-	sleep 4
-	adb shell input tap $((W - 5)) $((H / 2))
-	shot 30_german_home
-	P=$(center_of "Suchen…")
-	echo "german field at: $P"
-	if [ -n "$P" ] ; then adb shell input tap $P ; sleep 2 ; shot 31_german_search ; adb shell input keyevent KEYCODE_BACK ; adb shell input keyevent KEYCODE_BACK ; fi
-	adb shell cmd locale set-app-locales "$PKG" --locales "" || true
-fi
-
-# ---------- Pull and release on the app drawer (normal interface) ----------
-restart_home
-pull_state() { if [ -n "$(center_of "Calendar")" ] ; then echo open ; else echo closed ; fi ; }
-adb shell input swipe $((W / 2)) $((H * 2 / 3)) $((W / 2)) $((H / 4)) 150 ; sleep 2
-echo "after opening: $(pull_state)" >> "$OUT/pull_to_close.txt"
-# Small slide of the thumb while tapping (fast, 40 px towards the edge)
-adb shell input swipe $((W / 2)) $((H / 3)) $((W / 2)) $((H / 3 + 40)) 60 ; sleep 2
-echo "small slide: $(pull_state) (expected open)" >> "$OUT/pull_to_close.txt"
-# Short pull below the threshold
-adb shell input swipe $((W / 2)) $((H / 3)) $((W / 2)) $((H / 3 + 80)) 400 ; sleep 2
-echo "short pull: $(pull_state) (expected open)" >> "$OUT/pull_to_close.txt"
-shot 60_after_short_pull
-# Long pull beyond the threshold
-adb shell input swipe $((W / 2)) $((H / 4)) $((W / 2)) $((H * 3 / 4)) 700 ; sleep 2
-echo "long pull: $(pull_state) (expected closed)" >> "$OUT/pull_to_close.txt"
-shot 61_after_long_pull
-
 # ---------- Favorites panel with many favorites: tap with drift and pull and release ----------
 adb shell am force-stop "$PKG"
 adb shell "run-as $PKG sh -c 'rm -f files/favorites.txt'"
@@ -292,6 +247,51 @@ echo "long pull: $(fav_state) (expected closed)" >> "$OUT/favorites_pull.txt"
 shot 71_favorites_after_long_pull
 adb shell "run-as $PKG sh -c 'rm -f files/favorites.txt'"
 adb shell am force-stop "$PKG"
+
+# ---------- Optimized (R8) release APK: smoke test ----------
+if [ -n "$RELEASE_APK" ] ; then
+	adb install -r "$RELEASE_APK" && echo "release installed"
+	adb shell am force-stop "$PKG"
+	adb shell input keyevent KEYCODE_HOME
+	sleep 4
+	adb shell input tap $((W - 5)) $((H / 2))
+	shot 20_release_home
+	tap_field
+	shot 21_release_search
+	adb shell input keyevent KEYCODE_BACK
+	adb shell input keyevent KEYCODE_BACK
+	adb shell dumpsys package "$PKG" | grep -m2 -E "versionName|flags=" > "$OUT/release_package.txt" || true
+fi
+
+# ---------- Another language (per-app locale, Android 13+) ----------
+if adb shell cmd locale set-app-locales "$PKG" --locales de-DE ; then
+	adb shell am force-stop "$PKG"
+	adb shell input keyevent KEYCODE_HOME
+	sleep 4
+	adb shell input tap $((W - 5)) $((H / 2))
+	shot 30_german_home
+	P=$(center_of "Suchen…")
+	echo "german field at: $P"
+	if [ -n "$P" ] ; then adb shell input tap $P ; sleep 2 ; shot 31_german_search ; adb shell input keyevent KEYCODE_BACK ; adb shell input keyevent KEYCODE_BACK ; fi
+	adb shell cmd locale set-app-locales "$PKG" --locales "" || true
+fi
+
+# ---------- Pull and release on the app drawer (normal interface) ----------
+restart_home
+pull_state() { if [ -n "$(center_of "Calendar")" ] ; then echo open ; else echo closed ; fi ; }
+adb shell input swipe $((W / 2)) $((H * 2 / 3)) $((W / 2)) $((H / 4)) 150 ; sleep 2
+echo "after opening: $(pull_state)" >> "$OUT/pull_to_close.txt"
+# Small slide of the thumb while tapping (fast, 40 px towards the edge)
+adb shell input swipe $((W / 2)) $((H / 3)) $((W / 2)) $((H / 3 + 40)) 60 ; sleep 2
+echo "small slide: $(pull_state) (expected open)" >> "$OUT/pull_to_close.txt"
+# Short pull below the threshold
+adb shell input swipe $((W / 2)) $((H / 3)) $((W / 2)) $((H / 3 + 80)) 400 ; sleep 2
+echo "short pull: $(pull_state) (expected open)" >> "$OUT/pull_to_close.txt"
+shot 60_after_short_pull
+# Long pull beyond the threshold
+adb shell input swipe $((W / 2)) $((H / 4)) $((W / 2)) $((H * 3 / 4)) 700 ; sleep 2
+echo "long pull: $(pull_state) (expected closed)" >> "$OUT/pull_to_close.txt"
+shot 61_after_long_pull
 
 # Crash check
 adb logcat -d -b crash > "$OUT/crash.log" || true
