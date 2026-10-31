@@ -120,6 +120,11 @@ public class Search extends Application
 		String one_handed = PreferenceManager.getDefaultSharedPreferences(context).getString(Constants.ONE_HANDED, "off") ;
 		recycler.setLayoutManager(new FlexibleGridLayout(context, ActivityMain.getApplicationWidth(), !one_handed.equals("off"))) ;
 		recycler.setLayoutDirection(one_handed.equals("right") ? View.LAYOUT_DIRECTION_RTL : View.LAYOUT_DIRECTION_LTR) ;
+
+		// When the available height changes (keyboard opening), show the best result again
+		recycler.addOnLayoutChangeListener((view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+				if((bottom - top) != (oldBottom - oldTop)) recycler.scrollToPosition(0) ;
+			}) ;
 		recycler.setMinimumHeight(0) ;
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
 			recycler.setOverScrollMode(View.OVER_SCROLL_NEVER) ;
