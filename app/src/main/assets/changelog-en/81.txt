@@ -1,0 +1,3 @@
+v7.12.1 (81) - 31/10/2026
+CORRECTIONS
+   - One-handed use: the search results no longer jump up when touching an app (the search now closes before the app starts)

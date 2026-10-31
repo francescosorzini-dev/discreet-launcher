@@ -115,6 +115,9 @@ public class Search extends Application
 		// Prepare the popup content
 		recycler = popupView.findViewById(R.id.popup_recycler) ;
 		adapter = new SearchAdapter(context, applications) ;
+
+		// Close the search before launching an app, so that nothing moves on screen while it starts
+		adapter.setBeforeLaunch(this::closePopup) ;
 		recycler.setAdapter(adapter) ;
 		// For one-handed use, start the results from the bottom (on the right for the right hand)
 		String one_handed = PreferenceManager.getDefaultSharedPreferences(context).getString(Constants.ONE_HANDED, "off") ;

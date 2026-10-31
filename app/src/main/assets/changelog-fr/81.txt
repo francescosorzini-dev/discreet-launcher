@@ -1,0 +1,3 @@
+v7.12.1 (81) - 31/10/2026
+CORRECTIONS
+   - Utilisation à une main : les résultats de recherche ne sautent plus vers le haut quand on touche une application (la recherche se ferme maintenant avant le lancement)

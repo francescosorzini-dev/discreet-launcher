@@ -72,6 +72,25 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Applic
 	private final int padding ;
 	private final int target ;
 	private int text_color ;
+	private Runnable beforeLaunch ;
+
+
+	/**
+	 * Action to perform just before an application is launched from this adapter (ex: close a popup).
+	 */
+	public void setBeforeLaunch(Runnable action)
+	{
+		beforeLaunch = action ;
+	}
+
+
+	/**
+	 * Perform the action defined to be done before an application is launched (if any).
+	 */
+	void runBeforeLaunch(Application application)
+	{
+		if((beforeLaunch != null) && !(application instanceof com.vincent_falzon.discreetlauncher.core.Folder)) beforeLaunch.run() ;
+	}
 
 
 	/**
@@ -251,6 +270,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Applic
 		{
 			// Start the application
 			Application application = applicationsList.get(getBindingAdapterPosition()) ;
+			runBeforeLaunch(application) ;
 			if(!application.start(view))
 				{
 					final Context context = view.getContext() ;

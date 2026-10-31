@@ -138,6 +138,7 @@ public class SearchAdapter extends RecyclerAdapter implements Filterable
 		if(getItemCount() >= 1)
 			{
 				Application application = applicationsList.get(0) ;
+				runBeforeLaunch(application) ;
 				if(application.start(view)) UsageTracker.recordLaunch(view.getContext(), application) ;
 			}
 	}
