@@ -155,6 +155,30 @@ public class Search extends Application
 		// Fix popup not closing on press back with API 21
 		popup.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT)) ;
 
+		// The popup is first laid out at the bottom of the screen, then moved and resized at once when
+		// the keyboard has opened: keep it invisible until it is in its final place, then fade it in
+		popupView.setAlpha(0) ;
+		final float density = context.getResources().getDisplayMetrics().density ;
+		final int[] initial_bottom = { -1 } ;
+		final boolean[] revealed = { false } ;
+		final Runnable reveal = () -> {
+				if(revealed[0]) return ;
+				revealed[0] = true ;
+				popupView.setTranslationY(24 * density) ;
+				popupView.animate().alpha(1).translationY(0).setDuration(150).start() ;
+			} ;
+		popupView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+				if(revealed[0]) return ;
+				int[] location = new int[2] ;
+				popupView.getLocationOnScreen(location) ;
+				int bottom = location[1] + popupView.getHeight() ;
+				if(initial_bottom[0] < 0) initial_bottom[0] = bottom ;
+					else if(bottom < initial_bottom[0] - 50 * density) popupView.post(reveal) ;
+			}) ;
+
+		// Without keyboard movement (hardware keyboard, keyboard already open), display it anyway
+		popupView.postDelayed(reveal, 700) ;
+
 		// Display the popup and the keyboard
 		popup.showAtLocation(parent, Gravity.BOTTOM, 0, 0) ;
 		((InputMethodManager)context.getSystemService(Activity.INPUT_METHOD_SERVICE)).toggleSoftInputFromWindow(parent.getWindowToken(), InputMethod.SHOW_EXPLICIT, 0) ;

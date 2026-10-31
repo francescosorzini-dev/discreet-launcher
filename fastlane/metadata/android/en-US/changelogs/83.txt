@@ -1,0 +1,3 @@
+v7.12.3 (83) - 31/10/2026
+IMPROVEMENTS
+   - Smoother opening of the search: the results appear with a short fade once the keyboard is open, instead of jumping up
