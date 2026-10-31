@@ -176,6 +176,23 @@ for HAND in right left ; do
 	shot 42_${HAND}_drawer
 	adb shell input keyevent KEYCODE_BACK
 done
+# ---------- Tap on a result in one-handed mode: record the screen to see any movement ----------
+set_string one_handed right
+restart_home
+P=$(center_of "Search…")
+if [ -n "$P" ] ; then
+	adb shell input tap $P ; sleep 3
+	shot 50_tap_before
+	T=$(center_of "Calendar")
+	echo "calendar at: $T"
+	adb shell "screenrecord --time-limit 4 /sdcard/tap.mp4" &
+	REC=$!
+	sleep 1
+	[ -n "$T" ] && adb shell input tap $T
+	wait $REC
+	adb pull /sdcard/tap.mp4 "$OUT/51_tap.mp4" > /dev/null 2>&1
+	adb shell input keyevent KEYCODE_HOME
+fi
 set_string one_handed off
 set_string clock_format none
 adb shell "run-as $PKG cat $PREFS" > "$OUT/prefs.xml" || true
