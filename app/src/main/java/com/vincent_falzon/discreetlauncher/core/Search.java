@@ -41,7 +41,6 @@ import android.view.View ;
 import android.view.ViewGroup ;
 import android.view.animation.DecelerateInterpolator ;
 import android.view.inputmethod.EditorInfo ;
-import android.view.inputmethod.InputMethod ;
 import android.view.inputmethod.InputMethodManager ;
 import android.widget.EditText ;
 import android.widget.LinearLayout ;
@@ -282,8 +281,12 @@ public class Search extends Application
 
 		// Display the popup and the keyboard
 		popup.showAtLocation(parent, Gravity.BOTTOM, 0, 0) ;
-		((InputMethodManager)context.getSystemService(Activity.INPUT_METHOD_SERVICE)).toggleSoftInputFromWindow(parent.getWindowToken(), InputMethod.SHOW_EXPLICIT, 0) ;
+
+		// Ask explicitly for the keyboard (the former "toggle" call could close it instead of opening
+		// it when the system believed it was still open, every other opening)
 		searchBar.requestFocus() ;
+		final InputMethodManager inputMethodManager = (InputMethodManager)context.getSystemService(Activity.INPUT_METHOD_SERVICE) ;
+		searchBar.post(() -> inputMethodManager.showSoftInput(searchBar, InputMethodManager.SHOW_IMPLICIT)) ;
 		return true ;
 	}
 
