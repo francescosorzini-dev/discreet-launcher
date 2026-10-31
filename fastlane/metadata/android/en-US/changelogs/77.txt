@@ -1,0 +1,3 @@
+v7.10.2 (77) - 31/10/2026
+CORRECTIONS
+   - Android 15: the first item of the settings screens was hidden under the title bar

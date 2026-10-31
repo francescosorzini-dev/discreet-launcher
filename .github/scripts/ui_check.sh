@@ -69,6 +69,8 @@ if [ -n "$MENU" ] ; then
 	echo "operation at: $OPERATION"
 	[ -n "$OPERATION" ] && adb shell input tap $OPERATION
 	shot 06_settings_operation
+	adb shell uiautomator dump /sdcard/ui.xml > /dev/null 2>&1
+	adb pull /sdcard/ui.xml "$OUT/06_settings_operation.xml" > /dev/null 2>&1
 	# Scroll to the end of the settings to check the last items above the navigation bar
 	adb shell input swipe $((W / 2)) $((H * 3 / 4)) $((W / 2)) $((H / 5)) 200
 	adb shell input swipe $((W / 2)) $((H * 3 / 4)) $((W / 2)) $((H / 5)) 200

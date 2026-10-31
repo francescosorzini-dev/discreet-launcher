@@ -196,5 +196,21 @@ public abstract class Utils
 				view.setPadding(bars.left, view.getPaddingTop(), bars.right, bars.bottom) ;
 				return insets ;
 			}) ;
+
+		// The action bar is moved below the status bar but the content is not: measure the overlap
+		// after each layout and push the content down by exactly that amount
+		View actionBar = decor.findViewById(androidx.appcompat.R.id.action_bar_container) ;
+		if(actionBar == null) return ;
+		View.OnLayoutChangeListener overlapFixer = (view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+				int[] action_bar_location = new int[2] ;
+				int[] content_location = new int[2] ;
+				actionBar.getLocationInWindow(action_bar_location) ;
+				content.getLocationInWindow(content_location) ;
+				int overlap = Math.max(0, action_bar_location[1] + actionBar.getHeight() - content_location[1]) ;
+				if(content.getPaddingTop() != overlap)
+					content.post(() -> content.setPadding(content.getPaddingLeft(), overlap, content.getPaddingRight(), content.getPaddingBottom())) ;
+			} ;
+		actionBar.addOnLayoutChangeListener(overlapFixer) ;
+		content.addOnLayoutChangeListener(overlapFixer) ;
 	}
 }
