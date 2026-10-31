@@ -1,0 +1,3 @@
+v7.12.4 (84) - 31/10/2026
+IMPROVEMENTS
+   - Opening the search: the results appear directly in their final place, with the most used apps already shown, without visible scrolling

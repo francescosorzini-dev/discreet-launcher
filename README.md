@@ -13,6 +13,7 @@
 > - **v7.12.1** — search closes before launching the app, so results no longer jump when touched in one-handed mode.
 > - **v7.12.2** — touch feedback no longer relayouts the list: in one-handed mode the touched app now opens instead of the list jumping.
 > - **v7.12.3** — search results fade in once the keyboard is open, instead of jumping up.
+> - **v7.12.4** — search results revealed only once the first result is in place: no visible scrolling when opening.
 >
 > APKs are built automatically on every push to `main` and published in [Releases](https://github.com/francescosorzini-dev/discreet-launcher/releases).
 > They are signed with the fork's own key: uninstall the F-Droid version first (export your settings before); later builds update in place.

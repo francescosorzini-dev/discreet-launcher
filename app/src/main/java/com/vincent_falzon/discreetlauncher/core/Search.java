@@ -44,6 +44,7 @@ import android.widget.EditText ;
 import android.widget.LinearLayout ;
 import android.widget.PopupWindow ;
 import androidx.preference.PreferenceManager ;
+import androidx.recyclerview.widget.LinearLayoutManager ;
 import androidx.recyclerview.widget.RecyclerView ;
 import com.vincent_falzon.discreetlauncher.ActivityMain ;
 import com.vincent_falzon.discreetlauncher.Constants ;
@@ -155,29 +156,50 @@ public class Search extends Application
 		// Fix popup not closing on press back with API 21
 		popup.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT)) ;
 
-		// The popup is first laid out at the bottom of the screen, then moved and resized at once when
-		// the keyboard has opened: keep it invisible until it is in its final place, then fade it in
+		// The popup is first laid out before the keyboard opens, then resized when it has opened, and
+		// the list is brought back to the best result: keep it invisible during all these steps and
+		// fade it in only when it is above the keyboard with the first result already in place
 		popupView.setAlpha(0) ;
 		final float density = context.getResources().getDisplayMetrics().density ;
+		final LinearLayoutManager layoutManager = (LinearLayoutManager)recycler.getLayoutManager() ;
 		final int[] initial_bottom = { -1 } ;
+		final boolean[] moved = { false } ;
 		final boolean[] revealed = { false } ;
 		final Runnable reveal = () -> {
 				if(revealed[0]) return ;
 				revealed[0] = true ;
-				popupView.setTranslationY(24 * density) ;
-				popupView.animate().alpha(1).translationY(0).setDuration(150).start() ;
+				popupView.animate().alpha(1).setDuration(150).start() ;
 			} ;
+
+		// Detect when the popup has been moved above the keyboard
 		popupView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-				if(revealed[0]) return ;
+				if(moved[0]) return ;
 				int[] location = new int[2] ;
 				popupView.getLocationOnScreen(location) ;
 				int bottom = location[1] + popupView.getHeight() ;
 				if(initial_bottom[0] < 0) initial_bottom[0] = bottom ;
-					else if(bottom < initial_bottom[0] - 50 * density) popupView.post(reveal) ;
+					else if(bottom < initial_bottom[0] - 50 * density) moved[0] = true ;
 			}) ;
 
-		// Without keyboard movement (hardware keyboard, keyboard already open), display it anyway
-		popupView.postDelayed(reveal, 700) ;
+		// Just before drawing, reveal only once the first result is completely displayed
+		popupView.getViewTreeObserver().addOnPreDrawListener(() -> {
+				if(!revealed[0] && moved[0])
+					{
+						boolean first_in_place = (adapter.getItemCount() == 0) || (layoutManager == null)
+								|| (layoutManager.findFirstCompletelyVisibleItemPosition() == 0) ;
+						if(first_in_place) reveal.run() ;
+							else recycler.scrollToPosition(0) ;
+					}
+				return true ;
+			}) ;
+
+		// Without keyboard movement (hardware keyboard, keyboard already open), continue anyway
+		popupView.postDelayed(() -> {
+				moved[0] = true ;
+				recycler.scrollToPosition(0) ;
+				popupView.invalidate() ;
+			}, 700) ;
+		popupView.postDelayed(reveal, 1500) ;
 
 		// Display the popup and the keyboard
 		popup.showAtLocation(parent, Gravity.BOTTOM, 0, 0) ;
