@@ -10,6 +10,8 @@
     <string name="license_link">https://gnu.org/licenses/gpl-3.0.txt</string>
     <string name="website_description">Foreslå forbedringer, innrapporter feil, og støtt prosjektet på</string>
     <string name="website_link">https://github.com/falzonv/discreet-launcher</string>
+    <string name="fork_credit">Fork av Francesco Sorzini</string>
+    <string name="fork_description">Søk etter programmer med hvilken som helst del av navnet</string>
     <string name="translation_credit">(Norsk oversettelse ved Allan Nordhøy,\nepost@anotheragency.no)</string>
 
     <!-- Main menu -->
@@ -203,6 +205,14 @@
     <!-- Touch targets ("\n" creates a new line so that targets have more surface) -->
     <string name="set_touch_targets">Klikkbare etiketter (tilgjengelighetsvalg)</string>
     <string name="set_touch_targets_help">Pekemål på hjemmeskjermen</string>
+    <string name="home_search_hint">Søk…</string>
+    <string name="set_home_search_field">Søkefelt på startskjermen</string>
+    <string name="set_home_search_field_help">Under klokken, eller nederst på startskjermen uten klokke</string>
+    <string name="set_reset_usage_stats">Tilbakestill programbruk</string>
+    <string name="set_reset_usage_stats_help">Søket viser først programmene du åpner ofte. Trykk for å begynne på nytt</string>
+    <string name="set_reset_usage_stats_confirm">Tilbakestille statistikken over programbruk?</string>
+    <string name="button_reset">Tilbakestill</string>
+    <string name="info_usage_stats_reset">Statistikk over programbruk tilbakestilt</string>
     <string name="target_open_favorites">Åpne\nfavoritter</string>
     <string name="target_close_favorites">Lukk\nfavoritter</string>
     <string name="target_open_apps">Åpne\nprogrammer</string>
@@ -244,7 +254,7 @@
     <string name="help_folders_title">Mapper</string>
     <string name="help_folders">Håndter mapper eller favorittmerk dem med menyknappen, eller klikk på tittelfeltet til en åpen mappe for å opprette, gi nytt navn, eller putte programmer i den.\nFjerning av mapper putter alle programmer i dem tilbake i hovedlisten.</string>
     <string name="help_search_title">Søk</string>
-    <string name="help_search">Finn ethvert program med søkeikonet. Det kan også favorittmerkes for å være tilgjengelig fra merknaden, eller skjules.\n\nTrykk \"Enter\" for å åpne første søkeresultat.</string>
+    <string name="help_search">Finn ethvert program med søkeikonet. Det kan også favorittmerkes for å være tilgjengelig fra merknaden, eller skjules.\n\nDu kan også bruke søkefeltet på startskjermen. Søket finner enhver del av navnet, forbokstavene i ordene (\"gm\" for Google Maps) og navnet på mappene som inneholder programmet. Programmer du åpner ofte, vises først.\n\nTrykk \"Enter\" for å åpne første søkeresultat.</string>
 
 
     <!-- ========== Changelog ========== -->

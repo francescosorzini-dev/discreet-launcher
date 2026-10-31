@@ -10,6 +10,8 @@
     <string name="license_link">https://gnu.org/licenses/gpl-3.0.txt</string>
     <string name="website_description">Foreslå forbedringer, rapporter problemer og støt projektet på</string>
     <string name="website_link">https://github.com/falzonv/discreet-launcher</string>
+    <string name="fork_credit">Fork af Francesco Sorzini</string>
+    <string name="fork_description">Søg efter apps med enhver del af deres navn</string>
     <string name="translation_credit">Dansk oversættelse af Thomas Jensen</string>
 
     <!-- Main menu -->
@@ -203,6 +205,14 @@
     <!-- Touch targets ("\n" creates a new line so that targets have more surface) -->
     <string name="set_touch_targets">Touch-mål (tilgængelighed)</string>
     <string name="set_touch_targets_help">Klikbare etiketter på startskærmen</string>
+    <string name="home_search_hint">Søg…</string>
+    <string name="set_home_search_field">Søgefelt på startskærmen</string>
+    <string name="set_home_search_field_help">Under uret, eller nederst på startskærmen uden ur</string>
+    <string name="set_reset_usage_stats">Nulstil appbrug</string>
+    <string name="set_reset_usage_stats_help">Søgningen viser først de apps, du åbner ofte. Tryk for at starte forfra</string>
+    <string name="set_reset_usage_stats_confirm">Nulstil statistikken over appbrug?</string>
+    <string name="button_reset">Nulstil</string>
+    <string name="info_usage_stats_reset">Statistik over appbrug nulstillet</string>
     <string name="target_open_favorites">Åbn\nfavoritter</string>
     <string name="target_close_favorites">Luk\nfavoritter</string>
     <string name="target_open_apps">Åbn\napps</string>
@@ -244,7 +254,7 @@
     <string name="help_folders_title">Mapper</string>
     <string name="help_folders">Administrer mapper eller favorit dem fra menuknappen, eller klik på titlen på en åben mappe at oprette, omdøbe og lægge apps i den.\nHvis du fjerner mapper, flyttes alle apps i dem tilbage på hovedlisten.</string>
     <string name="help_search_title">Søg</string>
-    <string name="help_search">Find enhver app fra søgeikonet. Det kan også vælges at være tilgængeligt fra meddelelsen eller skjules.\n\nTryk på \"Enter\" åbner det første søgeresultat.</string>
+    <string name="help_search">Find enhver app fra søgeikonet. Det kan også vælges at være tilgængeligt fra meddelelsen eller skjules.\n\nDu kan også bruge søgefeltet på startskærmen. Søgningen finder enhver del af navnet, forbogstaverne i dets ord (\"gm\" for Google Maps) og navnet på de mapper, der indeholder appen. Apps, du ofte åbner, vises først.\n\nTryk på \"Enter\" åbner det første søgeresultat.</string>
 
 
     <!-- ========== Changelog ========== -->

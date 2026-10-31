@@ -10,6 +10,8 @@
     <string name="license_link">https://gnu.org/licenses/gpl-3.0.txt</string>
     <string name="website_description">Sugerir mejoras, reportar problemas y apoyar el proyecto en</string>
     <string name="website_link">https://github.com/falzonv/discreet-launcher</string>
+    <string name="fork_credit">Fork de Francesco Sorzini</string>
+    <string name="fork_description">Búsqueda de aplicaciones por cualquier parte de su nombre</string>
     <string name="translation_credit">Traducción al español por: yetanotherfossman</string>
 
     <!-- Main menu -->
@@ -203,6 +205,14 @@
     <!-- Touch targets ("\n" creates a new line so that targets have more surface) -->
     <string name="set_touch_targets">Tocar objetos (accesibilidad)</string>
     <string name="set_touch_targets_help">Etiquetas presionables en la pantalla de inicio</string>
+    <string name="home_search_hint">Buscar…</string>
+    <string name="set_home_search_field">Campo de búsqueda en la pantalla de inicio</string>
+    <string name="set_home_search_field_help">Debajo del reloj, o en la parte inferior de la pantalla de inicio sin reloj</string>
+    <string name="set_reset_usage_stats">Restablecer el uso de aplicaciones</string>
+    <string name="set_reset_usage_stats_help">La búsqueda muestra primero las aplicaciones que abres a menudo. Toca para empezar de cero</string>
+    <string name="set_reset_usage_stats_confirm">¿Restablecer las estadísticas de uso de aplicaciones?</string>
+    <string name="button_reset">Restablecer</string>
+    <string name="info_usage_stats_reset">Estadísticas de uso restablecidas</string>
     <string name="target_open_favorites">Abrir\nfavoritos</string>
     <string name="target_close_favorites">Cerrar\nfavoritos</string>
     <string name="target_open_apps">Abrir\naplicaciones</string>
@@ -244,7 +254,7 @@
     <string name="help_folders_title">Carpetas</string>
     <string name="help_folders">Administra las carpetas o márcalas como favoritas desde el botón de menú, o presiona el título de una carpeta abierta para crear, renombrar y colocar aplicaciones en ella.\nBorrar una carpeta coloca todas sus aplicaciones de nuevo en la lista principal.</string>
     <string name="help_search_title">Buscar</string>
-    <string name="help_search">Encuentra cualquier aplicación desde el ícono de búsqueda. También se puede marcar como favorito para tenerlo disponible desde la notificación, o puede ser ocultado.\n\nPresionar \"Enter\" abre el primer resultado de la búsqueda.</string>
+    <string name="help_search">Encuentra cualquier aplicación desde el ícono de búsqueda. También se puede marcar como favorito para tenerlo disponible desde la notificación, o puede ser ocultado.\n\nTambién puedes usar el campo de búsqueda de la pantalla de inicio. La búsqueda encuentra cualquier parte del nombre, las iniciales de sus palabras (\"gm\" para Google Maps) y el nombre de las carpetas que contienen la aplicación. Las aplicaciones que abres a menudo aparecen primero.\n\nPresionar \"Enter\" abre el primer resultado de la búsqueda.</string>
 
 
     <!-- ========== Changelog ========== -->

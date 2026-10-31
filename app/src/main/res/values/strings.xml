@@ -209,6 +209,11 @@
     <string name="home_search_hint">Search…</string>
     <string name="set_home_search_field">Search field on the home screen</string>
     <string name="set_home_search_field_help">Under the clock, or at the bottom of the home screen without clock</string>
+    <string name="set_reset_usage_stats">Reset app usage</string>
+    <string name="set_reset_usage_stats_help">The search shows the apps you open often first. Tap to start again from zero</string>
+    <string name="set_reset_usage_stats_confirm">Reset the app usage statistics?</string>
+    <string name="button_reset">Reset</string>
+    <string name="info_usage_stats_reset">App usage statistics reset</string>
     <string name="target_open_favorites">Open\nfavorites</string>
     <string name="target_close_favorites">Close\nfavorites</string>
     <string name="target_open_apps">Open\napps</string>

@@ -36,6 +36,13 @@
             app:iconSpaceReserved="false"
             app:defaultValue="true"/>
 
+        <Preference
+            app:key="reset_usage_stats"
+            app:title="@string/set_reset_usage_stats"
+            app:summary="@string/set_reset_usage_stats_help"
+            app:iconSpaceReserved="false"
+            app:persistent="false"/>
+
         <SwitchPreference
             app:key="always_show_favorites"
             app:title="@string/set_always_show_favorites"

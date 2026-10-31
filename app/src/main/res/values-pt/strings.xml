@@ -10,6 +10,8 @@
     <string name="license_link">https://gnu.org/licenses/gpl-3.0.txt</string>
     <string name="website_description">Sugerir melhorias, reportar problemas, e apoiar o projeto em</string>
     <string name="website_link">https://github.com/falzonv/discreet-launcher</string>
+    <string name="fork_credit">Fork de Francesco Sorzini</string>
+    <string name="fork_description">Busca de apps por qualquer parte do nome</string>
     <string name="translation_credit">Tradução para o português brasileiro: odanoburu</string>
 
     <!-- Main menu -->
@@ -203,6 +205,14 @@
     <!-- Touch targets ("\n" creates a new line so that targets have more surface) -->
     <string name="set_touch_targets">Tocar objetos (acessibilidade)</string>
     <string name="set_touch_targets_help">Etiquetas pressionáveis na tela inicial</string>
+    <string name="home_search_hint">Buscar…</string>
+    <string name="set_home_search_field">Campo de busca na tela inicial</string>
+    <string name="set_home_search_field_help">Abaixo do relógio, ou na parte inferior da tela inicial sem relógio</string>
+    <string name="set_reset_usage_stats">Redefinir o uso de apps</string>
+    <string name="set_reset_usage_stats_help">A busca mostra primeiro os apps que você abre com frequência. Toque para começar do zero</string>
+    <string name="set_reset_usage_stats_confirm">Redefinir as estatísticas de uso de apps?</string>
+    <string name="button_reset">Redefinir</string>
+    <string name="info_usage_stats_reset">Estatísticas de uso redefinidas</string>
     <string name="target_open_favorites">Abrir\nfavoritos</string>
     <string name="target_close_favorites">Fechar\nfavoritos</string>
     <string name="target_open_apps">Abrir\naplicativos</string>
@@ -244,7 +254,7 @@
     <string name="help_folders_title">Pastas</string>
     <string name="help_folders">Administre as pastas ou marque-as como favoritas a partir do botão de menu, ou clique no título de uma pasta aberta para criar ou renomear pastas, ou colocar apps nelas.\nRemover uma pasta devolve todos os seus apps à lista principal.</string>
     <string name="help_search_title">Buscar</string>
-    <string name="help_search">Encontre qualquer app com o ícone de busca. Também pode ser marcado como favorito (para tê-lo disponível mais facilmente), ou escondido.\n\nPressione \"Enter\" para abrir o primeiro resultado da busca.</string>
+    <string name="help_search">Encontre qualquer app com o ícone de busca. Também pode ser marcado como favorito (para tê-lo disponível mais facilmente), ou escondido.\n\nVocê também pode usar o campo de busca da tela inicial. A busca encontra qualquer parte do nome, as iniciais das suas palavras (\"gm\" para Google Maps) e o nome das pastas que contêm o app. Os apps que você abre com frequência aparecem primeiro.\n\nPressione \"Enter\" para abrir o primeiro resultado da busca.</string>
 
 
     <!-- ========== Changelog ========== -->

@@ -10,6 +10,8 @@
     <string name="license_link">https://gnu.org/licenses/gpl-3.0.txt</string>
     <string name="website_description">Geliştirmeler önerin, sorunları bildirin ve projeyi şurada destekleyin:</string>
     <string name="website_link">https://github.com/falzonv/discreet-launcher</string>
+    <string name="fork_credit">Francesco Sorzini tarafından fork</string>
+    <string name="fork_description">Uygulamaları adlarının herhangi bir bölümüyle arayın</string>
     <string name="translation_credit"> Türkçe dil çevirisi. Adil Oguz tarafından </string>
 
     <!-- Main menu -->
@@ -203,6 +205,14 @@
     <!-- Touch targets ("\n" creates a new line so that targets have more surface) -->
     <string name="set_touch_targets">Dokunma hedefleri (erişilebilirlik)</string>
     <string name="set_touch_targets_help">Ana ekranda tıklanabilir etiketler</string>
+    <string name="home_search_hint">Ara…</string>
+    <string name="set_home_search_field">Ana ekranda arama alanı</string>
+    <string name="set_home_search_field_help">Saatin altında veya saat yoksa ana ekranın altında</string>
+    <string name="set_reset_usage_stats">Uygulama kullanımını sıfırla</string>
+    <string name="set_reset_usage_stats_help">Arama, sık açtığınız uygulamaları önce gösterir. Baştan başlamak için dokunun</string>
+    <string name="set_reset_usage_stats_confirm">Uygulama kullanım istatistikleri sıfırlansın mı?</string>
+    <string name="button_reset">Sıfırla</string>
+    <string name="info_usage_stats_reset">Kullanım istatistikleri sıfırlandı</string>
     <string name="target_open_favorites">Açık\nFavoriler</string>
     <string name="target_close_favorites">Kapalı\nFavoriler</string>
     <string name="target_open_apps">Açık\nuygulamalar</string>
@@ -244,7 +254,7 @@
     <string name="help_folders_title">Klasörler</string>
     <string name="help_folders">Menü düğmesinden klasörleri yönetin veya favorilere ekleyin veya açık bir klasörün başlığına tıklayın uygulamalar oluşturmak, yeniden adlandırmak ve yerleştirmek için.\nKlasörlerin kaldırılması, içindeki tüm uygulamaları ana listeye geri getirir.</string>
     <string name="help_search_title">Ara</string>
-    <string name="help_search">Arama simgesinden herhangi bir uygulamayı bulun. Ayrıca kullanılabilir olması için favorilere de eklenebilir bildirimden veya gizli.\n\nTuşuna \"Enter\" basıldığında ilk arama sonucu açılır.</string>
+    <string name="help_search">Arama simgesinden herhangi bir uygulamayı bulun. Ayrıca kullanılabilir olması için favorilere de eklenebilir bildirimden veya gizli.\n\nAna ekrandaki arama alanını da kullanabilirsiniz. Arama, adın herhangi bir bölümünü, kelimelerinin baş harflerini (Google Maps için \"gm\") ve uygulamayı içeren klasörlerin adını bulur. Sık açtığınız uygulamalar önce gösterilir.\n\nTuşuna \"Enter\" basıldığında ilk arama sonucu açılır.</string>
 
 
     <!-- ========== Changelog ========== -->

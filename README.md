@@ -8,6 +8,7 @@
 > - **v7.10.1** — search field placed under the clock, following its position, alignment and colors.
 > - **v7.10.2** — Android 15: first settings item no longer hidden under the title bar.
 > - **v7.11.0** — most used apps shown first when the search is empty; optimized (R8) release APK; search unit tests run on every build.
+> - **v7.11.1** — option to reset the app usage statistics; new texts translated in all 13 languages of the app.
 >
 > APKs are built automatically on every push to `main` and published in [Releases](https://github.com/francescosorzini-dev/discreet-launcher/releases).
 > They are signed with the fork's own key: uninstall the F-Droid version first (export your settings before); later builds update in place.

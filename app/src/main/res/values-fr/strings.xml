@@ -208,6 +208,11 @@
     <string name="home_search_hint">Rechercher…</string>
     <string name="set_home_search_field">Champ de recherche sur l\'écran d\'accueil</string>
     <string name="set_home_search_field_help">Sous l\'horloge, ou en bas de l\'écran d\'accueil sans horloge</string>
+    <string name="set_reset_usage_stats">Réinitialiser l\'utilisation des applications</string>
+    <string name="set_reset_usage_stats_help">La recherche affiche d\'abord les applications que vous ouvrez souvent. Touchez pour repartir de zéro</string>
+    <string name="set_reset_usage_stats_confirm">Réinitialiser les statistiques d\'utilisation des applications ?</string>
+    <string name="button_reset">Réinitialiser</string>
+    <string name="info_usage_stats_reset">Statistiques d\'utilisation réinitialisées</string>
     <string name="target_open_favorites">Ouvrir les\nfavoris</string>
     <string name="target_close_favorites">Fermer les\nfavoris</string>
     <string name="target_open_apps">Ouvrir les\napplications</string>

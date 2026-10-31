@@ -60,6 +60,16 @@ public class UsageTracker
 
 
 	/**
+	 * Forget all recorded launches.
+	 */
+	public static void clear(Context context)
+	{
+		if(context == null) return ;
+		context.getSharedPreferences(FILE, Context.MODE_PRIVATE).edit().clear().apply() ;
+	}
+
+
+	/**
 	 * Return the current score of all launched applications, indexed by component info.
 	 */
 	public static Map<String, Double> getScores(Context context)

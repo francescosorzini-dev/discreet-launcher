@@ -10,6 +10,8 @@
     <string name="license_link">https://gnu.org/licenses/gpl-3.0.txt</string>
     <string name="website_description">Предложить улучшения, сообщить о проблемах и поддержать проект на</string>
     <string name="website_link">https://github.com/falzonv/discreet-launcher</string>
+    <string name="fork_credit">Форк от Francesco Sorzini</string>
+    <string name="fork_description">Поиск приложений по любой части названия</string>
     <string name="translation_credit">(Русский перевод от Artur Ajvazjan)</string>
 
     <!-- Main menu -->
@@ -203,6 +205,14 @@
     <!-- Touch targets ("\n" creates a new line so that targets have more surface) -->
     <string name="set_touch_targets">Цели касания (доступность)</string>
     <string name="set_touch_targets_help">Нажимаемые ярлыки на главном экране</string>
+    <string name="home_search_hint">Поиск…</string>
+    <string name="set_home_search_field">Поле поиска на главном экране</string>
+    <string name="set_home_search_field_help">Под часами или внизу главного экрана, если часов нет</string>
+    <string name="set_reset_usage_stats">Сбросить статистику использования</string>
+    <string name="set_reset_usage_stats_help">Поиск сначала показывает часто открываемые приложения. Нажмите, чтобы начать заново</string>
+    <string name="set_reset_usage_stats_confirm">Сбросить статистику использования приложений?</string>
+    <string name="button_reset">Сбросить</string>
+    <string name="info_usage_stats_reset">Статистика использования сброшена</string>
     <string name="target_open_favorites">Открыть\nизбранные</string>
     <string name="target_close_favorites">Закрыть\nизбранные</string>
     <string name="target_open_apps">Открыть\nприложения</string>
@@ -244,7 +254,7 @@
     <string name="help_folders_title">Папки</string>
     <string name="help_folders">Управляйте папками или избранными приложениями с помощью кнопки или щелкните на название открытой папки, чтобы создавать, переименовывать и помещать в нее приложения.\nУдаление папок возвращает все находящиеся в них приложения в основной список.</string>
     <string name="help_search_title">Поиск</string>
-    <string name="help_search">Найдите любое приложение с помощью значка поиска. Его также можно выбрать, чтобы оно было доступно из уведомлений или скрыть.\n\nНажатие \"Enter\" открывает первый результат поиска.</string>
+    <string name="help_search">Найдите любое приложение с помощью значка поиска. Его также можно выбрать, чтобы оно было доступно из уведомлений или скрыть.\n\nТакже можно использовать поле поиска на главном экране. Поиск находит любую часть названия, первые буквы его слов (\"gm\" для Google Maps) и название папок, в которых находится приложение. Часто открываемые приложения показываются первыми.\n\nНажатие \"Enter\" открывает первый результат поиска.</string>
 
 
     <!-- ========== Changelog ========== -->

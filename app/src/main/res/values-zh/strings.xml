@@ -10,6 +10,8 @@
     <string name="license_link">https://gnu.org/licenses/gpl-3.0.txt</string>
     <string name="website_description">要提出完善应用建议、报告问题及支持本应用，请前往</string>
     <string name="website_link">https://github.com/falzonv/discreet-launcher</string>
+    <string name="fork_credit">Francesco Sorzini 的分支版本</string>
+    <string name="fork_description">按名称的任意部分搜索应用</string>
     <string name="translation_credit">简体中文翻译者 sr093906</string>
 
     <!-- Main menu -->
@@ -203,6 +205,14 @@
     <!-- Touch targets ("\n" creates a new line so that targets have more surface) -->
     <string name="set_touch_targets">触摸目标（无障碍）</string>
     <string name="set_touch_targets_help">主屏幕上的可单击标签</string>
+    <string name="home_search_hint">搜索…</string>
+    <string name="set_home_search_field">主屏幕上的搜索栏</string>
+    <string name="set_home_search_field_help">在时钟下方；没有时钟时在主屏幕底部</string>
+    <string name="set_reset_usage_stats">重置应用使用统计</string>
+    <string name="set_reset_usage_stats_help">搜索会优先显示常用的应用。点击以从头开始</string>
+    <string name="set_reset_usage_stats_confirm">要重置应用使用统计吗？</string>
+    <string name="button_reset">重置</string>
+    <string name="info_usage_stats_reset">已重置应用使用统计</string>
     <string name="target_open_favorites">打开\n收藏</string>
     <string name="target_close_favorites">关闭\n收藏</string>
     <string name="target_open_apps">打开\n应用</string>
@@ -244,7 +254,7 @@
     <string name="help_folders_title">文件夹</string>
     <string name="help_folders">从菜单按钮管理文件夹或收藏文件夹，或单击打开文件夹的标题来创建、重命名以及把应用放在里面。\n删除文件夹会把其中的应用放回主列表。</string>
     <string name="help_search_title">搜索</string>
-    <string name="help_search">从搜索图标寻找任何应用。也可以收藏以便从通知找到或进行隐藏。\n\n按下 \“Enter\” 键打开第一个搜索结果。</string>
+    <string name="help_search">从搜索图标寻找任何应用。也可以收藏以便从通知找到或进行隐藏。\n\n也可以使用主屏幕上的搜索栏。搜索可匹配名称的任意部分、各单词的首字母（如 \"gm\" 对应 Google Maps）以及包含该应用的文件夹名称。常用的应用会排在前面。\n\n按下 \“Enter\” 键打开第一个搜索结果。</string>
 
 
     <!-- ========== Changelog ========== -->

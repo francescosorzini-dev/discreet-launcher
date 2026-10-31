@@ -23,6 +23,9 @@ package com.vincent_falzon.discreetlauncher.settings ;
  */
 
 // Imports
+import androidx.appcompat.app.AlertDialog ;
+import androidx.preference.Preference ;
+import com.vincent_falzon.discreetlauncher.core.UsageTracker ;
 import com.vincent_falzon.discreetlauncher.Utils ;
 import android.annotation.SuppressLint ;
 import android.content.SharedPreferences ;
@@ -181,6 +184,21 @@ public class ActivitySettingsOperation extends AppCompatActivity
 					swipeTowardsRight.setEntries(applicationsNames.toArray(new CharSequence[0])) ;
 					swipeTowardsRight.setEntryValues(applicationsComponentInfos.toArray(new CharSequence[0])) ;
 				}
+
+			// Ask for confirmation before forgetting which apps are used most
+			Preference resetUsageStats = findPreference(Constants.RESET_USAGE_STATS) ;
+			if(resetUsageStats != null)
+				resetUsageStats.setOnPreferenceClickListener(preference -> {
+						new AlertDialog.Builder(requireContext())
+							.setMessage(R.string.set_reset_usage_stats_confirm)
+							.setNegativeButton(R.string.button_cancel, null)
+							.setPositiveButton(R.string.button_reset, (dialog, which) -> {
+									UsageTracker.clear(requireContext()) ;
+									Utils.displayToast(requireContext(), R.string.info_usage_stats_reset) ;
+								})
+							.show() ;
+						return true ;
+					}) ;
 
 			// Initialize the clock app selector
 			ListPreference clockApp = findPreference(Constants.CLOCK_APP) ;

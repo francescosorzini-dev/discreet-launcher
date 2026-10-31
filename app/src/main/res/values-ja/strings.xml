@@ -10,6 +10,8 @@
     <string name="license_link">https://gnu.org/licenses/gpl-3.0.txt</string>
     <string name="website_description">このアプリ関する改善提案や問題点の報告、プロジェクトへのサポートなど</string>
     <string name="website_link">https://github.com/falzonv/discreet-launcher</string>
+    <string name="fork_credit">Francesco Sorzini によるフォーク</string>
+    <string name="fork_description">名前の任意の部分でアプリを検索</string>
     <string name="translation_credit">(Npepperlinuxによる日本語翻訳)</string>
 
     <!-- Main menu -->
@@ -203,6 +205,14 @@
     <!-- Touch targets ("\n" creates a new line so that targets have more surface) -->
     <string name="set_touch_targets">タッチターゲット（アクセシビリティ）</string>
     <string name="set_touch_targets_help">ホーム画面にタップ可能なラベルを追加します</string>
+    <string name="home_search_hint">検索…</string>
+    <string name="set_home_search_field">ホーム画面の検索フィールド</string>
+    <string name="set_home_search_field_help">時計の下、時計がない場合はホーム画面の下部</string>
+    <string name="set_reset_usage_stats">アプリの使用状況をリセット</string>
+    <string name="set_reset_usage_stats_help">検索ではよく開くアプリが先に表示されます。タップすると最初からやり直します</string>
+    <string name="set_reset_usage_stats_confirm">アプリの使用統計をリセットしますか？</string>
+    <string name="button_reset">リセット</string>
+    <string name="info_usage_stats_reset">アプリの使用統計をリセットしました</string>
     <string name="target_open_favorites">お気に入りを開く</string>
     <string name="target_close_favorites">お気に入りを閉じる</string>
     <string name="target_open_apps">アプリ一覧を開く</string>
@@ -244,7 +254,7 @@
     <string name="help_folders_title">フォルダ</string>
     <string name="help_folders">メニューボタンからフォルダの管理やお気に入り登録、 開いているフォルダのタイトルをクリックしてアプリの追加、名前変更、入れ替えができます。\nフォルダを削除すると、その中のすべてのアプリがメインリストに戻ってきます。</string>
     <string name="help_search_title">検索</string>
-    <string name="help_search">検索アイコンから任意のアプリを探すことができます。 また、通知から利用できるようにお気に入りに登録したり、非表示にしたりすることも可能です。\n\n\"Enter\"を押すと開くことができます。</string>
+    <string name="help_search">検索アイコンから任意のアプリを探すことができます。 また、通知から利用できるようにお気に入りに登録したり、非表示にしたりすることも可能です。\n\nホーム画面の検索フィールドも使えます。検索では名前の任意の部分、単語の頭文字（Google Mapsなら\"gm\"）、アプリを含むフォルダ名で見つけることができます。よく開くアプリが先に表示されます。\n\n\"Enter\"を押すと開くことができます。</string>
 
 
     <!-- ========== Changelog ========== -->

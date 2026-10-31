@@ -1,0 +1,4 @@
+v7.11.1 (79) - 31/10/2026
+AMÉLIORATIONS
+   - Option pour réinitialiser les statistiques d'utilisation des applications (paramètres de fonctionnement)
+   - Nouveaux textes de ce fork traduits dans toutes les langues de l'application

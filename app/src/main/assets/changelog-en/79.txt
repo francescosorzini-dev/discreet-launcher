@@ -1,0 +1,4 @@
+v7.11.1 (79) - 31/10/2026
+IMPROVEMENTS
+   - Option to reset the app usage statistics (Operation settings)
+   - New texts of this fork translated in all the languages of the app

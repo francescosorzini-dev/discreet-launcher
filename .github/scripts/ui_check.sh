@@ -79,6 +79,17 @@ if [ -n "$MENU" ] ; then
 	shot 06_settings_operation
 	adb shell uiautomator dump /sdcard/ui.xml > /dev/null 2>&1
 	adb pull /sdcard/ui.xml "$OUT/06_settings_operation.xml" > /dev/null 2>&1
+	# Reset of the usage statistics (confirmation dialog)
+	RESET=$(center_of "Reset app usage")
+	echo "reset at: $RESET"
+	if [ -n "$RESET" ] ; then
+		adb shell input tap $RESET
+		shot 06c_reset_dialog
+		CONFIRM=$(center_of "Reset") ; [ -z "$CONFIRM" ] && CONFIRM=$(center_of "RESET")
+		echo "confirm at: $CONFIRM"
+		[ -n "$CONFIRM" ] && adb shell input tap $CONFIRM
+		sleep 1
+	fi
 	# Scroll to the end of the settings to check the last items above the navigation bar
 	adb shell input swipe $((W / 2)) $((H * 3 / 4)) $((W / 2)) $((H / 5)) 200
 	adb shell input swipe $((W / 2)) $((H * 3 / 4)) $((W / 2)) $((H / 5)) 200
@@ -158,6 +169,19 @@ if [ -n "$RELEASE_APK" ] ; then
 	adb shell input keyevent KEYCODE_BACK
 	adb shell input keyevent KEYCODE_BACK
 	adb shell dumpsys package "$PKG" | grep -m2 -E "versionName|flags=" > "$OUT/release_package.txt" || true
+fi
+
+# ---------- Another language (per-app locale, Android 13+) ----------
+if adb shell cmd locale set-app-locales "$PKG" --locales de-DE ; then
+	adb shell am force-stop "$PKG"
+	adb shell input keyevent KEYCODE_HOME
+	sleep 4
+	adb shell input tap $((W - 5)) $((H / 2))
+	shot 30_german_home
+	P=$(center_of "Suchen…")
+	echo "german field at: $P"
+	if [ -n "$P" ] ; then adb shell input tap $P ; sleep 2 ; shot 31_german_search ; adb shell input keyevent KEYCODE_BACK ; adb shell input keyevent KEYCODE_BACK ; fi
+	adb shell cmd locale set-app-locales "$PKG" --locales "" || true
 fi
 
 # Crash check

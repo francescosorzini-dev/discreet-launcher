@@ -10,6 +10,8 @@
     <string name="license_link">https://gnu.org/licenses/gpl-3.0.txt</string>
     <string name="website_description">Запропонувати покращення, повідомити про ваду, а також підтримати проєкт, можна на сторінці</string>
     <string name="website_link">https://github.com/falzonv/discreet-launcher</string>
+    <string name="fork_credit">Форк від Francesco Sorzini</string>
+    <string name="fork_description">Пошук застосунків за будь-якою частиною назви</string>
     <string name="translation_credit">(Український переклад від Maksym Bilak)</string>
 
     <!-- Main menu -->
@@ -203,6 +205,14 @@
     <!-- Touch targets ("\n" creates a new line so that targets have more surface) -->
     <string name="set_touch_targets">Цілі для дотику (доступність)</string>
     <string name="set_touch_targets_help">Доступні для активації ярлики на головному екрані</string>
+    <string name="home_search_hint">Пошук…</string>
+    <string name="set_home_search_field">Поле пошуку на головному екрані</string>
+    <string name="set_home_search_field_help">Під годинником або внизу головного екрана, якщо годинника немає</string>
+    <string name="set_reset_usage_stats">Скинути статистику використання</string>
+    <string name="set_reset_usage_stats_help">Пошук спершу показує застосунки, які ви часто відкриваєте. Натисніть, щоб почати спочатку</string>
+    <string name="set_reset_usage_stats_confirm">Скинути статистику використання застосунків?</string>
+    <string name="button_reset">Скинути</string>
+    <string name="info_usage_stats_reset">Статистику використання скинуто</string>
     <string name="target_open_favorites">Показати\nобране</string>
     <string name="target_close_favorites">Приховати\nобране</string>
     <string name="target_open_apps">Показати\nзастосунки</string>
@@ -244,7 +254,7 @@
     <string name="help_folders_title">Теки</string>
     <string name="help_folders">За допомогою кнопки меню, керуйте теками чи обраним, або торкніться назви відкритої теки, щоб створити, перейменувати чи додати донеї застосунки.\nВсі застосунки з видалених тек повертаються назад, до основного списку.</string>
     <string name="help_search_title">Пошук</string>
-    <string name="help_search">Використовуйте піфтограму пошуку, щоб знайти будь-який застосунок. Також  можна її обрати, щоб вона була доступною зі сповіщень, чи приховати.\n\nНатискання «Ентер» відкриває перший результат пошуку.</string>
+    <string name="help_search">Використовуйте піфтограму пошуку, щоб знайти будь-який застосунок. Також  можна її обрати, щоб вона була доступною зі сповіщень, чи приховати.\n\nТакож можна користуватися полем пошуку на головному екрані. Пошук знаходить будь-яку частину назви, перші літери її слів («gm» для Google Maps) і назву тек, у яких міститься застосунок. Застосунки, які ви часто відкриваєте, показуються першими.\n\nНатискання «Ентер» відкриває перший результат пошуку.</string>
 
 
     <!-- ========== Changelog ========== -->
