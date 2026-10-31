@@ -203,7 +203,7 @@ public class Search extends Application
 		public void onTextChanged(CharSequence text, int start, int before, int count)
 		{
 			// Update the display of the RecyclerView, then show the best result
-			adapter.getFilter().filter(text, count -> { if(recycler != null) recycler.scrollToPosition(0) ; }) ;
+			adapter.getFilter().filter(text, results_count -> { if(recycler != null) recycler.scrollToPosition(0) ; }) ;
 		}
 
 		// Needed to implement TextWatcher
