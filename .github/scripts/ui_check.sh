@@ -165,6 +165,9 @@ for HAND in right left ; do
 	if [ -n "$P" ] ; then
 		adb shell input tap $P ; sleep 2
 		shot 40_${HAND}_search_empty
+		adb shell uiautomator dump /sdcard/ui.xml > /dev/null 2>&1
+		adb pull /sdcard/ui.xml "$OUT/40_${HAND}_search_empty.xml" > /dev/null 2>&1
+		adb shell dumpsys window windows | grep -E "Window #|mFrame=|mAttrs=|PopupWindow|InputMethod" > "$OUT/40_${HAND}_windows.txt" 2>/dev/null || true
 		adb shell input text "a" ; sleep 1
 		shot 41_${HAND}_search_a
 		adb shell input keyevent KEYCODE_BACK ; adb shell input keyevent KEYCODE_BACK ; sleep 1
