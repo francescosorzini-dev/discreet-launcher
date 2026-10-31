@@ -19,7 +19,8 @@ xml = open(sys.argv[1], encoding="utf-8").read()
 for node in re.finditer(r'<node [^>]*>', xml):
     n = node.group(0)
     t = re.search(r' text="([^"]*)"', n)
-    if t and t.group(1) == sys.argv[2]:
+    c = re.search(r' content-desc="([^"]*)"', n)
+    if (t and t.group(1) == sys.argv[2]) or (c and c.group(1) == sys.argv[2]):
         b = list(map(int, re.findall(r'\d+', re.search(r'bounds="([^"]*)"', n).group(1))))
         print((b[0] + b[2]) // 2, (b[1] + b[3]) // 2)
         break
@@ -57,12 +58,24 @@ SIZE=$(adb shell wm size | grep -oE '[0-9]+x[0-9]+' | tail -1)
 W=${SIZE%x*} ; H=${SIZE#*x}
 adb shell input swipe $((W / 2)) $((H / 3)) $((W / 2)) $((H * 2 / 3)) 150
 shot 05_favorites
-adb shell input keyevent KEYCODE_BACK
 
-# Settings activity (action bar and system bars)
-adb shell am start -n "$PKG/.settings.ActivitySettingsOperation"
-shot 06_settings_operation
-adb shell input keyevent KEYCODE_BACK
+# Settings activity opened from the menu (action bar and system bars)
+MENU=$(center_of "Menu")
+echo "menu at: $MENU"
+if [ -n "$MENU" ] ; then
+	adb shell input tap $MENU
+	sleep 2
+	OPERATION=$(center_of "Operation")
+	echo "operation at: $OPERATION"
+	[ -n "$OPERATION" ] && adb shell input tap $OPERATION
+	shot 06_settings_operation
+	# Scroll to the end of the settings to check the last items above the navigation bar
+	adb shell input swipe $((W / 2)) $((H * 3 / 4)) $((W / 2)) $((H / 5)) 200
+	adb shell input swipe $((W / 2)) $((H * 3 / 4)) $((W / 2)) $((H / 5)) 200
+	shot 06b_settings_operation_end
+	adb shell input keyevent KEYCODE_BACK
+fi
+adb shell input keyevent KEYCODE_HOME
 
 # Same home screen with the 3-button navigation bar
 adb shell cmd overlay enable com.android.internal.systemui.navbar.threebutton || true
@@ -72,6 +85,7 @@ shot 07_home_3buttons
 POS=$(center_of "Search…")
 if [ -n "$POS" ] ; then
 	adb shell input tap $POS
+	sleep 2
 	adb shell input text "ca"
 	shot 08_search_3buttons
 fi

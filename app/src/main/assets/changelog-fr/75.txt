@@ -1,0 +1,8 @@
+v7.10.0 (75) - 31/10/2026
+NOUVEAUTÉS
+   - Champ de recherche fixe en bas de l'écran d'accueil (toucher pour rechercher, désactivable dans les paramètres)
+   - Recherche par les initiales des mots d'un nom ("gm" pour Google Maps)
+   - Les noms des dossiers servent d'étiquettes dans la recherche ("banque" trouve les applications du dossier "Banque")
+AMÉLIORATIONS
+   - Les applications ouvertes souvent apparaissent en premier dans les résultats
+   - Mise à jour pour Android 15

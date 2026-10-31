@@ -1,0 +1,8 @@
+v7.10.0 (75) - 31/10/2026
+NEW THINGS
+   - Search field fixed at the bottom of the home screen (tap to search, can be disabled in settings)
+   - Search by the initials of the words of a name ("gm" for Google Maps)
+   - Folder names act as labels in the search ("bank" finds the apps of the "Bank" folder)
+IMPROVEMENTS
+   - Apps you open often come first in the search results
+   - Updated for Android 15
