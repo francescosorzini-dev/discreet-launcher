@@ -118,6 +118,10 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 	private View statusBarScrim ;
 	private View navigationBarScrim ;
 
+	// Panels currently disappearing slowly
+	private boolean closing_favorites ;
+	private boolean closing_drawer ;
+
 	// Attributes related to the drawer
 	private RecyclerView drawer ;
 	private RecyclerAdapter drawerAdapter ;
@@ -235,8 +239,8 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 		if(settings.getBoolean(Constants.ALWAYS_SHOW_FAVORITES, false)) displayFavorites(true) ;
 
 		// Hide the favorites panel and the drawer by default
-		displayFavorites(false) ;
-		displayDrawer(false) ;
+		displayFavorites(false, false) ;
+		displayDrawer(false, false) ;
 
 		// Start to listen for packages added or removed
 		packagesListener = new PackagesListener() ;
@@ -392,9 +396,19 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 	 */
 	private void displayFavorites(boolean display)
 	{
-		boolean was_visible = favorites.getVisibility() == View.VISIBLE ;
+		displayFavorites(display, true) ;
+	}
+
+
+	/**
+	 * Display or hide the favorites panel, with or without the slow animation.
+	 */
+	private void displayFavorites(boolean display, boolean animate)
+	{
+		boolean was_visible = (favorites.getVisibility() == View.VISIBLE) && !closing_favorites ;
 		if(display)
 			{
+				closing_favorites = false ;
 				// Update the recyclers (favorites panel and applications drawer) if needed
 				if(adapters_update_needed) updateAdapters() ;
 
@@ -464,24 +478,44 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 				// Do not continue if the option to always show the panel is selected
 				if(settings.getBoolean(Constants.ALWAYS_SHOW_FAVORITES, false)) return ;
 
-				// Hide the favorites panel
-				Utils.resetAppear(favoritesScroll) ;
-				Utils.resetAppear(statusBarScrim) ;
-				Utils.resetAppear(navigationBarScrim) ;
-				favorites.setVisibility(View.GONE) ;
-				menuButton.setVisibility(View.GONE) ;
-				noFavoritesYet.setVisibility(View.GONE) ;
-				defaultLauncherButton.setVisibility(View.GONE) ;
-				targetFavorites.setText(R.string.target_open_favorites) ;
-
-				// If the option is selected, make the status bar fully transparent
-				if(settings.getBoolean(Constants.TRANSPARENT_STATUS_BAR, true))
-						setStatusBarColor(ContextCompat.getColor(this, R.color.transparent)) ;
-					else setStatusBarColor(Utils.getColor(settings, Constants.BACKGROUND_COLOR_FAVORITES, Constants.COLOR_FOR_OVERLAY)) ;
-
-				// Make the navigation bar transparent
-				setNavigationBarColor(ContextCompat.getColor(this, R.color.transparent)) ;
+				// Disappear slowly towards its side of the screen, then hide (or hide at once)
+				if(animate && was_visible)
+					{
+						closing_favorites = true ;
+						Utils.slowDisappear(reverse_interface ? navigationBarScrim : statusBarScrim, 0, null) ;
+						Utils.slowDisappear(favoritesScroll, reverse_interface ? 1 : -1, () -> {
+								if(closing_favorites) hideFavorites() ;
+							}) ;
+					}
+					else if(!closing_favorites || !animate) hideFavorites() ;
 			}
+	}
+
+
+	/**
+	 * Hide the favorites panel at once.
+	 */
+	private void hideFavorites()
+	{
+		closing_favorites = false ;
+		favorites.setVisibility(View.GONE) ;
+		menuButton.setVisibility(View.GONE) ;
+		noFavoritesYet.setVisibility(View.GONE) ;
+		defaultLauncherButton.setVisibility(View.GONE) ;
+		targetFavorites.setText(R.string.target_open_favorites) ;
+
+		// If the option is selected, make the status bar fully transparent
+		if(settings.getBoolean(Constants.TRANSPARENT_STATUS_BAR, true))
+				setStatusBarColor(ContextCompat.getColor(this, R.color.transparent)) ;
+			else setStatusBarColor(Utils.getColor(settings, Constants.BACKGROUND_COLOR_FAVORITES, Constants.COLOR_FOR_OVERLAY)) ;
+
+		// Make the navigation bar transparent
+		setNavigationBarColor(ContextCompat.getColor(this, R.color.transparent)) ;
+
+		// Restore the normal state of the animated views
+		Utils.resetAppear(favoritesScroll) ;
+		Utils.resetAppear(statusBarScrim) ;
+		Utils.resetAppear(navigationBarScrim) ;
 	}
 
 
@@ -489,6 +523,15 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 	 * Display or hide the applications drawer.
 	 */
 	private void displayDrawer(boolean display)
+	{
+		displayDrawer(display, true) ;
+	}
+
+
+	/**
+	 * Display or hide the applications drawer, with or without the slow animation.
+	 */
+	private void displayDrawer(boolean display, boolean animate)
 	{
 		if(display)
 			{
@@ -509,7 +552,9 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 					else scroll_position = 0 ;
 				scroll_last_position = scroll_position ;
 				scroll_close_gesture = 0 ;
-				boolean drawer_was_visible = drawer.getVisibility() == View.VISIBLE ;
+				boolean drawer_was_visible = (drawer.getVisibility() == View.VISIBLE) && !closing_drawer ;
+				closing_drawer = false ;
+				Utils.resetAppear(homeScreen) ;
 				homeScreen.setVisibility(View.GONE) ;
 				drawer.setVisibility(View.VISIBLE) ;
 				targetApplications.setText(R.string.target_close_apps) ;
@@ -524,29 +569,53 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 			}
 			else
 			{
-				// Hide the applications drawer
-				if(reverse_interface) drawer.scrollToPosition(applicationsList.getDrawer().size() - 1) ;
-					else drawer.scrollToPosition(0) ;
-				Utils.resetAppear(drawer) ;
-				Utils.resetAppear(statusBarScrim) ;
-				Utils.resetAppear(navigationBarScrim) ;
-				homeScreen.setVisibility(View.VISIBLE) ;
-				drawer.setVisibility(View.GONE) ;
-				targetApplications.setText(R.string.target_open_apps) ;
-
-				// Retrieve the background color for favorites
-				int favorites_background_color = Utils.getColor(settings, Constants.BACKGROUND_COLOR_FAVORITES, Constants.COLOR_FOR_OVERLAY) ;
-
-				// If the option is selected, make the status bar fully transparent
-				if(settings.getBoolean(Constants.TRANSPARENT_STATUS_BAR, true))
-						setStatusBarColor(ContextCompat.getColor(this, R.color.transparent)) ;
-					else setStatusBarColor(favorites_background_color) ;
-
-				// Make the navigation bar transparent, unless in reverse interface with favorites always shown
-				if(reverse_interface && settings.getBoolean(Constants.ALWAYS_SHOW_FAVORITES, false))
-						setNavigationBarColor(favorites_background_color) ;
-					else setNavigationBarColor(ContextCompat.getColor(this, R.color.transparent)) ;
+				// Disappear slowly towards its side of the screen, then hide (or hide at once)
+				boolean drawer_visible = (drawer.getVisibility() == View.VISIBLE) && !closing_drawer ;
+				if(animate && drawer_visible)
+					{
+						closing_drawer = true ;
+						Utils.slowDisappear(statusBarScrim, 0, null) ;
+						Utils.slowDisappear(navigationBarScrim, 0, null) ;
+						Utils.slowDisappear(drawer, reverse_interface ? -1 : 1, () -> {
+								if(closing_drawer) hideDrawer(true) ;
+							}) ;
+					}
+					else if(!closing_drawer || !animate) hideDrawer(false) ;
 			}
+	}
+
+
+	/**
+	 * Hide the applications drawer at once (the home screen then appears slowly if requested).
+	 */
+	private void hideDrawer(boolean home_appears_slowly)
+	{
+		closing_drawer = false ;
+		if(reverse_interface) drawer.scrollToPosition(applicationsList.getDrawer().size() - 1) ;
+			else drawer.scrollToPosition(0) ;
+		homeScreen.setVisibility(View.VISIBLE) ;
+		if(home_appears_slowly) Utils.slowAppear(homeScreen, 0) ;
+			else Utils.resetAppear(homeScreen) ;
+		drawer.setVisibility(View.GONE) ;
+		targetApplications.setText(R.string.target_open_apps) ;
+
+		// Retrieve the background color for favorites
+		int favorites_background_color = Utils.getColor(settings, Constants.BACKGROUND_COLOR_FAVORITES, Constants.COLOR_FOR_OVERLAY) ;
+
+		// If the option is selected, make the status bar fully transparent
+		if(settings.getBoolean(Constants.TRANSPARENT_STATUS_BAR, true))
+				setStatusBarColor(ContextCompat.getColor(this, R.color.transparent)) ;
+			else setStatusBarColor(favorites_background_color) ;
+
+		// Make the navigation bar transparent, unless in reverse interface with favorites always shown
+		if(reverse_interface && settings.getBoolean(Constants.ALWAYS_SHOW_FAVORITES, false))
+				setNavigationBarColor(favorites_background_color) ;
+			else setNavigationBarColor(ContextCompat.getColor(this, R.color.transparent)) ;
+
+		// Restore the normal state of the animated views
+		Utils.resetAppear(drawer) ;
+		Utils.resetAppear(statusBarScrim) ;
+		Utils.resetAppear(navigationBarScrim) ;
 	}
 
 
@@ -891,8 +960,8 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 
 		// Hide the favorites panel and the applications drawer
 		keepMenuAccessible() ;
-		displayFavorites(false) ;
-		displayDrawer(false) ;
+		displayFavorites(false, false) ;
+		displayDrawer(false, false) ;
 
 		// Update the display according to settings
 		dialogMenu.hide() ;
@@ -931,11 +1000,11 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 		maybeHideSystemBars(true) ;
 
 		// Hide popups if some are still opened
-		if(homeSearch != null) homeSearch.closePopup() ;
+		if(homeSearch != null) homeSearch.closePopupNow() ;
 		for(Application application : applicationsList.getDrawer())
 		{
-			if(application instanceof Folder) ((Folder)application).closePopup() ;
-			if(application instanceof Search) ((Search)application).closePopup() ;
+			if(application instanceof Folder) ((Folder)application).closePopupNow() ;
+			if(application instanceof Search) ((Search)application).closePopupNow() ;
 		}
 	}
 

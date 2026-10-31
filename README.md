@@ -18,6 +18,7 @@
 > - **v7.12.6** — slower slide of the search results (1.4 s).
 > - **v7.12.7** — every move of the search popup caused by the keyboard is animated; the list is corrected before drawing, never showing a wrong position.
 > - **v7.13.0** — search: keyboard first, results list added only once it is open; same slow appearance for search, favorites, app list and folders.
+> - **v7.13.1** — animations 3 times faster (467 ms) and also used when closing; first search opening no longer waits 1.5 s.
 >
 > APKs are built automatically on every push to `main` and published in [Releases](https://github.com/francescosorzini-dev/discreet-launcher/releases).
 > They are signed with the fork's own key: uninstall the F-Droid version first (export your settings before); later builds update in place.

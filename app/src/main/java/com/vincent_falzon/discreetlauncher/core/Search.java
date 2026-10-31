@@ -63,7 +63,7 @@ import java.util.ArrayList ;
 public class Search extends Application
 {
 	// Attributes
-	private PopupWindow popup ;
+	private AnimatedPopupWindow popup ;
 	private SearchAdapter adapter ;
 	private RecyclerView recycler ;
 
@@ -148,7 +148,7 @@ public class Search extends Application
 		adapter.setTextColor(text_color) ;
 
 		// Create the popup representing the Search application
-		popup = new PopupWindow(popupView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true) ;
+		popup = new AnimatedPopupWindow(popupView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true, 1) ;
 		popupView.setOnTouchListener(new PopupTouchListener()) ;
 
 		// Fix popup not closing on press back with API 21
@@ -162,6 +162,7 @@ public class Search extends Application
 		final float density = context.getResources().getDisplayMetrics().density ;
 		final LinearLayoutManager layoutManager = (LinearLayoutManager)recycler.getLayoutManager() ;
 		final int[] last_bottom = { -1 } ;
+		final int[] initial_bottom = { -1 } ;
 		final boolean[] list_shown = { false } ;
 		final boolean[] revealed = { false } ;
 		final boolean[] user_scrolled = { false } ;
@@ -175,15 +176,20 @@ public class Search extends Application
 				recycler.scrollToPosition(0) ;
 			} ;
 
-		// The keyboard is considered settled when it is visible and the popup has not moved for a while
+		// The keyboard is considered open and settled when the popup has been pushed up by it (or the
+		// system reports it visible) and has not moved for a while. The position is the reliable part:
+		// on the first opening the system reports the keyboard visible late, even when it is already up
 		final Runnable checkKeyboardSettled = () -> {
+				boolean pushed_up = (initial_bottom[0] >= 0) && (last_bottom[0] < initial_bottom[0] - 50 * density) ;
 				WindowInsetsCompat insets = ViewCompat.getRootWindowInsets(popupView) ;
-				if((insets != null) && insets.isVisible(WindowInsetsCompat.Type.ime())) showList.run() ;
+				boolean reported = (insets != null) && insets.isVisible(WindowInsetsCompat.Type.ime()) ;
+				if(pushed_up || reported) showList.run() ;
 			} ;
 		popupView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
 				int[] location = new int[2] ;
 				popupView.getLocationOnScreen(location) ;
 				int bottom = location[1] - Math.round(popupView.getTranslationY()) + popupView.getHeight() ;
+				if(initial_bottom[0] < 0) initial_bottom[0] = bottom ;
 				if(bottom != last_bottom[0])
 					{
 						// Moved by the system after the appearance (ex: suggestions bar): follow slowly
@@ -237,6 +243,7 @@ public class Search extends Application
 				WindowInsetsCompat insets = ViewCompat.getRootWindowInsets(popupView) ;
 				if((insets == null) || !insets.isVisible(WindowInsetsCompat.Type.ime())) showList.run() ;
 			}, 1500) ;
+		popupView.postDelayed(checkKeyboardSettled, 300) ;
 		popupView.postDelayed(showList, 2500) ;
 
 		// Display the popup and the keyboard
@@ -253,6 +260,15 @@ public class Search extends Application
 	public void closePopup()
 	{
 		if(popup != null) popup.dismiss() ;
+	}
+
+
+	/**
+	 * Dismiss the popup immediately, without animation (ex: when leaving the home screen).
+	 */
+	public void closePopupNow()
+	{
+		if(popup != null) popup.dismissNow() ;
 	}
 
 

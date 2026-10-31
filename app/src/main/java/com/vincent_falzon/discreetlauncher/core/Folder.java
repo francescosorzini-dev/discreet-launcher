@@ -58,7 +58,7 @@ public class Folder extends Application
 {
 	// Attributes
 	private final ArrayList<Application> applications ;
-	private PopupWindow popup ;
+	private AnimatedPopupWindow popup ;
 	private int color ;
 
 
@@ -194,7 +194,7 @@ public class Folder extends Application
 
 		// Create the popup representing the folder
 		int popup_height = context.getResources().getDisplayMetrics().heightPixels / 2 ;
-		popup = new PopupWindow(popupView, LinearLayout.LayoutParams.MATCH_PARENT, popup_height, true) ;
+		popup = new AnimatedPopupWindow(popupView, LinearLayout.LayoutParams.MATCH_PARENT, popup_height, true, 1) ;
 		popupView.setOnTouchListener(new PopupTouchListener()) ;
 
 		// Fix popup not closing on press back with API 21
@@ -223,6 +223,15 @@ public class Folder extends Application
 	public void closePopup()
 	{
 		if(popup != null) popup.dismiss() ;
+	}
+
+
+	/**
+	 * Dismiss the popup immediately, without animation (ex: when leaving the home screen).
+	 */
+	public void closePopupNow()
+	{
+		if(popup != null) popup.dismissNow() ;
 	}
 
 

@@ -31,6 +31,7 @@ import android.util.Log ;
 import android.view.Gravity ;
 import android.view.View ;
 import android.view.ViewGroup ;
+import android.view.animation.AccelerateInterpolator ;
 import android.view.animation.DecelerateInterpolator ;
 import android.widget.FrameLayout ;
 import android.widget.Toast ;
@@ -217,7 +218,7 @@ public abstract class Utils
 
 
 	// Slow appearance shared by the search, the favorites panel, the app drawer and the folders
-	public static final long SLOW_APPEAR_DURATION = 1400 ;
+	public static final long SLOW_APPEAR_DURATION = 467 ;
 	public static final float SLOW_APPEAR_DISTANCE_DP = 48 ;
 
 
@@ -233,6 +234,21 @@ public abstract class Utils
 		view.setAlpha(0) ;
 		view.setTranslationY(direction * distance) ;
 		view.animate().alpha(1).translationY(0).setDuration(SLOW_APPEAR_DURATION).setInterpolator(new DecelerateInterpolator(2f)).start() ;
+	}
+
+
+	/**
+	 * Make a view disappear slowly, the reverse of slowAppear(): fade out while sliding towards
+	 * <code>direction</code>, speeding up, then run <code>endAction</code> (the view stays faded:
+	 * the end action is expected to hide it and call resetAppear()).
+	 */
+	public static void slowDisappear(View view, int direction, Runnable endAction)
+	{
+		if(view == null) return ;
+		float distance = SLOW_APPEAR_DISTANCE_DP * view.getResources().getDisplayMetrics().density ;
+		view.animate().cancel() ;
+		view.animate().alpha(0).translationY(direction * distance).setDuration(SLOW_APPEAR_DURATION).setInterpolator(new AccelerateInterpolator(2f))
+			.withEndAction(endAction).start() ;
 	}
 
 

@@ -1,0 +1,5 @@
+v7.13.1 (89) - 31/10/2026
+IMPROVEMENTS
+   - The slow appearance is 3 times faster, and the same effect is used when closing the search, the folders, the favorites panel and the app list
+CORRECTIONS
+   - First opening of the search: the results list appeared only after 1.5 s

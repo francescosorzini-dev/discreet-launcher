@@ -1,0 +1,5 @@
+v7.13.1 (89) - 31/10/2026
+AMÉLIORATIONS
+   - L'apparition lente est 3 fois plus rapide, et le même effet est utilisé à la fermeture de la recherche, des dossiers, du panneau des favoris et de la liste des applications
+CORRECTIONS
+   - Première ouverture de la recherche : la liste des résultats n'apparaissait qu'après 1,5 s
