@@ -120,6 +120,7 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 
 	// Panels currently disappearing slowly
 	private boolean closing_favorites ;
+	private int favorites_close_direction ;
 	private boolean closing_drawer ;
 
 	// Attributes related to the drawer
@@ -236,8 +237,12 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 
 		// Close the drawer and the favorites panel by pulling them beyond the edge of their list
 		drawer.addOnItemTouchListener(new PullToClose(drawer, reverse_interface ? -1 : 1, () -> displayDrawer(false), drawer)) ;
-		favorites.addOnItemTouchListener(new PullToClose(findViewById(R.id.favorites_scroll), reverse_interface ? 1 : -1,
-				() -> displayFavorites(false), favorites, findViewById(R.id.favorites_scroll))) ;
+		// (favorites: pulled downwards beyond the beginning of the list, available as soon as it opens)
+		favorites.addOnItemTouchListener(new PullToClose(findViewById(R.id.favorites_scroll), 1, () -> {
+				favorites_close_direction = 1 ;
+				displayFavorites(false) ;
+				favorites_close_direction = 0 ;
+			}, favorites, findViewById(R.id.favorites_scroll))) ;
 		applyOneHandedDrawer() ;
 
 		// Load the favorites panel if it should always be shown
@@ -488,7 +493,9 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 					{
 						closing_favorites = true ;
 						Utils.slowDisappear(reverse_interface ? navigationBarScrim : statusBarScrim, 0, null) ;
-						Utils.slowDisappear(favoritesScroll, reverse_interface ? 1 : -1, () -> {
+						// Towards its side of the screen, or in the direction of the pull that closed it
+						int direction = (favorites_close_direction != 0) ? favorites_close_direction : (reverse_interface ? 1 : -1) ;
+						Utils.slowDisappear(favoritesScroll, direction, () -> {
 								if(closing_favorites) hideFavorites() ;
 							}) ;
 					}

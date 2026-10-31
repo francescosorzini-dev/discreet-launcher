@@ -1,0 +1,3 @@
+v7.14.1 (91) - 31/10/2026
+CORRECTIONS
+   - Panneau des favoris : il se ferme en le tirant vers le bas depuis le début de la liste, possible dès son ouverture (avec beaucoup de favoris, il fallait d'abord défiler jusqu'à la fin)

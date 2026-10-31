@@ -1,0 +1,3 @@
+v7.14.1 (91) - 31/10/2026
+CORRECTIONS
+   - Favorites panel: it closes by pulling it downwards from the beginning of the list, available as soon as it opens (with many favorites, it was necessary to scroll to the end first)
