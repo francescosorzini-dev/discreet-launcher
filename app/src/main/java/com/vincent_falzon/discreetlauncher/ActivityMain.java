@@ -229,6 +229,7 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 		drawerLayout = new FlexibleGridLayout(this, application_width) ;
 		drawer.setLayoutManager(drawerLayout) ;
 		drawer.addOnScrollListener(new ScrollListener(Constants.APP_DRAWER)) ;
+		applyOneHandedDrawer() ;
 
 		// Load the favorites panel if it should always be shown
 		if(settings.getBoolean(Constants.ALWAYS_SHOW_FAVORITES, false)) displayFavorites(true) ;
@@ -639,6 +640,16 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 
 
 	/**
+	 * For one-handed use with the right hand, fill the rows of the app drawer from the right.
+	 */
+	private void applyOneHandedDrawer()
+	{
+		boolean right_hand = settings.getString(Constants.ONE_HANDED, "off").equals("right") ;
+		drawer.setLayoutDirection(right_hand ? View.LAYOUT_DIRECTION_RTL : View.LAYOUT_DIRECTION_LTR) ;
+	}
+
+
+	/**
 	 * Show or hide the search field according to the settings, and give it the clock colors.
 	 */
 	private void updateHomeSearchField()
@@ -964,6 +975,10 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 			case Constants.CLOCK_SIZE :
 				// Show or hide the search field on the home screen
 				updateHomeSearchField() ;
+				break ;
+			case Constants.ONE_HANDED :
+				// Update the direction of the app drawer rows (the search reads it when opening)
+				applyOneHandedDrawer() ;
 				break ;
 			case Constants.REVERSE_INTERFACE :
 				// Change the interface direction

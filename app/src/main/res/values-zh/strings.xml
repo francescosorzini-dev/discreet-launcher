@@ -208,6 +208,12 @@
     <string name="home_search_hint">搜索…</string>
     <string name="set_home_search_field">主屏幕上的搜索栏</string>
     <string name="set_home_search_field_help">在时钟下方；没有时钟时在主屏幕底部</string>
+    <string name="set_one_handed">单手操作</string>
+    <string-array name="set_one_handed_entries">
+        <item>关闭</item>
+        <item>右手</item>
+        <item>左手</item>
+    </string-array>
     <string name="set_reset_usage_stats">重置应用使用统计</string>
     <string name="set_reset_usage_stats_help">搜索会优先显示常用的应用。点击以从头开始</string>
     <string name="set_reset_usage_stats_confirm">要重置应用使用统计吗？</string>

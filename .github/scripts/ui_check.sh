@@ -154,6 +154,27 @@ shot 14_reverse_targets_no_clock
 set_bool reverse_interface false
 set_bool touch_targets false
 set_string clock_format none
+
+# ---------- One-handed use ----------
+set_string clock_format datetime
+set_string clock_position middle
+for HAND in right left ; do
+	set_string one_handed $HAND
+	restart_home
+	P=$(center_of "Search…")
+	if [ -n "$P" ] ; then
+		adb shell input tap $P ; sleep 2
+		shot 40_${HAND}_search_empty
+		adb shell input text "a" ; sleep 1
+		shot 41_${HAND}_search_a
+		adb shell input keyevent KEYCODE_BACK ; adb shell input keyevent KEYCODE_BACK ; sleep 1
+	fi
+	adb shell input swipe $((W / 2)) $((H * 2 / 3)) $((W / 2)) $((H / 4)) 150
+	shot 42_${HAND}_drawer
+	adb shell input keyevent KEYCODE_BACK
+done
+set_string one_handed off
+set_string clock_format none
 adb shell "run-as $PKG cat $PREFS" > "$OUT/prefs.xml" || true
 
 # ---------- Optimized (R8) release APK: smoke test ----------

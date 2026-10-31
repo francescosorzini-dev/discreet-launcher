@@ -208,6 +208,12 @@
     <string name="home_search_hint">Buscar…</string>
     <string name="set_home_search_field">Campo de búsqueda en la pantalla de inicio</string>
     <string name="set_home_search_field_help">Debajo del reloj, o en la parte inferior de la pantalla de inicio sin reloj</string>
+    <string name="set_one_handed">Uso con una mano</string>
+    <string-array name="set_one_handed_entries">
+        <item>Desactivado</item>
+        <item>Mano derecha</item>
+        <item>Mano izquierda</item>
+    </string-array>
     <string name="set_reset_usage_stats">Restablecer el uso de aplicaciones</string>
     <string name="set_reset_usage_stats_help">La búsqueda muestra primero las aplicaciones que abres a menudo. Toca para empezar de cero</string>
     <string name="set_reset_usage_stats_confirm">¿Restablecer las estadísticas de uso de aplicaciones?</string>

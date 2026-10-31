@@ -170,6 +170,7 @@ public class ActivityExportImport extends AppCompatActivity implements View.OnCl
 		exportedData.add(exportStringSetting(Constants.ICON_COLOR_FILTER)) ;
 		exportedData.add(exportBooleanSetting(Constants.NOTIFICATION, false)) ;
 		exportedData.add(exportStringSetting(Constants.FORCED_ORIENTATION)) ;
+		exportedData.add(exportStringSetting(Constants.ONE_HANDED)) ;
 		exportedData.add(exportBooleanSetting(Constants.ALWAYS_SHOW_FAVORITES, false)) ;
 		exportedData.add(exportBooleanSetting(Constants.REVERSE_INTERFACE, false)) ;
 		exportedData.add(exportBooleanSetting(Constants.IMMERSIVE_MODE, false)) ;
@@ -328,6 +329,7 @@ public class ActivityExportImport extends AppCompatActivity implements View.OnCl
 				else if(target.equals(Constants.ICON_COLOR_FILTER)) editor.putString(target, value) ;
 				else if(target.equals(Constants.NOTIFICATION)) editor.putBoolean(target, value.equals("true")) ;
 				else if(target.equals(Constants.FORCED_ORIENTATION)) editor.putString(target, value) ;
+				else if(target.equals(Constants.ONE_HANDED)) editor.putString(target, value) ;
 				else if(target.equals(Constants.ALWAYS_SHOW_FAVORITES)) editor.putBoolean(target, value.equals("true")) ;
 				else if(target.equals(Constants.REVERSE_INTERFACE)) editor.putBoolean(target, value.equals("true")) ;
 				else if(target.equals(Constants.IMMERSIVE_MODE)) editor.putBoolean(target, value.equals("true")) ;

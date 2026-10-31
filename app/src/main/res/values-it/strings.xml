@@ -208,6 +208,12 @@
     <string name="home_search_hint">Cerca…</string>
     <string name="set_home_search_field">Campo di ricerca nella schermata home</string>
     <string name="set_home_search_field_help">Sotto l\'orologio, oppure in fondo alla schermata home senza orologio</string>
+    <string name="set_one_handed">Uso con una mano</string>
+    <string-array name="set_one_handed_entries">
+        <item>Disattivato</item>
+        <item>Mano destra</item>
+        <item>Mano sinistra</item>
+    </string-array>
     <string name="set_reset_usage_stats">Azzera uso delle app</string>
     <string name="set_reset_usage_stats_help">La ricerca mostra per prime le app che apri spesso. Tocca per ripartire da zero</string>
     <string name="set_reset_usage_stats_confirm">Azzerare le statistiche d\'uso delle app?</string>

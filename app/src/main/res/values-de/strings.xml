@@ -208,6 +208,12 @@
     <string name="home_search_hint">Suchen…</string>
     <string name="set_home_search_field">Suchfeld auf dem Startbildschirm</string>
     <string name="set_home_search_field_help">Unter der Uhr, oder unten auf dem Startbildschirm ohne Uhr</string>
+    <string name="set_one_handed">Einhandbedienung</string>
+    <string-array name="set_one_handed_entries">
+        <item>Aus</item>
+        <item>Rechte Hand</item>
+        <item>Linke Hand</item>
+    </string-array>
     <string name="set_reset_usage_stats">App-Nutzung zurücksetzen</string>
     <string name="set_reset_usage_stats_help">Die Suche zeigt häufig geöffnete Apps zuerst. Tippen, um von vorne zu beginnen</string>
     <string name="set_reset_usage_stats_confirm">Statistik der App-Nutzung zurücksetzen?</string>

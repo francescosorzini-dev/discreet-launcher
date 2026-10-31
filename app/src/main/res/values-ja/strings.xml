@@ -208,6 +208,12 @@
     <string name="home_search_hint">検索…</string>
     <string name="set_home_search_field">ホーム画面の検索フィールド</string>
     <string name="set_home_search_field_help">時計の下、時計がない場合はホーム画面の下部</string>
+    <string name="set_one_handed">片手操作</string>
+    <string-array name="set_one_handed_entries">
+        <item>オフ</item>
+        <item>右手</item>
+        <item>左手</item>
+    </string-array>
     <string name="set_reset_usage_stats">アプリの使用状況をリセット</string>
     <string name="set_reset_usage_stats_help">検索ではよく開くアプリが先に表示されます。タップすると最初からやり直します</string>
     <string name="set_reset_usage_stats_confirm">アプリの使用統計をリセットしますか？</string>

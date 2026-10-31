@@ -1,0 +1,3 @@
+v7.12.0 (80) - 31/10/2026
+NEW THINGS
+   - One-handed use (Operation settings): search results start from the bottom, on the side of the selected hand; with the right hand, the rows of the app list are filled from the right

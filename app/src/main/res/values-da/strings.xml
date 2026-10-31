@@ -208,6 +208,12 @@
     <string name="home_search_hint">Søg…</string>
     <string name="set_home_search_field">Søgefelt på startskærmen</string>
     <string name="set_home_search_field_help">Under uret, eller nederst på startskærmen uden ur</string>
+    <string name="set_one_handed">Brug med én hånd</string>
+    <string-array name="set_one_handed_entries">
+        <item>Fra</item>
+        <item>Højre hånd</item>
+        <item>Venstre hånd</item>
+    </string-array>
     <string name="set_reset_usage_stats">Nulstil appbrug</string>
     <string name="set_reset_usage_stats_help">Søgningen viser først de apps, du åbner ofte. Tryk for at starte forfra</string>
     <string name="set_reset_usage_stats_confirm">Nulstil statistikken over appbrug?</string>

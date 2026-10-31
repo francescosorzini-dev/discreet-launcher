@@ -208,6 +208,12 @@
     <string name="home_search_hint">Ara…</string>
     <string name="set_home_search_field">Ana ekranda arama alanı</string>
     <string name="set_home_search_field_help">Saatin altında veya saat yoksa ana ekranın altında</string>
+    <string name="set_one_handed">Tek elle kullanım</string>
+    <string-array name="set_one_handed_entries">
+        <item>Kapalı</item>
+        <item>Sağ el</item>
+        <item>Sol el</item>
+    </string-array>
     <string name="set_reset_usage_stats">Uygulama kullanımını sıfırla</string>
     <string name="set_reset_usage_stats_help">Arama, sık açtığınız uygulamaları önce gösterir. Baştan başlamak için dokunun</string>
     <string name="set_reset_usage_stats_confirm">Uygulama kullanım istatistikleri sıfırlansın mı?</string>

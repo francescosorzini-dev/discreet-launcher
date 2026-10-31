@@ -1,0 +1,3 @@
+v7.12.0 (80) - 31/10/2026
+NOUVEAUTÉS
+   - Utilisation à une main (paramètres de fonctionnement) : les résultats de recherche commencent en bas, du côté de la main choisie ; avec la main droite, les lignes de la liste des applications se remplissent depuis la droite

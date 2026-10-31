@@ -80,6 +80,7 @@ public interface Constants
 	String TOUCH_TARGETS = "touch_targets" ;
 	String HOME_SEARCH_FIELD = "home_search_field" ;
 	String RESET_USAGE_STATS = "reset_usage_stats" ;
+	String ONE_HANDED = "one_handed" ;
 	String INTERACTIVE_CLOCK = "interactive_clock" ;
 	String CLOCK_APP = "clock_app" ;
 	String HIDE_MENU_BUTTON = "hide_menu_button" ;

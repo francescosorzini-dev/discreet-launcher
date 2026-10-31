@@ -208,6 +208,12 @@
     <string name="home_search_hint">Поиск…</string>
     <string name="set_home_search_field">Поле поиска на главном экране</string>
     <string name="set_home_search_field_help">Под часами или внизу главного экрана, если часов нет</string>
+    <string name="set_one_handed">Управление одной рукой</string>
+    <string-array name="set_one_handed_entries">
+        <item>Выкл.</item>
+        <item>Правая рука</item>
+        <item>Левая рука</item>
+    </string-array>
     <string name="set_reset_usage_stats">Сбросить статистику использования</string>
     <string name="set_reset_usage_stats_help">Поиск сначала показывает часто открываемые приложения. Нажмите, чтобы начать заново</string>
     <string name="set_reset_usage_stats_confirm">Сбросить статистику использования приложений?</string>

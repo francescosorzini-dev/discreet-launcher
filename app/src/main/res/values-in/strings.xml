@@ -208,6 +208,12 @@
     <string name="home_search_hint">Cari…</string>
     <string name="set_home_search_field">Kolom pencarian di layar utama</string>
     <string name="set_home_search_field_help">Di bawah jam, atau di bagian bawah layar utama tanpa jam</string>
+    <string name="set_one_handed">Penggunaan satu tangan</string>
+    <string-array name="set_one_handed_entries">
+        <item>Nonaktif</item>
+        <item>Tangan kanan</item>
+        <item>Tangan kiri</item>
+    </string-array>
     <string name="set_reset_usage_stats">Atur ulang penggunaan aplikasi</string>
     <string name="set_reset_usage_stats_help">Pencarian menampilkan aplikasi yang sering Anda buka lebih dulu. Ketuk untuk memulai dari awal</string>
     <string name="set_reset_usage_stats_confirm">Atur ulang statistik penggunaan aplikasi?</string>

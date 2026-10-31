@@ -61,6 +61,7 @@ public class Search extends Application
 	// Attributes
 	private PopupWindow popup ;
 	private SearchAdapter adapter ;
+	private RecyclerView recycler ;
 
 
 	/**
@@ -112,10 +113,13 @@ public class Search extends Application
 		if(search != null) applications.remove(search) ;
 
 		// Prepare the popup content
-		RecyclerView recycler = popupView.findViewById(R.id.popup_recycler) ;
+		recycler = popupView.findViewById(R.id.popup_recycler) ;
 		adapter = new SearchAdapter(context, applications) ;
 		recycler.setAdapter(adapter) ;
-		recycler.setLayoutManager(new FlexibleGridLayout(context, ActivityMain.getApplicationWidth())) ;
+		// For one-handed use, start the results from the bottom (on the right for the right hand)
+		String one_handed = PreferenceManager.getDefaultSharedPreferences(context).getString(Constants.ONE_HANDED, "off") ;
+		recycler.setLayoutManager(new FlexibleGridLayout(context, ActivityMain.getApplicationWidth(), !one_handed.equals("off"))) ;
+		recycler.setLayoutDirection(one_handed.equals("right") ? View.LAYOUT_DIRECTION_RTL : View.LAYOUT_DIRECTION_LTR) ;
 		recycler.setMinimumHeight(0) ;
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
 			recycler.setOverScrollMode(View.OVER_SCROLL_NEVER) ;
@@ -198,8 +202,8 @@ public class Search extends Application
 		@Override
 		public void onTextChanged(CharSequence text, int start, int before, int count)
 		{
-			// Update the display of the RecyclerView
-			adapter.getFilter().filter(text) ;
+			// Update the display of the RecyclerView, then show the best result
+			adapter.getFilter().filter(text, count -> { if(recycler != null) recycler.scrollToPosition(0) ; }) ;
 		}
 
 		// Needed to implement TextWatcher

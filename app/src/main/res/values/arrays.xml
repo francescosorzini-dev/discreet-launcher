@@ -50,6 +50,13 @@
         <item>date</item>
     </string-array>
 
+    <!-- One-handed use -->
+    <string-array name="set_one_handed_values">
+        <item>off</item>
+        <item>right</item>
+        <item>left</item>
+    </string-array>
+
     <!-- Clock position -->
     <string-array name="set_clock_position_values">
         <item>top</item>

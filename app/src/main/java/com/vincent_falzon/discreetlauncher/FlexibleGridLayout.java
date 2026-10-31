@@ -41,8 +41,17 @@ public class FlexibleGridLayout extends GridLayoutManager
 	 */
 	public FlexibleGridLayout(Context context, int item_width)
 	{
+		this(context, item_width, false) ;
+	}
+
+
+	/**
+	 * Constructor with an item width given in pixels, optionally laid out from the bottom.
+	 */
+	public FlexibleGridLayout(Context context, int item_width, boolean from_bottom)
+	{
 		// Create the GridLayout starting with one column
-		super(context, 1, RecyclerView.VERTICAL, false) ;
+		super(context, 1, RecyclerView.VERTICAL, from_bottom) ;
 
 		// Retrieve the width of an item in pixels
 		this.item_width = item_width ;

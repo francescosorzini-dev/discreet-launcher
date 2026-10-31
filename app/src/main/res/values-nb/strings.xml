@@ -208,6 +208,12 @@
     <string name="home_search_hint">Søk…</string>
     <string name="set_home_search_field">Søkefelt på startskjermen</string>
     <string name="set_home_search_field_help">Under klokken, eller nederst på startskjermen uten klokke</string>
+    <string name="set_one_handed">Bruk med én hånd</string>
+    <string-array name="set_one_handed_entries">
+        <item>Av</item>
+        <item>Høyre hånd</item>
+        <item>Venstre hånd</item>
+    </string-array>
     <string name="set_reset_usage_stats">Tilbakestill programbruk</string>
     <string name="set_reset_usage_stats_help">Søket viser først programmene du åpner ofte. Trykk for å begynne på nytt</string>
     <string name="set_reset_usage_stats_confirm">Tilbakestille statistikken over programbruk?</string>
