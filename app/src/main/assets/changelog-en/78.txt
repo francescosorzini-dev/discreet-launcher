@@ -1,0 +1,6 @@
+v7.11.0 (78) - 31/10/2026
+NEW THINGS
+   - Without search text, the search shows the 8 apps you open most often first
+IMPROVEMENTS
+   - Optimized APK: smaller and faster than the previous debug builds
+   - Automated tests of the search run on every build

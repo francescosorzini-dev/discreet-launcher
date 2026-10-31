@@ -48,15 +48,15 @@ jobs:
           KS="$RUNNER_TEMP/fixed.keystore"
           echo "$DEBUG_KEYSTORE_B64" | base64 -d > "$KS"
           echo "DL_KEYSTORE=$KS" >> "$GITHUB_ENV"
-      - name: Build debug APK
+      - name: Run unit tests and build the optimized APK
         run: |
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew testDebugUnitTest assembleRelease
       - name: Verify APK is signed with the fixed key
         run: |
           set -euo pipefail
           EXPECTED=$(keytool -list -v -keystore "$DL_KEYSTORE" -storepass android | grep -m1 'SHA256:' | awk '{print $2}' | tr -d ':' | tr 'A-F' 'a-f')
-          ACTUAL=$("$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --print-certs app/build/outputs/apk/debug/app-debug.apk | grep -m1 'SHA-256 digest' | awk '{print $NF}')
+          ACTUAL=$("$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --print-certs app/build/outputs/apk/release/app-release.apk | grep -m1 'SHA-256 digest' | awk '{print $NF}')
           echo "Expected: $EXPECTED"
           echo "Actual:   $ACTUAL"
           if [ "$EXPECTED" != "$ACTUAL" ]; then echo "::error::APK not signed with the fixed key"; exit 1; fi
@@ -74,14 +74,14 @@ jobs:
             cat "app/src/main/assets/changelog-en/$CODE.txt" 2>/dev/null || echo "(no changelog for $CODE)"
             echo '```'
             echo
-            echo "Debug build ${{ github.run_number }} from ${{ github.sha }}"
+            echo "Build ${{ github.run_number }} from ${{ github.sha }}"
           } > release_notes.md
       - name: Rename APK
-        run: cp app/build/outputs/apk/debug/app-debug.apk discreet-launcher-${{ steps.meta.outputs.version }}-build${{ github.run_number }}.apk
+        run: cp app/build/outputs/apk/release/app-release.apk discreet-launcher-${{ steps.meta.outputs.version }}-build${{ github.run_number }}.apk
       - name: Upload APK as workflow artifact
         uses: actions/upload-artifact@v4
         with:
-          name: discreet-launcher-debug
+          name: discreet-launcher
           path: discreet-launcher-*.apk
       - name: Publish APK as GitHub release
         uses: softprops/action-gh-release@v2

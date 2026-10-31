@@ -153,6 +153,29 @@ public final class SearchMatcher
 
 
 	/**
+	 * Order used without search: the most used entries first (at most <code>count</code>,
+	 * only those already used), then all the others in their initial order.
+	 */
+	public static <T> ArrayList<T> mostUsedFirst(List<Entry<T>> entries, int count)
+	{
+		// Select the most used entries
+		ArrayList<Entry<T>> used = new ArrayList<>() ;
+		for(Entry<T> entry : entries) if(entry.score > 0) used.add(entry) ;
+		Collections.sort(used, (a, b) -> {
+				int compare = Double.compare(b.score, a.score) ;
+				return (compare != 0) ? compare : Integer.compare(a.order, b.order) ;
+			}) ;
+		if(used.size() > count) used.subList(count, used.size()).clear() ;
+
+		// Put them first, followed by the other entries in their initial order
+		ArrayList<T> result = new ArrayList<>() ;
+		for(Entry<T> entry : used) result.add(entry.item) ;
+		for(Entry<T> entry : entries) if(!used.contains(entry)) result.add(entry.item) ;
+		return result ;
+	}
+
+
+	/**
 	 * Lowercase a string and strip its accents to allow case/accent insensitive search.
 	 */
 	public static String normalize(String text)

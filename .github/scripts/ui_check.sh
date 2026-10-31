@@ -4,6 +4,7 @@
 set -uo pipefail
 APK="$1"
 OUT="$2"
+RELEASE_APK="${3:-}"
 PKG="com.vincent_falzon.discreetlauncher"
 mkdir -p "$OUT"
 
@@ -143,6 +144,21 @@ set_bool reverse_interface false
 set_bool touch_targets false
 set_string clock_format none
 adb shell "run-as $PKG cat $PREFS" > "$OUT/prefs.xml" || true
+
+# ---------- Optimized (R8) release APK: smoke test ----------
+if [ -n "$RELEASE_APK" ] ; then
+	adb install -r "$RELEASE_APK" && echo "release installed"
+	adb shell am force-stop "$PKG"
+	adb shell input keyevent KEYCODE_HOME
+	sleep 4
+	adb shell input tap $((W - 5)) $((H / 2))
+	shot 20_release_home
+	tap_field
+	shot 21_release_search
+	adb shell input keyevent KEYCODE_BACK
+	adb shell input keyevent KEYCODE_BACK
+	adb shell dumpsys package "$PKG" | grep -m2 -E "versionName|flags=" > "$OUT/release_package.txt" || true
+fi
 
 # Crash check
 adb logcat -d -b crash > "$OUT/crash.log" || true

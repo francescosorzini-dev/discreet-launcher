@@ -41,8 +41,11 @@ import java.util.Map ;
  */
 public class SearchAdapter extends RecyclerAdapter implements Filterable
 {
+	// Constants
+	private static final int MOST_USED_COUNT = 8 ;
+
 	// Attributes
-	private final ArrayList<Application> initialApplicationsList ;
+	private final ArrayList<Application> withoutSearchList ;
 	private final ArrayList<SearchMatcher.Entry<Application>> entries ;
 
 
@@ -53,9 +56,6 @@ public class SearchAdapter extends RecyclerAdapter implements Filterable
 	{
 		// Let the parent actions be performed
 		super(context, applicationsList, Constants.SEARCH) ;
-
-		// Initializations
-		initialApplicationsList = applicationsList ;
 
 		// Find the folders containing each application, so that folder names act as labels
 		Map<Application, List<String>> folderNames = new IdentityHashMap<>() ;
@@ -81,6 +81,10 @@ public class SearchAdapter extends RecyclerAdapter implements Filterable
 			Double score = scores.get(application.getComponentInfo()) ;
 			entries.add(new SearchMatcher.Entry<>(application, application.getDisplayName(), folderNames.get(application), (score == null) ? 0 : score, i)) ;
 		}
+
+		// Without search, display the most used applications first
+		withoutSearchList = SearchMatcher.mostUsedFirst(entries, MOST_USED_COUNT) ;
+		this.applicationsList = withoutSearchList ;
 	}
 
 
@@ -101,7 +105,7 @@ public class SearchAdapter extends RecyclerAdapter implements Filterable
 				// Without search pattern display all applications, otherwise rank the matching ones
 				String search = filter.toString() ;
 				ArrayList<Application> results ;
-				if(search.isEmpty()) results = initialApplicationsList ;
+				if(search.isEmpty()) results = withoutSearchList ;
 					else results = SearchMatcher.rank(entries, search) ;
 
 				// Prepare the filter results

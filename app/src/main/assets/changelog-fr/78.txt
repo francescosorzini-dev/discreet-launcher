@@ -1,0 +1,6 @@
+v7.11.0 (78) - 31/10/2026
+NOUVEAUTÉS
+   - Sans texte de recherche, la recherche affiche d'abord les 8 applications que vous ouvrez le plus souvent
+AMÉLIORATIONS
+   - APK optimisé : plus léger et plus rapide que les précédentes versions de débogage
+   - Des tests automatiques de la recherche sont exécutés à chaque compilation
