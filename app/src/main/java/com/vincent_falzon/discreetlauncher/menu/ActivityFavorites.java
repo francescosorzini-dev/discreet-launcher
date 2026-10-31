@@ -23,6 +23,7 @@ package com.vincent_falzon.discreetlauncher.menu ;
  */
 
 // Imports
+import com.vincent_falzon.discreetlauncher.Utils ;
 import android.annotation.SuppressLint ;
 import android.graphics.drawable.Drawable ;
 import android.os.Build ;
@@ -74,6 +75,7 @@ public class ActivityFavorites extends AppCompatActivity implements View.OnClick
 
 		// Initializations
 		setContentView(R.layout.activity_favorites) ;
+		Utils.fitSystemBars(this) ;
 		folder_icon = AppCompatResources.getDrawable(this, R.drawable.icon_folder) ;
 		icon_size = Math.round(32 * getResources().getDisplayMetrics().density) ;
 		favorites = ActivityMain.getApplicationsList().getFavorites() ;

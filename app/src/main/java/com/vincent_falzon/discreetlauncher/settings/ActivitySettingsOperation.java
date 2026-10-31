@@ -23,6 +23,7 @@ package com.vincent_falzon.discreetlauncher.settings ;
  */
 
 // Imports
+import com.vincent_falzon.discreetlauncher.Utils ;
 import android.annotation.SuppressLint ;
 import android.content.SharedPreferences ;
 import android.content.pm.ActivityInfo ;
@@ -79,6 +80,7 @@ public class ActivitySettingsOperation extends AppCompatActivity
 
 		// Load the general settings layout
 		setContentView(R.layout.activity_settings) ;
+		Utils.fitSystemBars(this) ;
 		getSupportFragmentManager().beginTransaction().replace(R.id.settings_container, new SettingsFragment()).commit() ;
 	}
 

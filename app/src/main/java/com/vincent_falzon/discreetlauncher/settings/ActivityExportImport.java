@@ -68,6 +68,7 @@ public class ActivityExportImport extends AppCompatActivity implements View.OnCl
 
 		// Initializations
 		setContentView(R.layout.activity_export_import) ;
+		Utils.fitSystemBars(this) ;
 		settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()) ;
 		findViewById(R.id.export_button).setOnClickListener(this) ;
 		findViewById(R.id.import_button).setOnClickListener(this) ;

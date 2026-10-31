@@ -23,11 +23,20 @@ package com.vincent_falzon.discreetlauncher ;
  */
 
 // Imports
+import android.app.Activity ;
 import android.content.Context ;
 import android.content.SharedPreferences ;
+import android.os.Build ;
 import android.util.Log ;
+import android.view.Gravity ;
 import android.view.View ;
+import android.view.ViewGroup ;
+import android.widget.FrameLayout ;
 import android.widget.Toast ;
+import androidx.core.content.ContextCompat ;
+import androidx.core.graphics.Insets ;
+import androidx.core.view.ViewCompat ;
+import androidx.core.view.WindowInsetsCompat ;
 import com.vincent_falzon.discreetlauncher.core.Application ;
 import com.vincent_falzon.discreetlauncher.settings.ColorPickerDialog ;
 
@@ -153,5 +162,39 @@ public abstract class Utils
 	{
 		if(BuildConfig.DEBUG)
 			Log.d(LOG_PREFIX + tag, message) ;
+	}
+
+
+	/**
+	 * Starting with Android 15, windows of apps targeting API 35 are drawn behind the system bars
+	 * and the bars are no longer colored by the system. For activities with an action bar, draw the
+	 * status bar background and keep the content above the navigation bar.
+	 */
+	public static void fitSystemBars(Activity activity)
+	{
+		// Before Android 15, the system still handles the bars
+		if(Build.VERSION.SDK_INT < 35) return ;
+
+		// Add a view drawing the status bar background on top of the window
+		ViewGroup decor = (ViewGroup)activity.getWindow().getDecorView() ;
+		View statusBarScrim = new View(activity) ;
+		statusBarScrim.setBackgroundColor(ContextCompat.getColor(activity, R.color.for_system_bars)) ;
+		decor.addView(statusBarScrim, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, Gravity.TOP)) ;
+
+		// Size the status bar background and pad the content above the navigation bar
+		View content = activity.findViewById(android.R.id.content) ;
+		ViewCompat.setOnApplyWindowInsetsListener(content, (view, insets) -> {
+				WindowInsetsCompat rootInsets = ViewCompat.getRootWindowInsets(decor) ;
+				if(rootInsets == null) rootInsets = insets ;
+				Insets bars = rootInsets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout()) ;
+				ViewGroup.LayoutParams params = statusBarScrim.getLayoutParams() ;
+				if(params.height != bars.top)
+					{
+						params.height = bars.top ;
+						statusBarScrim.setLayoutParams(params) ;
+					}
+				view.setPadding(bars.left, view.getPaddingTop(), bars.right, bars.bottom) ;
+				return insets ;
+			}) ;
 	}
 }

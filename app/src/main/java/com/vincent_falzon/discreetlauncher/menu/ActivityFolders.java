@@ -78,6 +78,7 @@ public class ActivityFolders extends AppCompatActivity implements View.OnClickLi
 
 		// Interface initializations
 		setContentView(R.layout.activity_folders) ;
+		Utils.fitSystemBars(this) ;
 		findViewById(R.id.new_folder_button).setOnClickListener(this) ;
 		folders = ActivityMain.getApplicationsList().getFolders() ;
 
