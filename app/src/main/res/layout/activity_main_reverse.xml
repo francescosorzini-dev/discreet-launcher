@@ -72,7 +72,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"/>
 
-            <ScrollView
+            <com.vincent_falzon.discreetlauncher.PullScrollView
                 android:id="@+id/favorites_scroll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -139,7 +139,7 @@
 
                 </LinearLayout>
 
-            </ScrollView>
+            </com.vincent_falzon.discreetlauncher.PullScrollView>
 
         </LinearLayout>
 

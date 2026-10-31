@@ -21,6 +21,7 @@
 > - **v7.13.1** — animations 3 times faster (467 ms) and also used when closing; first search opening no longer waits 1.5 s.
 > - **v7.14.0** — pull and release to close the app list and the favorites panel; small finger slides while tapping no longer close them.
 > - **v7.14.1** — favorites panel closes by pulling down from the beginning of its list, right after opening.
+> - **v7.14.2** — pulling starts beyond the touch slop and is handled by the favorites ScrollView; search list no longer waits when the keyboard opens instantly.
 >
 > APKs are built automatically on every push to `main` and published in [Releases](https://github.com/francescosorzini-dev/discreet-launcher/releases).
 > They are signed with the fork's own key: uninstall the F-Droid version first (export your settings before); later builds update in place.

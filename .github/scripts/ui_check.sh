@@ -247,6 +247,40 @@ adb shell input swipe $((W / 2)) $((H / 4)) $((W / 2)) $((H * 3 / 4)) 700 ; slee
 echo "long pull: $(pull_state) (expected closed)" >> "$OUT/pull_to_close.txt"
 shot 61_after_long_pull
 
+# ---------- Favorites panel with many favorites: tap with drift and pull and release ----------
+adb shell am force-stop "$PKG"
+adb shell "run-as $PKG sh -c 'rm -f files/favorites.txt'"
+adb shell cmd package query-activities --brief -a android.intent.action.MAIN -c android.intent.category.LAUNCHER | tr -d '\r' | grep '/' | grep -v "$PKG" | while read -r C ; do
+	P_NAME=${C%%/*} ; CLS=${C#*/}
+	case "$CLS" in .*) CLS="$P_NAME$CLS" ;; esac
+	adb shell "run-as $PKG sh -c 'echo \"{$P_NAME/$CLS}\" >> files/favorites.txt'" < /dev/null
+done
+echo "favorites: $(adb shell "run-as $PKG sh -c 'wc -l < files/favorites.txt'")" >> "$OUT/favorites_pull.txt"
+restart_home
+fav_state() { if [ -n "$(center_of "Menu")" ] ; then echo open ; else echo closed ; fi ; }
+open_favorites() { adb shell input swipe $((W / 2)) $((H / 3)) $((W / 2)) $((H * 2 / 3)) 150 ; sleep 2 ; }
+open_favorites
+echo "after opening: $(fav_state)" >> "$OUT/favorites_pull.txt"
+shot 70_favorites_many
+# Tap with a small drift (under the touch slop) on a favorite: the app must open
+T=$(center_of "Calendar")
+if [ -n "$T" ] ; then
+	read -r TX TY <<< "$T"
+	adb shell input swipe "$TX" "$TY" "$TX" $((TY + 4)) 200 ; sleep 3
+	echo "tap with drift: $(adb shell dumpsys activity activities | grep -m1 -E 'mResumedActivity|topResumedActivity' | grep -oE '[a-z.]+/[A-Za-z.]+' | head -1) (expected calendar)" >> "$OUT/favorites_pull.txt"
+	adb shell input keyevent KEYCODE_HOME ; sleep 2
+fi
+open_favorites
+adb shell input swipe $((W / 2)) $((H / 5)) $((W / 2)) $((H / 5 + 40)) 60 ; sleep 2
+echo "small slide: $(fav_state) (expected open)" >> "$OUT/favorites_pull.txt"
+adb shell input swipe $((W / 2)) $((H / 5)) $((W / 2)) $((H / 5 + 80)) 400 ; sleep 2
+echo "short pull: $(fav_state) (expected open)" >> "$OUT/favorites_pull.txt"
+adb shell input swipe $((W / 2)) $((H / 5)) $((W / 2)) $((H * 4 / 5)) 700 ; sleep 2
+echo "long pull: $(fav_state) (expected closed)" >> "$OUT/favorites_pull.txt"
+shot 71_favorites_after_long_pull
+adb shell "run-as $PKG sh -c 'rm -f files/favorites.txt'"
+adb shell am force-stop "$PKG"
+
 # Crash check
 adb logcat -d -b crash > "$OUT/crash.log" || true
 rm -f "$OUT/ui.xml"

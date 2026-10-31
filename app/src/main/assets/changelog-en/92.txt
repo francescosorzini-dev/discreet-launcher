@@ -1,0 +1,5 @@
+v7.14.2 (92) - 31/10/2026
+CORRECTIONS
+   - Favorites panel: pulling it is now handled by its scrolling container, so it is no longer interrupted with many favorites
+   - Pulling a panel starts only beyond the touch threshold: a tap with a slightly moving finger opens the app again
+   - Search: the results list could still wait 1.5 s when the keyboard opened instantly

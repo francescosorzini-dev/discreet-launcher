@@ -237,12 +237,14 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 
 		// Close the drawer and the favorites panel by pulling them beyond the edge of their list
 		drawer.addOnItemTouchListener(new PullToClose(drawer, reverse_interface ? -1 : 1, () -> displayDrawer(false), drawer)) ;
-		// (favorites: pulled downwards beyond the beginning of the list, available as soon as it opens)
-		favorites.addOnItemTouchListener(new PullToClose(findViewById(R.id.favorites_scroll), 1, () -> {
+		// (favorites: pulled downwards beyond the beginning of the list, available as soon as it opens;
+		// handled by its ScrollView, which sees the touches before the list and its own scrolling)
+		PullScrollView favoritesPullScroll = findViewById(R.id.favorites_scroll) ;
+		favoritesPullScroll.setPullToClose(new PullToClose(favoritesPullScroll, 1, () -> {
 				favorites_close_direction = 1 ;
 				displayFavorites(false) ;
 				favorites_close_direction = 0 ;
-			}, favorites, findViewById(R.id.favorites_scroll))) ;
+			}, favoritesPullScroll)) ;
 		applyOneHandedDrawer() ;
 
 		// Load the favorites panel if it should always be shown

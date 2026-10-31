@@ -25,6 +25,7 @@ package com.vincent_falzon.discreetlauncher ;
 // Imports
 import android.view.MotionEvent ;
 import android.view.View ;
+import android.view.ViewConfiguration ;
 import android.view.animation.DecelerateInterpolator ;
 import androidx.annotation.NonNull ;
 import androidx.recyclerview.widget.RecyclerView ;
@@ -48,8 +49,10 @@ public class PullToClose implements RecyclerView.OnItemTouchListener
 	private final int direction ;
 	private final Runnable closeAction ;
 	private final float threshold ;
+	private final int touch_slop ;
 	private boolean enabled ;
 	private boolean pulling ;
+	private float down_y ;
 	private float anchor_y ;
 	private float last_y ;
 
@@ -68,6 +71,7 @@ public class PullToClose implements RecyclerView.OnItemTouchListener
 		this.closeAction = closeAction ;
 		this.scrollables = scrollables ;
 		threshold = THRESHOLD_DP * panel.getResources().getDisplayMetrics().density ;
+		touch_slop = ViewConfiguration.get(panel.getContext()).getScaledTouchSlop() ;
 		enabled = true ;
 		pulling = false ;
 	}
@@ -96,29 +100,31 @@ public class PullToClose implements RecyclerView.OnItemTouchListener
 
 
 	/**
-	 * Watch every event before the list and its items, start pulling when appropriate.
+	 * Watch an event before the list and its items: return <code>true</code> when the pulling starts
+	 * and the following events must be given to handleTouch(). The pulling only starts once the
+	 * finger has moved more than the touch slop (so a tap is never taken as a pull).
 	 */
-	@Override
-	public boolean onInterceptTouchEvent(@NonNull RecyclerView recycler, @NonNull MotionEvent event)
+	public boolean shouldIntercept(MotionEvent event)
 	{
 		if(!enabled) return false ;
+		if(pulling) return true ;
 		switch(event.getActionMasked())
 		{
 			case MotionEvent.ACTION_DOWN :
-				pulling = false ;
-				last_y = event.getRawY() ;
+				down_y = event.getRawY() ;
+				last_y = down_y ;
 				return false ;
 			case MotionEvent.ACTION_MOVE :
 				float y = event.getRawY() ;
 				float dy = y - last_y ;
 				last_y = y ;
-				if((dy * direction > 0) && !canScrollTowardsEdge())
+				boolean beyond_slop = (y - down_y) * direction > touch_slop ;
+				if(beyond_slop && (dy * direction > 0) && !canScrollTowardsEdge())
 					{
 						// The list is at its edge and the finger keeps pushing: start pulling the panel
 						pulling = true ;
-						anchor_y = y - dy ;
+						anchor_y = y ;
 						panel.animate().cancel() ;
-						update(y) ;
 						return true ;
 					}
 				return false ;
@@ -129,10 +135,18 @@ public class PullToClose implements RecyclerView.OnItemTouchListener
 
 
 	/**
+	 * Return <code>true</code> while the panel is being pulled.
+	 */
+	public boolean isPulling()
+	{
+		return pulling ;
+	}
+
+
+	/**
 	 * Follow the finger while pulling, then close or go back in place.
 	 */
-	@Override
-	public void onTouchEvent(@NonNull RecyclerView recycler, @NonNull MotionEvent event)
+	public void handleTouch(MotionEvent event)
 	{
 		if(!pulling) return ;
 		switch(event.getActionMasked())
@@ -150,6 +164,21 @@ public class PullToClose implements RecyclerView.OnItemTouchListener
 				springBack() ;
 				break ;
 		}
+	}
+
+
+	// RecyclerView.OnItemTouchListener (used for the app drawer)
+	@Override
+	public boolean onInterceptTouchEvent(@NonNull RecyclerView recycler, @NonNull MotionEvent event)
+	{
+		return shouldIntercept(event) ;
+	}
+
+
+	@Override
+	public void onTouchEvent(@NonNull RecyclerView recycler, @NonNull MotionEvent event)
+	{
+		handleTouch(event) ;
 	}
 
 

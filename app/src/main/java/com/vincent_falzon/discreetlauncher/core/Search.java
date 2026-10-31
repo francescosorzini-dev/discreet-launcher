@@ -179,8 +179,15 @@ public class Search extends Application
 		// The keyboard is considered open and settled when the popup has been pushed up by it (or the
 		// system reports it visible) and has not moved for a while. The position is the reliable part:
 		// on the first opening the system reports the keyboard visible late, even when it is already up
+		final View screen = parent.getRootView() ;
 		final Runnable checkKeyboardSettled = () -> {
-				boolean pushed_up = (initial_bottom[0] >= 0) && (last_bottom[0] < initial_bottom[0] - 50 * density) ;
+				// Pushed up since the first layout, or laid out directly above the keyboard (warm keyboard
+				// opening instantly: no movement to observe): its bottom is far above the screen bottom
+				int[] screen_location = new int[2] ;
+				screen.getLocationOnScreen(screen_location) ;
+				int screen_bottom = screen_location[1] + screen.getHeight() ;
+				boolean above_keyboard = (last_bottom[0] >= 0) && (last_bottom[0] < screen_bottom - 120 * density) ;
+				boolean pushed_up = above_keyboard || ((initial_bottom[0] >= 0) && (last_bottom[0] < initial_bottom[0] - 50 * density)) ;
 				WindowInsetsCompat insets = ViewCompat.getRootWindowInsets(popupView) ;
 				boolean reported = (insets != null) && insets.isVisible(WindowInsetsCompat.Type.ime()) ;
 				if(pushed_up || reported) showList.run() ;

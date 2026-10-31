@@ -1,0 +1,5 @@
+v7.14.2 (92) - 31/10/2026
+CORRECTIONS
+   - Panneau des favoris : le tirage est maintenant géré par son conteneur de défilement, il n'est plus interrompu avec beaucoup de favoris
+   - Le tirage d'un panneau ne commence qu'au-delà du seuil de toucher : un toucher avec un doigt qui bouge un peu ouvre de nouveau l'application
+   - Recherche : la liste des résultats pouvait encore attendre 1,5 s quand le clavier s'ouvrait instantanément

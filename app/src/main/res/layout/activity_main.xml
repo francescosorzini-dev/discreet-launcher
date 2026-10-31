@@ -46,7 +46,7 @@
             android:layout_alignParentTop="true"
             android:orientation="vertical">
 
-            <ScrollView
+            <com.vincent_falzon.discreetlauncher.PullScrollView
                 android:id="@+id/favorites_scroll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -113,7 +113,7 @@
 
                 </LinearLayout>
 
-            </ScrollView>
+            </com.vincent_falzon.discreetlauncher.PullScrollView>
 
             <View
                 android:id="@+id/info_touch_targets"
