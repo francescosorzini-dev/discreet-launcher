@@ -36,6 +36,23 @@ sleep 5
 adb shell input keyevent KEYCODE_HOME
 shot 01_home
 
+# Time for the results list to appear after tapping the field (second opening: keyboard warm)
+list_delay() {
+	local P T0 N
+	P=$(center_of "Search…")
+	[ -z "$P" ] && { echo "no field" ; return ; }
+	T0=$(date +%s%N)
+	adb shell input tap $P
+	for N in $(seq 1 40) ; do
+		if adb shell uiautomator dump /sdcard/d.xml > /dev/null 2>&1 && adb shell cat /sdcard/d.xml | grep -q 'application_item' ; then
+			echo "$(( ($(date +%s%N) - T0) / 1000000 )) ms (includes ~1 s of uiautomator dump)"
+			adb shell input keyevent KEYCODE_BACK ; adb shell input keyevent KEYCODE_BACK ; sleep 1
+			return
+		fi
+	done
+	echo "not shown"
+	adb shell input keyevent KEYCODE_BACK ; adb shell input keyevent KEYCODE_BACK ; sleep 1
+}
 # Tap on the home search field
 POS=$(center_of "Search…")
 echo "search field at: $POS"
@@ -292,6 +309,12 @@ shot 60_after_short_pull
 adb shell input swipe $((W / 2)) $((H / 4)) $((W / 2)) $((H * 3 / 4)) 700 ; sleep 2
 echo "long pull: $(pull_state) (expected closed)" >> "$OUT/pull_to_close.txt"
 shot 61_after_long_pull
+
+# ---------- Delay before the results list appears ----------
+adb shell am force-stop "$PKG" ; adb shell input keyevent KEYCODE_HOME ; sleep 4 ; adb shell input tap $((W - 5)) $((H / 2)) ; sleep 1
+echo "first opening: $(list_delay)" >> "$OUT/list_delay.txt"
+echo "second opening: $(list_delay)" >> "$OUT/list_delay.txt"
+echo "third opening: $(list_delay)" >> "$OUT/list_delay.txt"
 
 # Crash check
 adb logcat -d -b crash > "$OUT/crash.log" || true

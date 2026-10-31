@@ -176,21 +176,34 @@ public class Search extends Application
 				recycler.scrollToPosition(0) ;
 			} ;
 
-		// The keyboard is considered open and settled when the popup has been pushed up by it (or the
-		// system reports it visible) and has not moved for a while. The position is the reliable part:
-		// on the first opening the system reports the keyboard visible late, even when it is already up
+		// The keyboard is detected by polling the position of the popup: when the keyboard opens the
+		// small popup is only moved (not laid out again), which triggers no layout event. The list is
+		// added once the popup is above the keyboard and has not moved for two checks in a row
 		final View screen = parent.getRootView() ;
-		final Runnable checkKeyboardSettled = () -> {
-				// Pushed up since the first layout, or laid out directly above the keyboard (warm keyboard
-				// opening instantly: no movement to observe): its bottom is far above the screen bottom
-				int[] screen_location = new int[2] ;
-				screen.getLocationOnScreen(screen_location) ;
-				int screen_bottom = screen_location[1] + screen.getHeight() ;
-				boolean above_keyboard = (last_bottom[0] >= 0) && (last_bottom[0] < screen_bottom - 120 * density) ;
-				boolean pushed_up = above_keyboard || ((initial_bottom[0] >= 0) && (last_bottom[0] < initial_bottom[0] - 50 * density)) ;
-				WindowInsetsCompat insets = ViewCompat.getRootWindowInsets(popupView) ;
-				boolean reported = (insets != null) && insets.isVisible(WindowInsetsCompat.Type.ime()) ;
-				if(pushed_up || reported) showList.run() ;
+		final Runnable pollKeyboard = new Runnable()
+			{
+				private int last_seen = -1 ;
+				private int stable_checks = 0 ;
+
+				@Override
+				public void run()
+				{
+					if(list_shown[0]) return ;
+					int[] location = new int[2] ;
+					popupView.getLocationOnScreen(location) ;
+					int bottom = location[1] - Math.round(popupView.getTranslationY()) + popupView.getHeight() ;
+					int[] screen_location = new int[2] ;
+					screen.getLocationOnScreen(screen_location) ;
+					int screen_bottom = screen_location[1] + screen.getHeight() ;
+					WindowInsetsCompat insets = ViewCompat.getRootWindowInsets(popupView) ;
+					boolean keyboard = (bottom < screen_bottom - 120 * density)
+							|| ((insets != null) && insets.isVisible(WindowInsetsCompat.Type.ime()) && (bottom < screen_bottom - 50 * density)) ;
+					if(keyboard && (bottom == last_seen)) stable_checks++ ;
+						else stable_checks = 0 ;
+					last_seen = bottom ;
+					if(stable_checks >= 2) showList.run() ;
+						else popupView.postDelayed(this, 30) ;
+				}
 			} ;
 		popupView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
 				int[] location = new int[2] ;
@@ -208,9 +221,6 @@ public class Search extends Application
 							}
 						last_bottom[0] = bottom ;
 
-						// Wait until the position is stable before adding the list
-						popupView.removeCallbacks(checkKeyboardSettled) ;
-						if(!list_shown[0]) popupView.postDelayed(checkKeyboardSettled, 150) ;
 					}
 			}) ;
 
@@ -245,13 +255,9 @@ public class Search extends Application
 				return true ;
 			}) ;
 
-		// Without keyboard (hardware keyboard) or with a very slow one, show the list anyway
-		popupView.postDelayed(() -> {
-				WindowInsetsCompat insets = ViewCompat.getRootWindowInsets(popupView) ;
-				if((insets == null) || !insets.isVisible(WindowInsetsCompat.Type.ime())) showList.run() ;
-			}, 1500) ;
-		popupView.postDelayed(checkKeyboardSettled, 300) ;
-		popupView.postDelayed(showList, 2500) ;
+		// Start watching for the keyboard, and in any case show the list after 0.4 s at most
+		popupView.post(pollKeyboard) ;
+		popupView.postDelayed(showList, 400) ;
 
 		// Display the popup and the keyboard
 		popup.showAtLocation(parent, Gravity.BOTTOM, 0, 0) ;

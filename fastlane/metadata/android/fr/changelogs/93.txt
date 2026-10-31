@@ -1,0 +1,3 @@
+v7.14.3 (93) - 01/11/2026
+CORRECTIONS
+   - Recherche : la liste des résultats pouvait attendre jusqu'à 2,5 s avec le clavier déjà ouvert ; le clavier est maintenant détecté immédiatement, et la liste apparaît au plus tard après 0,4 s dans tous les cas
