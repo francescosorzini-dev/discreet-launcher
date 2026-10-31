@@ -2,6 +2,8 @@ name: UI Check
 
 # Run the app on emulators and store screenshots in the "ui-screenshots" branch
 on:
+  push:
+    branches: [ 'feature/**' ]
   workflow_dispatch:
 
 permissions:
