@@ -648,7 +648,9 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 		homeSearchField.setVisibility(display ? View.VISIBLE : View.GONE) ;
 
 		// Use the clock colors (text, magnifying glass and shadow)
+		// (the transparency is applied to the colors, not to the view, so that the text shadow is not clipped)
 		int clock_color = Utils.getColor(settings, Constants.CLOCK_COLOR, Constants.COLOR_FOR_TEXT_ON_OVERLAY) ;
+		clock_color = Color.argb(Math.round(Color.alpha(clock_color) * 0.6f), Color.red(clock_color), Color.green(clock_color), Color.blue(clock_color)) ;
 		int shadow_color = Utils.getColor(settings, Constants.CLOCK_SHADOW_COLOR, Constants.COLOR_FOR_OVERLAY) ;
 		homeSearchField.setTextColor(clock_color) ;
 		homeSearchField.setShadowLayer(getResources().getDimension(R.dimen.spacing_normal), 0, 0, shadow_color) ;

@@ -5,6 +5,7 @@
 > - **v7.9.0** — app search matches any part of the name (e.g. `rome` finds *Chrome*), case and accent insensitive; names starting with the search are listed first.
 > - **v7.9.1** — About dialog mentions the fork; APKs always signed with the same key.
 > - **v7.10.0** — search field fixed at the bottom of the home screen; search by initials (`gm` → *Google Maps*) and by folder name; most used apps first; targets Android 15.
+> - **v7.10.1** — search field placed under the clock, following its position, alignment and colors.
 >
 > APKs are built automatically on every push to `main` and published in [Releases](https://github.com/francescosorzini-dev/discreet-launcher/releases).
 > They are signed with the fork's own key: uninstall the F-Droid version first (export your settings before); later builds update in place.

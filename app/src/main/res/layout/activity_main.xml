@@ -36,7 +36,6 @@
             android:drawablePadding="@dimen/spacing_small"
             android:text="@string/home_search_hint"
             android:textSize="@dimen/text_size_big"
-            android:alpha="0.6"
             android:visibility="gone"
             app:drawableStartCompat="@drawable/icon_home_search"
             tools:visibility="visible"/>

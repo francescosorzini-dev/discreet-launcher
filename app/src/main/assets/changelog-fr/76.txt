@@ -1,0 +1,6 @@
+v7.10.1 (76) - 31/10/2026
+AMÉLIORATIONS
+   - Le champ de recherche est maintenant placé juste sous l'horloge et suit sa position, son alignement et ses couleurs (en bas de l'écran d'accueil sans horloge)
+   - Icône de loupe dans le champ de recherche
+CORRECTIONS
+   - Champ de recherche superposé à l'horloge en interface inversée

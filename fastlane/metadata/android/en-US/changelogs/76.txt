@@ -1,0 +1,6 @@
+v7.10.1 (76) - 31/10/2026
+IMPROVEMENTS
+   - The search field is now placed just under the clock and follows its position, alignment and colors (at the bottom of the home screen without clock)
+   - Magnifying glass icon in the search field
+CORRECTIONS
+   - Search field overlapping the clock in reversed interface
