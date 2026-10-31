@@ -56,11 +56,18 @@ fi
 # Favorites panel (swipe down)
 SIZE=$(adb shell wm size | grep -oE '[0-9]+x[0-9]+' | tail -1)
 W=${SIZE%x*} ; H=${SIZE#*x}
-adb shell input swipe $((W / 2)) $((H / 3)) $((W / 2)) $((H * 2 / 3)) 150
+# The swipe can be lost right after closing the drawer: retry until the menu button appears
+MENU=""
+for attempt in 1 2 3 ; do
+	sleep 1
+	adb shell input swipe $((W / 2)) $((H / 3)) $((W / 2)) $((H * 2 / 3)) 150
+	sleep 1
+	MENU=$(center_of "Menu")
+	[ -n "$MENU" ] && break
+done
 shot 05_favorites
 
 # Settings activity opened from the menu (action bar and system bars)
-MENU=$(center_of "Menu")
 echo "menu at: $MENU"
 if [ -n "$MENU" ] ; then
 	adb shell input tap $MENU
