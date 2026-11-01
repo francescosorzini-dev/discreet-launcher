@@ -280,6 +280,7 @@ CELL_HALF=$((W / 8))
 adb shell "run-as $PKG sh -c 'rm -f files/drawer_order.txt files/folder_*.txt'"
 restart_home
 
+adb logcat -c
 # A) Long press and release without moving: the usual menu opens
 open_drawer
 T=$(center_of "Calendar")
@@ -339,6 +340,7 @@ if [ -n "$F" ] ; then
 		shot 86_after_drag_out
 		echo "D folder content: $(file_lines folder_Folder.txt | tr '\n' ' ') (expected Clock only)" >> "$DR"
 		echo "D Camera in list at: $(center_of "Camera")" >> "$DR"
+		adb logcat -d -s DLDrag:I View:W ViewRootImpl:W >> "$DR" 2>&1
 	fi
 fi
 

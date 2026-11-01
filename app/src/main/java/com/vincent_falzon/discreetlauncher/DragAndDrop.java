@@ -26,6 +26,7 @@ package com.vincent_falzon.discreetlauncher ;
 import android.content.ClipData ;
 import android.content.Context ;
 import android.os.Build ;
+import android.util.Log ;
 import android.view.DragEvent ;
 import android.view.HapticFeedbackConstants ;
 import android.view.View ;
@@ -96,8 +97,11 @@ public final class DragAndDrop
 	{
 		ClipData data = ClipData.newPlainText("application", info.application.getComponentInfo()) ;
 		View.DragShadowBuilder shadow = new View.DragShadowBuilder(view) ;
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) return view.startDragAndDrop(data, shadow, info, 0) ;
-		return view.startDrag(data, shadow, info, 0) ;
+		boolean started ;
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) started = view.startDragAndDrop(data, shadow, info, 0) ;
+			else started = view.startDrag(data, shadow, info, 0) ;
+		Log.i("DLDrag", "start " + info.application.getDisplayName() + " from " + info.source + ": " + started) ;
+		return started ;
 	}
 
 
@@ -215,6 +219,7 @@ public final class DragAndDrop
 				DragInfo info = getInfo(event) ;
 				if((info == null) || ((info.source != Constants.APP_DRAWER) && (info.source != Constants.FOLDER))) return false ;
 				ArrayList<Application> list = adapter.getApplicationsList() ;
+				if(event.getAction() != DragEvent.ACTION_DRAG_LOCATION) Log.i("DLDrag", "drawer event " + event.getAction()) ;
 				switch(event.getAction())
 				{
 					case DragEvent.ACTION_DRAG_STARTED :
@@ -457,6 +462,7 @@ public final class DragAndDrop
 		recycler.setOnDragListener((view, event) -> {
 				DragInfo info = getInfo(event) ;
 				if((info == null) || (info.sourceFolder != folder)) return false ;
+				Log.i("DLDrag", "popup event " + event.getAction()) ;
 				switch(event.getAction())
 				{
 					case DragEvent.ACTION_DRAG_EXITED :
