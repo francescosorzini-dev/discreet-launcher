@@ -39,6 +39,7 @@ import android.view.LayoutInflater ;
 import android.view.MotionEvent ;
 import android.view.View ;
 import android.view.ViewGroup ;
+import android.view.ViewTreeObserver ;
 import android.view.animation.DecelerateInterpolator ;
 import android.view.inputmethod.EditorInfo ;
 import android.view.inputmethod.InputMethodManager ;
@@ -284,9 +285,21 @@ public class Search extends Application
 
 		// Ask explicitly for the keyboard (the former "toggle" call could close it instead of opening
 		// it when the system believed it was still open, every other opening)
+		// (explicit request, flags 0: an implicit request is ignored; made once the popup has the focus)
 		searchBar.requestFocus() ;
 		final InputMethodManager inputMethodManager = (InputMethodManager)context.getSystemService(Activity.INPUT_METHOD_SERVICE) ;
-		searchBar.post(() -> inputMethodManager.showSoftInput(searchBar, InputMethodManager.SHOW_IMPLICIT)) ;
+		final Runnable showKeyboard = () -> inputMethodManager.showSoftInput(searchBar, 0) ;
+		if(searchBar.hasWindowFocus()) searchBar.post(showKeyboard) ;
+			else searchBar.getViewTreeObserver().addOnWindowFocusChangeListener(new ViewTreeObserver.OnWindowFocusChangeListener()
+				{
+					@Override
+					public void onWindowFocusChanged(boolean has_focus)
+					{
+						if(!has_focus) return ;
+						searchBar.getViewTreeObserver().removeOnWindowFocusChangeListener(this) ;
+						searchBar.post(showKeyboard) ;
+					}
+				}) ;
 		return true ;
 	}
 
