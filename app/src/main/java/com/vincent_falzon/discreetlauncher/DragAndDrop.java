@@ -98,7 +98,9 @@ public final class DragAndDrop
 		ClipData data = ClipData.newPlainText("application", info.application.getComponentInfo()) ;
 		View.DragShadowBuilder shadow = new View.DragShadowBuilder(view) ;
 		boolean started ;
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) started = view.startDragAndDrop(data, shadow, info, 0) ;
+		// Without the global flag, the system limits the drag to the window where it started: the
+		// app drawer would never receive an app dragged out of a folder popup (another window)
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) started = view.startDragAndDrop(data, shadow, info, View.DRAG_FLAG_GLOBAL) ;
 			else started = view.startDrag(data, shadow, info, 0) ;
 		Log.i("DLDrag", "start " + info.application.getDisplayName() + " from " + info.source + ": " + started) ;
 		return started ;
@@ -224,6 +226,9 @@ public final class DragAndDrop
 				{
 					case DragEvent.ACTION_DRAG_STARTED :
 						insertion[0] = RecyclerView.NO_POSITION ;
+						// An app dragged out of a folder: close the popup to show the drawer under the finger
+						if((info.source == Constants.FOLDER) && (info.sourceFolder != null))
+							recycler.post(info.sourceFolder::closePopupNow) ;
 						return true ;
 
 					case DragEvent.ACTION_DRAG_LOCATION :
