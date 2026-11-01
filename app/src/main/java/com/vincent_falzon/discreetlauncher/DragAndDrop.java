@@ -477,6 +477,20 @@ public final class DragAndDrop
 	}
 
 
+	/**
+	 * Debug: log the drag events received by a window root.
+	 */
+	public static void debugRoot(View root, String name)
+	{
+		if(root == null) return ;
+		root.setOnDragListener((view, event) -> {
+				if(event.getAction() != DragEvent.ACTION_DRAG_LOCATION) Log.i("DLDrag", name + " root event " + event.getAction() + " at " + (int)event.getX() + "," + (int)event.getY()) ;
+					else Log.i("DLDrag", name + " root location " + (int)event.getX() + "," + (int)event.getY()) ;
+				return event.getAction() != DragEvent.ACTION_DROP ;
+			}) ;
+	}
+
+
 	// ---------------------------------------------------------------------------------------------
 
 	/**

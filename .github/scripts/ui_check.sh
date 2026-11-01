@@ -336,7 +336,13 @@ if [ -n "$F" ] ; then
 	if [ -n "$P" ] ; then
 		read -r PX PY <<< "$P"
 		# Leave the popup (it closes), then rest on the border of an element at the bottom of the list
-		drag_to "$PX" "$PY" $((W / 8 + 4)) $((H * 4 / 5)) 1.0
+		adb shell "input motionevent DOWN $PX $PY ; sleep 0.9 ; input motionevent MOVE $((PX + 25)) $((PY + 25)) ; sleep 2.5 ; input motionevent MOVE $((W / 8 + 4)) $((H * 4 / 5)) ; sleep 3 ; input motionevent MOVE $((W / 8 + 6)) $((H * 4 / 5)) ; input motionevent UP $((W / 8 + 6)) $((H * 4 / 5))" &
+		sleep 2.5
+		adb shell dumpsys window windows | grep -E "Window #|mHasSurface|isVisible|mDrag|ty=" | head -40 > "$OUT/drag_windows.txt"
+		adb shell dumpsys input | grep -iE -A12 "TouchStates|Drag" | head -60 > "$OUT/drag_input.txt"
+		sleep 2
+		shot 85b_during_drag_out
+		wait ; sleep 2
 		shot 86_after_drag_out
 		echo "D folder content: $(file_lines folder_Folder.txt | tr '\n' ' ') (expected Clock only)" >> "$DR"
 		echo "D Camera in list at: $(center_of "Camera")" >> "$DR"
