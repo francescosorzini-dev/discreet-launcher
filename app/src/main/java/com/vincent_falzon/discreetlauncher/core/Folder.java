@@ -181,7 +181,6 @@ public class Folder extends Application
 
 		// Dragging an app out of the popup closes it, to drop the app in the drawer or on a folder
 		DragAndDrop.attachToFolderPopup(popupRecycler, this) ;
-		DragAndDrop.debugRoot(popupView, "popup") ;
 		popupRecycler.setLayoutManager(new FlexibleGridLayout(context, getApplicationWidth())) ;
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
 			popupRecycler.setOverScrollMode(View.OVER_SCROLL_NEVER) ;

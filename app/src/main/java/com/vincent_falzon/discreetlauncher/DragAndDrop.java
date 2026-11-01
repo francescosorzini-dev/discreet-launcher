@@ -234,7 +234,6 @@ public final class DragAndDrop
 				DragInfo info = getInfo(event) ;
 				if((info == null) || ((info.source != Constants.APP_DRAWER) && (info.source != Constants.FOLDER))) return false ;
 				ArrayList<Application> list = adapter.getApplicationsList() ;
-				if(event.getAction() != DragEvent.ACTION_DRAG_LOCATION) Log.i("DLDrag", "drawer event " + event.getAction()) ;
 				switch(event.getAction())
 				{
 					case DragEvent.ACTION_DRAG_STARTED :
@@ -480,7 +479,6 @@ public final class DragAndDrop
 		recycler.setOnDragListener((view, event) -> {
 				DragInfo info = getInfo(event) ;
 				if((info == null) || (info.sourceFolder != folder)) return false ;
-				Log.i("DLDrag", "popup event " + event.getAction()) ;
 				switch(event.getAction())
 				{
 					case DragEvent.ACTION_DRAG_EXITED :
@@ -491,20 +489,6 @@ public final class DragAndDrop
 						break ;
 				}
 				return true ;
-			}) ;
-	}
-
-
-	/**
-	 * Debug: log the drag events received by a window root.
-	 */
-	public static void debugRoot(View root, String name)
-	{
-		if(root == null) return ;
-		root.setOnDragListener((view, event) -> {
-				if(event.getAction() != DragEvent.ACTION_DRAG_LOCATION) Log.i("DLDrag", name + " root event " + event.getAction() + " at " + (int)event.getX() + "," + (int)event.getY()) ;
-					else Log.i("DLDrag", name + " root location " + (int)event.getX() + "," + (int)event.getY()) ;
-				return event.getAction() != DragEvent.ACTION_DROP ;
 			}) ;
 	}
 

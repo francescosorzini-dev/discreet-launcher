@@ -184,7 +184,6 @@ for HAND in right left ; do
 		shot 40_${HAND}_search_empty
 		adb shell uiautomator dump /sdcard/ui.xml > /dev/null 2>&1
 		adb pull /sdcard/ui.xml "$OUT/40_${HAND}_search_empty.xml" > /dev/null 2>&1
-		adb shell dumpsys window windows | grep -E "Window #|mFrame=|mAttrs=|PopupWindow|InputMethod" > "$OUT/40_${HAND}_windows.txt" 2>/dev/null || true
 		adb shell input text "a" ; sleep 1
 		shot 41_${HAND}_search_a
 		adb shell input keyevent KEYCODE_BACK ; adb shell input keyevent KEYCODE_BACK ; sleep 1
@@ -341,8 +340,6 @@ if [ -n "$F" ] ; then
 		# Leave the popup (it closes), then rest on the border of an element at the bottom of the list
 		adb shell "input motionevent DOWN $PX $PY ; sleep 0.9 ; input motionevent MOVE $((PX + 25)) $((PY + 25)) ; sleep 2.5 ; input motionevent MOVE $((W / 8 + 4)) $((H * 4 / 5)) ; sleep 3 ; input motionevent MOVE $((W / 8 + 6)) $((H * 4 / 5)) ; input motionevent UP $((W / 8 + 6)) $((H * 4 / 5))" &
 		sleep 2.5
-		adb shell dumpsys window windows | grep -E "Window #|mHasSurface|isVisible|mDrag|ty=" | head -40 > "$OUT/drag_windows.txt"
-		adb shell dumpsys input | grep -iE -A12 "TouchStates|Drag" | head -60 > "$OUT/drag_input.txt"
 		sleep 2
 		shot 85b_during_drag_out
 		wait ; sleep 2

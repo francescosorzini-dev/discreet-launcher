@@ -238,7 +238,6 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 		// Organize by dragging: reorder favorites, reorder the drawer and manage folders
 		DragAndDrop.attachToFavorites(favorites, favoritesAdapter, findViewById(R.id.favorites_scroll)) ;
 		DragAndDrop.attachToDrawer(drawer, drawerAdapter, this::refreshLists) ;
-		DragAndDrop.debugRoot(findViewById(android.R.id.content), "main") ;
 
 		// Close the drawer and the favorites panel by pulling them beyond the edge of their list
 		drawer.addOnItemTouchListener(new PullToClose(drawer, reverse_interface ? -1 : 1, () -> displayDrawer(false), drawer)) ;
