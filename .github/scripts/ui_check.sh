@@ -309,8 +309,11 @@ fi
 
 # C) Hold an app over another one: new folder dialog, then create
 restart_home ; open_drawer
-A1=$(center_of "Camera") ; A2=$(center_of "Clock")
-echo "C Camera at $A1, Clock at $A2" >> "$DR"
+# (the emulator images do not all have a Camera app)
+N1=Camera ; A1=$(center_of "$N1")
+[ -z "$A1" ] && { N1=Contacts ; A1=$(center_of "$N1") ; }
+A2=$(center_of "Clock")
+echo "C $N1 at $A1, Clock at $A2" >> "$DR"
 if [ -n "$A1" ] && [ -n "$A2" ] ; then
 	read -r X1 Y1 <<< "$A1" ; read -r X2 Y2 <<< "$A2"
 	drag_to "$X1" "$Y1" "$X2" "$Y2" 1.5
@@ -331,8 +334,8 @@ echo "D folder at: ${F:-missing}" >> "$DR"
 if [ -n "$F" ] ; then
 	adb shell input tap $F ; sleep 2
 	shot 85_folder_open
-	P=$(center_of "Camera")
-	echo "D Camera in popup at: ${P:-missing}" >> "$DR"
+	P=$(center_of "$N1")
+	echo "D $N1 in popup at: ${P:-missing}" >> "$DR"
 	if [ -n "$P" ] ; then
 		read -r PX PY <<< "$P"
 		# Leave the popup (it closes), then rest on the border of an element at the bottom of the list
@@ -345,7 +348,7 @@ if [ -n "$F" ] ; then
 		wait ; sleep 2
 		shot 86_after_drag_out
 		echo "D folder content: $(file_lines folder_Folder.txt | tr '\n' ' ') (expected Clock only)" >> "$DR"
-		echo "D Camera in list at: $(center_of "Camera")" >> "$DR"
+		echo "D $N1 in list at: $(center_of "$N1")" >> "$DR"
 		adb logcat -d -s DLDrag:I View:W ViewRootImpl:W >> "$DR" 2>&1
 	fi
 fi

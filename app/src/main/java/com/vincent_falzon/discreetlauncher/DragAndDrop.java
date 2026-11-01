@@ -24,6 +24,7 @@ package com.vincent_falzon.discreetlauncher ;
 
 // Imports
 import android.content.ClipData ;
+import android.content.ClipDescription ;
 import android.content.Context ;
 import android.os.Build ;
 import android.util.Log ;
@@ -53,6 +54,10 @@ public final class DragAndDrop
 	// Constants
 	private static final long MERGE_DELAY = 500 ;
 	private static final long REORDER_DELAY = 250 ;
+	private static final String CLIP_LABEL = "discreetlauncher.drag" ;
+
+	// Drag currently started by the launcher
+	private static DragInfo current = null ;
 	private static final float EDGE_ZONE_DP = 56 ;
 	private static final float SCROLL_STEP_DP = 8 ;
 
@@ -95,7 +100,8 @@ public final class DragAndDrop
 	@SuppressWarnings("deprecation")
 	static boolean start(View view, DragInfo info)
 	{
-		ClipData data = ClipData.newPlainText("application", info.application.getComponentInfo()) ;
+		ClipData data = ClipData.newPlainText(CLIP_LABEL, info.application.getComponentInfo()) ;
+		current = info ;
 		View.DragShadowBuilder shadow = new View.DragShadowBuilder(view) ;
 		boolean started ;
 		// Without the global flag, the system limits the drag to the window where it started: the
@@ -112,8 +118,15 @@ public final class DragAndDrop
 	 */
 	private static DragInfo getInfo(DragEvent event)
 	{
+		// The local state is only given to the window where the drag started (not to the app drawer
+		// when an app is dragged out of a folder popup): fall back on the drag started by the launcher
 		Object state = event.getLocalState() ;
-		return (state instanceof DragInfo) ? (DragInfo)state : null ;
+		if(state instanceof DragInfo) return (DragInfo)state ;
+		if(current == null) return null ;
+		if(event.getAction() == DragEvent.ACTION_DRAG_ENDED) return current ;
+		ClipDescription description = event.getClipDescription() ;
+		if((description != null) && CLIP_LABEL.contentEquals(description.getLabel())) return current ;
+		return null ;
 	}
 
 
