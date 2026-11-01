@@ -18,8 +18,8 @@ android
         targetSdkVersion var_compile_sdk
 
         // Versioning
-        versionCode 93
-        versionName "v7.14.3"
+        versionCode 94
+        versionName "v7.15.0"
     }
 
     // Fixed signing key provided by CI (DL_KEYSTORE), so that every build can update the installed app

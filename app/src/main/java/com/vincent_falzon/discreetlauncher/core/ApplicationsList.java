@@ -183,6 +183,9 @@ public class ApplicationsList
 		// Prepare folders according to files
 		prepareFolders(context, reversed, iconPack1, iconPack2) ;
 
+		// Apply the order chosen by the user (if any)
+		applyDrawerOrder() ;
+
 		// Update the favorites applications list
 		updateFavorites() ;
 	}
@@ -243,6 +246,64 @@ public class ApplicationsList
 						break ;
 					}
 		}
+	}
+
+
+	/**
+	 * Apply the order of the applications drawer chosen by the user (by dragging). Elements which
+	 * are not in the order file (ex: newly installed apps) are placed at the top of the list.
+	 */
+	private void applyDrawerOrder()
+	{
+		ArrayList<String> order = new InternalFileTXT(Constants.FILE_DRAWER_ORDER).readAllLines() ;
+		if((order == null) || order.isEmpty()) return ;
+
+		// Separate the elements of the order file from the new ones
+		ArrayList<Application> ordered = new ArrayList<>() ;
+		for(String component_info : order)
+			for(Application application : drawer)
+				if(application.getComponentInfo().equals(component_info))
+					{
+						if(!ordered.contains(application)) ordered.add(application) ;
+						break ;
+					}
+		ArrayList<Application> newOnes = new ArrayList<>() ;
+		for(Application application : drawer)
+			if(!ordered.contains(application)) newOnes.add(application) ;
+
+		// New elements first, then the user order
+		drawer.clear() ;
+		drawer.addAll(newOnes) ;
+		drawer.addAll(ordered) ;
+	}
+
+
+	/**
+	 * Save the given order of the applications drawer.
+	 */
+	public static void saveDrawerOrder(ArrayList<String> component_infos)
+	{
+		InternalFileTXT file = new InternalFileTXT(Constants.FILE_DRAWER_ORDER) ;
+		file.remove() ;
+		for(String component_info : component_infos) file.writeLine(component_info) ;
+	}
+
+
+	/**
+	 * Forget the order chosen by the user (the drawer goes back to the alphabetical order).
+	 */
+	public static void resetDrawerOrder()
+	{
+		new InternalFileTXT(Constants.FILE_DRAWER_ORDER).remove() ;
+	}
+
+
+	/**
+	 * Return the ComponentInfo of the folder with the given name.
+	 */
+	public static String getFolderComponentInfo(String folder_name)
+	{
+		return "{" + Constants.APK_FOLDER + "/" + Constants.APK_FOLDER + folder_name + "}" ;
 	}
 
 

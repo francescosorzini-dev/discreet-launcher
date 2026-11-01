@@ -200,6 +200,22 @@ public class ActivitySettingsOperation extends AppCompatActivity
 						return true ;
 					}) ;
 
+			// Ask for confirmation before forgetting the order chosen by dragging in the drawer
+			Preference sortDrawer = findPreference(Constants.SORT_DRAWER_ALPHABETICALLY) ;
+			if(sortDrawer != null)
+				sortDrawer.setOnPreferenceClickListener(preference -> {
+						new AlertDialog.Builder(requireContext())
+							.setMessage(R.string.set_sort_drawer_alphabetically_confirm)
+							.setNegativeButton(R.string.button_cancel, null)
+							.setPositiveButton(R.string.button_sort, (dialog, which) -> {
+									com.vincent_falzon.discreetlauncher.core.ApplicationsList.resetDrawerOrder() ;
+									com.vincent_falzon.discreetlauncher.ActivityMain.updateList(requireContext()) ;
+									Utils.displayToast(requireContext(), R.string.info_drawer_sorted) ;
+								})
+							.show() ;
+						return true ;
+					}) ;
+
 			// Initialize the clock app selector
 			ListPreference clockApp = findPreference(Constants.CLOCK_APP) ;
 			if(clockApp != null)

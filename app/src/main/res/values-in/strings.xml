@@ -258,7 +258,7 @@
     <string name="help_list_update_title">Perbaruan Daftar</string>
     <string name="help_list_update">Pesan popup muncul saat menyegarkan daftar aplikasi dan ikon, saat memulai, menambah atau menghapus aplikasi, atau jika paket ikon dimodifikasi.</string>
     <string name="help_folders_title">Folder</string>
-    <string name="help_folders">Kelola folder atau favoritkan aplikasi dengan tombol menu, atau klik judul dari folder yang terbuka untuk membuat, mengganti nama, atau memasukan aplikasi kedalamnya.\nMenghapus folder akan meletakan kembali isinya ke daftar utama.</string>
+    <string name="help_folders">Kelola folder atau favoritkan aplikasi dengan tombol menu, atau klik judul dari folder yang terbuka untuk membuat, mengganti nama, atau memasukan aplikasi kedalamnya.\nMenghapus folder akan meletakan kembali isinya ke daftar utama.\nTekan lama aplikasi dan seret untuk memindahkannya: lepaskan di folder untuk memasukkannya, atau tahan di atas aplikasi lain untuk membuat folder baru.</string>
     <string name="help_search_title">Pencarian</string>
     <string name="help_search">Temukan aplikasi apapun dari ikon cari. ikon cari juga bisa difavoritkan, untuk membuatnya tersedia dari notifikasi, dan tersembunyi.\n\nAnda juga bisa menggunakan kolom pencarian di layar utama. Pencarian menemukan bagian mana pun dari nama, huruf awal dari kata-katanya (\"gm\" untuk Google Maps) dan nama folder yang berisi aplikasi. Aplikasi yang sering Anda buka muncul lebih dulu.\n\nMenekan \"Enter\" akan membuka hasil pencarian pertama.</string>
 
@@ -269,4 +269,11 @@
     <string name="error_changelog_missing_folder">Tidak bisa menemukan changelog folder</string>
     <string name="error_changelog_missing_file">Tidak bisa membuka %1$s</string>
 
+    <string name="new_folder_title">Folder baru</string>
+    <string name="new_folder_default_name">Folder</string>
+    <string name="button_create">Buat</string>
+    <string name="set_sort_drawer_alphabetically">Urutkan menurut abjad</string>
+    <string name="set_sort_drawer_alphabetically_help">Lupakan urutan yang dipilih dengan menyeret di daftar aplikasi</string>
+    <string name="set_sort_drawer_alphabetically_confirm">Urutkan daftar aplikasi menurut abjad? Urutan yang dipilih dengan menyeret akan hilang.</string>
+    <string name="info_drawer_sorted">Daftar aplikasi diurutkan menurut abjad</string>
 </resources>

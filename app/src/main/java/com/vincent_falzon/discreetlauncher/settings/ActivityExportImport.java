@@ -134,6 +134,8 @@ public class ActivityExportImport extends AppCompatActivity implements View.OnCl
 		// Save the content of all internal files
 		exportedData.add("# " + getString(R.string.export_import_header_internal_files)) ;
 		exportedData.addAll(new InternalFileTXT(Constants.FILE_FAVORITES).prepareForExport()) ;
+		if(new InternalFileTXT(Constants.FILE_DRAWER_ORDER).exists())
+			exportedData.addAll(new InternalFileTXT(Constants.FILE_DRAWER_ORDER).prepareForExport()) ;
 		String[] folders_files = InternalFile.searchFilesStartingWith(this, Constants.FILE_FOLDER_PREFIX) ;
 		if(folders_files != null)
 			for(String folder : folders_files)
@@ -242,12 +244,14 @@ public class ActivityExportImport extends AppCompatActivity implements View.OnCl
 
 		// Prepare the files that need to be replaced
 		InternalFileTXT favorites = new InternalFileTXT(Constants.FILE_FAVORITES) ;
+		InternalFileTXT drawer_order = new InternalFileTXT(Constants.FILE_DRAWER_ORDER) ;
 		InternalFileTXT folders_colors = new InternalFileTXT(Constants.FILE_FOLDERS_COLORS) ;
 		InternalFileTXT hidden = new InternalFileTXT(Constants.FILE_HIDDEN) ;
 		InternalFileTXT rename_apps = new InternalFileTXT(Constants.FILE_RENAME_APPS) ;
 		InternalFileTXT shortcuts = new InternalFileTXT(Constants.FILE_SHORTCUTS) ;
 		InternalFileTXT shortcuts_legacy = new InternalFileTXT(Constants.FILE_SHORTCUTS_LEGACY) ;
 		favorites.remove() ;
+		drawer_order.remove() ;
 		folders_colors.remove() ;
 		hidden.remove() ;
 		rename_apps.remove() ;
@@ -287,6 +291,7 @@ public class ActivityExportImport extends AppCompatActivity implements View.OnCl
 
 			// Create the internal files
 			if(target.equals(Constants.FILE_FAVORITES)) writeLineToInternalFile(favorites, value) ;
+				else if(target.equals(Constants.FILE_DRAWER_ORDER)) writeLineToInternalFile(drawer_order, value) ;
 				else if(target.equals(Constants.FILE_FOLDERS_COLORS)) writeLineToInternalFile(folders_colors, value) ;
 				else if(target.equals(Constants.FILE_HIDDEN)) writeLineToInternalFile(hidden, value) ;
 				else if(target.equals(Constants.FILE_RENAME_APPS)) writeLineToInternalFile(rename_apps, value) ;

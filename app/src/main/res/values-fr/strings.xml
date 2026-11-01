@@ -258,7 +258,7 @@
     <string name="help_list_update_title">Mise à jour de la liste</string>
     <string name="help_list_update">Un petit message s\'affiche lors de l\'actualisation de la liste des applications et de leurs icônes, lors du démarrage, lors de l\'ajout ou de la suppression d\'applications, ou si le pack d\'icônes est modifié.</string>
     <string name="help_folders_title">Dossiers</string>
-    <string name="help_folders">Gérez les dossiers ou mettez les en favoris depuis le bouton de menu, ou cliquez sur le titre d\'un dossier ouvert pour créer, renommer, et mettre des applications dedans.\nLa suppression d\'un dossier remet toutes ses applications dans la liste principale.</string>
+    <string name="help_folders">Gérez les dossiers ou mettez les en favoris depuis le bouton de menu, ou cliquez sur le titre d\'un dossier ouvert pour créer, renommer, et mettre des applications dedans.\nLa suppression d\'un dossier remet toutes ses applications dans la liste principale.\nAppuyez longuement sur une application et faites-la glisser pour la déplacer : déposez-la sur un dossier pour l\'y ranger, ou maintenez-la sur une autre application pour créer un nouveau dossier.</string>
     <string name="help_search_title">Recherche</string>
     <string name="help_search">Trouvez n\'importe quelle application depuis l\'icône de recherche ou depuis le champ de recherche de l\'écran d\'accueil. Elle peut aussi être ajoutée aux favoris pour être disponible depuis la notification, ou masquée.\n\nLa recherche trouve n\'importe quelle partie du nom, les initiales de ses mots (\"gm\" pour Google Maps) et le nom des dossiers contenant l\'application. Les applications ouvertes souvent apparaissent en premier.\n\nAppuyer sur \"Entrée\" ouvre le premier résultat de recherche.</string>
 
@@ -269,4 +269,11 @@
     <string name="error_changelog_missing_folder">Impossible de trouver le dossier du journal des changements</string>
     <string name="error_changelog_missing_file">Impossible d\'ouvrir %1$s</string>
 
+    <string name="new_folder_title">Nouveau dossier</string>
+    <string name="new_folder_default_name">Dossier</string>
+    <string name="button_create">Créer</string>
+    <string name="set_sort_drawer_alphabetically">Trier par ordre alphabétique</string>
+    <string name="set_sort_drawer_alphabetically_help">Oublier l\'ordre choisi en glissant dans la liste des applications</string>
+    <string name="set_sort_drawer_alphabetically_confirm">Trier la liste des applications par ordre alphabétique ? L\'ordre choisi en glissant sera perdu.</string>
+    <string name="info_drawer_sorted">Liste des applications triée par ordre alphabétique</string>
 </resources>

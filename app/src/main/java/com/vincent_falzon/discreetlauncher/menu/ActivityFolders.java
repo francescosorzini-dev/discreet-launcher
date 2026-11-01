@@ -313,6 +313,16 @@ public class ActivityFolders extends AppCompatActivity implements View.OnClickLi
 											// Update the favorites if necessary
 											InternalFileTXT favorites = new InternalFileTXT(Constants.FILE_FAVORITES) ;
 											boolean was_in_favorites = favorites.removeLine(folder.getComponentInfo()) ;
+
+											// Keep the place of the folder in the custom order of the drawer (if any)
+											String old_component_info = folder.getComponentInfo() ;
+											InternalFileTXT drawer_order = new InternalFileTXT(Constants.FILE_DRAWER_ORDER) ;
+											java.util.ArrayList<String> order = drawer_order.readAllLines() ;
+											if((order != null) && order.contains(old_component_info))
+												{
+													order.set(order.indexOf(old_component_info), com.vincent_falzon.discreetlauncher.core.ApplicationsList.getFolderComponentInfo(new_folder_name)) ;
+													com.vincent_falzon.discreetlauncher.core.ApplicationsList.saveDrawerOrder(order) ;
+												}
 											folder.setDisplayName(new_folder_name) ;
 											if(was_in_favorites) favorites.writeLine(folder.getComponentInfo()) ;
 

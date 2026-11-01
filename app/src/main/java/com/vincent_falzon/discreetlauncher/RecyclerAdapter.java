@@ -73,6 +73,57 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Applic
 	private int text_color ;
 	private Runnable beforeLaunch ;
 
+	// Attributes related to dragging (favorites, drawer and folders)
+	private Folder ownerFolder ;
+	private Application dragged ;
+
+
+	/**
+	 * Define the folder displayed by this adapter (when the target is a folder popup).
+	 */
+	public void setOwnerFolder(Folder folder)
+	{
+		ownerFolder = folder ;
+	}
+
+
+	/**
+	 * Return true if the elements of this list can be dragged.
+	 */
+	boolean isDragEnabled()
+	{
+		return (target == Constants.FAVORITES_PANEL) || (target == Constants.APP_DRAWER) || (target == Constants.FOLDER) ;
+	}
+
+
+	/**
+	 * Return the list displayed by this adapter.
+	 */
+	public ArrayList<Application> getApplicationsList()
+	{
+		return applicationsList ;
+	}
+
+
+	/**
+	 * Return the type of list displayed by this adapter.
+	 */
+	public int getTarget()
+	{
+		return target ;
+	}
+
+
+	/**
+	 * Mark the element being dragged (displayed faded at its place), or null when the drag is over.
+	 */
+	@SuppressLint("NotifyDataSetChanged")
+	public void setDragged(Application application)
+	{
+		dragged = application ;
+		notifyDataSetChanged() ;
+	}
+
 
 	/**
 	 * Action to perform just before an application is launched from this adapter (ex: close a popup).
@@ -161,6 +212,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Applic
 		// If the option is selected, remove padding around the applications
 		if(hide_app_names && remove_padding) appView.name.setPadding(0, 0, 0, 0) ;
 			else appView.name.setPadding(0, padding, 0, padding) ;
+
+		// Reset the dragging appearance (the dragged element stays faded at its place)
+		appView.itemView.animate().cancel() ;
+		appView.itemView.setScaleX(1) ;
+		appView.itemView.setScaleY(1) ;
+		appView.itemView.setAlpha((dragged != null) && (applicationsList.get(i) == dragged) ? 0.3f : 1) ;
 	}
 
 
@@ -184,6 +241,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Applic
 	{
 		// Attributes
 		private final TextView name ;
+		private boolean touch_active ;
+		private boolean picked ;
+		private float down_x ;
+		private float down_y ;
 
 
 		/**
@@ -218,16 +279,87 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Applic
 				// Gesture started
 				case MotionEvent.ACTION_DOWN :
 					setVisualFeedback(context, true) ;
+					touch_active = true ;
+					picked = false ;
+					down_x = event.getRawX() ;
+					down_y = event.getRawY() ;
 					break ;
-				// Gesture finished or aborted
+				// The element has been picked up by a long press: moving it starts the dragging
+				case MotionEvent.ACTION_MOVE :
+					if(picked)
+						{
+							float distance = (float)Math.hypot(event.getRawX() - down_x, event.getRawY() - down_y) ;
+							if(distance > android.view.ViewConfiguration.get(context).getScaledTouchSlop())
+								{
+									picked = false ;
+									setVisualFeedback(context, false) ;
+									startDragging(view) ;
+								}
+							return true ;
+						}
+					break ;
+				// Gesture finished: an element picked up and released without moving opens the menu
 				case MotionEvent.ACTION_UP :
+					setVisualFeedback(context, false) ;
+					touch_active = false ;
+					if(picked)
+						{
+							picked = false ;
+							dropAppearance(view) ;
+							showMenu(view) ;
+							return true ;
+						}
+					break ;
+				// Gesture aborted
 				case MotionEvent.ACTION_CANCEL :
 					setVisualFeedback(context, false) ;
+					touch_active = false ;
+					if(picked)
+						{
+							picked = false ;
+							dropAppearance(view) ;
+						}
 					break ;
 			}
 
 			// Do not consider the event as consumed
 			return false ;
+		}
+
+
+		/**
+		 * Pick up the element: it grows a little, the list stops scrolling under the finger.
+		 */
+		private void pickUp(View view)
+		{
+			picked = true ;
+			if(view.getParent() != null) view.getParent().requestDisallowInterceptTouchEvent(true) ;
+			view.animate().scaleX(1.15f).scaleY(1.15f).setDuration(120).start() ;
+		}
+
+
+		/**
+		 * Put back the normal appearance of a picked element.
+		 */
+		private void dropAppearance(View view)
+		{
+			view.animate().scaleX(1).scaleY(1).setDuration(120).start() ;
+		}
+
+
+		/**
+		 * Start dragging the element (system drag and drop, which can cross windows: ex: from a
+		 * folder popup to the app drawer).
+		 */
+		private void startDragging(View view)
+		{
+			int position = getBindingAdapterPosition() ;
+			if(position == RecyclerView.NO_POSITION) return ;
+			Application application = applicationsList.get(position) ;
+			DragAndDrop.DragInfo info = new DragAndDrop.DragInfo(application, target, ownerFolder, RecyclerAdapter.this) ;
+			view.setScaleX(1) ;
+			view.setScaleY(1) ;
+			if(DragAndDrop.start(view, info)) setDragged(application) ;
 		}
 
 
@@ -288,6 +420,23 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Applic
 		@SuppressLint("NotifyDataSetChanged")
 		@Override
 		public boolean onLongClick(final View view)
+		{
+			// In lists which can be reordered, a long press with the finger picks up the element: the
+			// menu opens when releasing it without moving, moving it starts the dragging
+			if((view != null) && isDragEnabled() && touch_active)
+				{
+					pickUp(view) ;
+					return true ;
+				}
+			return showMenu(view) ;
+		}
+
+
+		/**
+		 * Display the menu of the element (formerly displayed directly on long press).
+		 */
+		@SuppressLint("NotifyDataSetChanged")
+		boolean showMenu(final View view)
 		{
 			// Get the clicked position and retrieve the selected application
 			if(view == null) return false ;

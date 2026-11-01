@@ -1,0 +1,12 @@
+v7.15.0 (94) - 01/11/2026
+NOUVEAUTÉS
+   - Organisation par glisser : un appui long sur une application ou un dossier la soulève ; relâchez sans bouger pour ouvrir le menu habituel, ou faites-la glisser
+   - Favoris : glissez pour changer leur position
+   - Liste des applications : glissez applications et dossiers pour les réordonner librement
+   - Liste des applications : déposez une application sur un dossier pour l'y ranger
+   - Liste des applications : maintenez une application sur une autre une demi-seconde pour créer un nouveau dossier avec les deux
+   - Dossiers : faites glisser une application hors d'un dossier ouvert pour la remettre dans la liste ou la déplacer dans un autre dossier
+   - Une fois la liste réordonnée en glissant, les applications nouvellement installées apparaissent en haut
+   - Paramètres > Fonctionnement : « Trier par ordre alphabétique » pour oublier l'ordre choisi en glissant
+AMÉLIORATIONS
+   - L'ordre de la liste est inclus dans l'export / import des paramètres

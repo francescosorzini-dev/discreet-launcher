@@ -258,7 +258,7 @@
     <string name="help_list_update_title">Actualización de listas</string>
     <string name="help_list_update">Un mensaje emergente es mostrado cuando se refrescan la lista de aplicaciones y sus íconos, cuando se inicia el lanzador, se añaden o remueven aplicaciones, o si el paquete de íconos es modificado.</string>
     <string name="help_folders_title">Carpetas</string>
-    <string name="help_folders">Administra las carpetas o márcalas como favoritas desde el botón de menú, o presiona el título de una carpeta abierta para crear, renombrar y colocar aplicaciones en ella.\nBorrar una carpeta coloca todas sus aplicaciones de nuevo en la lista principal.</string>
+    <string name="help_folders">Administra las carpetas o márcalas como favoritas desde el botón de menú, o presiona el título de una carpeta abierta para crear, renombrar y colocar aplicaciones en ella.\nBorrar una carpeta coloca todas sus aplicaciones de nuevo en la lista principal.\nMantén pulsada una aplicación y arrástrala para moverla: suéltala sobre una carpeta para meterla, o mantenla sobre otra aplicación para crear una carpeta nueva.</string>
     <string name="help_search_title">Buscar</string>
     <string name="help_search">Encuentra cualquier aplicación desde el ícono de búsqueda. También se puede marcar como favorito para tenerlo disponible desde la notificación, o puede ser ocultado.\n\nTambién puedes usar el campo de búsqueda de la pantalla de inicio. La búsqueda encuentra cualquier parte del nombre, las iniciales de sus palabras (\"gm\" para Google Maps) y el nombre de las carpetas que contienen la aplicación. Las aplicaciones que abres a menudo aparecen primero.\n\nPresionar \"Enter\" abre el primer resultado de la búsqueda.</string>
 
@@ -269,4 +269,11 @@
     <string name="error_changelog_missing_folder">No se pudo encontrar la carpeta con el registro de cambios</string>
     <string name="error_changelog_missing_file">No se pudo abrir %1$s</string>
 
+    <string name="new_folder_title">Nueva carpeta</string>
+    <string name="new_folder_default_name">Carpeta</string>
+    <string name="button_create">Crear</string>
+    <string name="set_sort_drawer_alphabetically">Ordenar alfabéticamente</string>
+    <string name="set_sort_drawer_alphabetically_help">Olvidar el orden elegido arrastrando en la lista de aplicaciones</string>
+    <string name="set_sort_drawer_alphabetically_confirm">¿Ordenar alfabéticamente la lista de aplicaciones? Se perderá el orden elegido arrastrando.</string>
+    <string name="info_drawer_sorted">Lista de aplicaciones ordenada alfabéticamente</string>
 </resources>

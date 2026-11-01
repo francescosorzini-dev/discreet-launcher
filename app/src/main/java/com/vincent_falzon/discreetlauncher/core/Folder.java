@@ -43,6 +43,7 @@ import androidx.recyclerview.widget.RecyclerView ;
 import com.vincent_falzon.discreetlauncher.Utils ;
 import com.vincent_falzon.discreetlauncher.menu.ActivityFolders ;
 import com.vincent_falzon.discreetlauncher.Constants ;
+import com.vincent_falzon.discreetlauncher.DragAndDrop ;
 import com.vincent_falzon.discreetlauncher.FlexibleGridLayout ;
 import com.vincent_falzon.discreetlauncher.R ;
 import com.vincent_falzon.discreetlauncher.RecyclerAdapter ;
@@ -175,7 +176,11 @@ public class Folder extends Application
 		// Prepare the folder content
 		RecyclerView popupRecycler = popupView.findViewById(R.id.popup_recycler) ;
 		RecyclerAdapter recyclerAdapter = new RecyclerAdapter(context, applications, Constants.FOLDER) ;
+		recyclerAdapter.setOwnerFolder(this) ;
 		popupRecycler.setAdapter(recyclerAdapter) ;
+
+		// Dragging an app out of the popup closes it, to drop the app in the drawer or on a folder
+		DragAndDrop.attachToFolderPopup(popupRecycler, this) ;
 		popupRecycler.setLayoutManager(new FlexibleGridLayout(context, getApplicationWidth())) ;
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
 			popupRecycler.setOverScrollMode(View.OVER_SCROLL_NEVER) ;

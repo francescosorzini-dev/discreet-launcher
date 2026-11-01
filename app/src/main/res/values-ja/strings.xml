@@ -258,7 +258,7 @@
     <string name="help_list_update_title">リストの更新</string>
     <string name="help_list_update">アプリ一覧やアイコンの更新時、アプリの起動・追加・削除時、 アイコンパックの変更時にポップアップメッセージが表示されます。</string>
     <string name="help_folders_title">フォルダ</string>
-    <string name="help_folders">メニューボタンからフォルダの管理やお気に入り登録、 開いているフォルダのタイトルをクリックしてアプリの追加、名前変更、入れ替えができます。\nフォルダを削除すると、その中のすべてのアプリがメインリストに戻ってきます。</string>
+    <string name="help_folders">メニューボタンからフォルダの管理やお気に入り登録、 開いているフォルダのタイトルをクリックしてアプリの追加、名前変更、入れ替えができます。\nフォルダを削除すると、その中のすべてのアプリがメインリストに戻ってきます。\nアプリを長押ししてドラッグすると移動できます。フォルダの上で離すとフォルダに入れ、別のアプリの上で保持すると新しいフォルダを作成します。</string>
     <string name="help_search_title">検索</string>
     <string name="help_search">検索アイコンから任意のアプリを探すことができます。 また、通知から利用できるようにお気に入りに登録したり、非表示にしたりすることも可能です。\n\nホーム画面の検索フィールドも使えます。検索では名前の任意の部分、単語の頭文字（Google Mapsなら\"gm\"）、アプリを含むフォルダ名で見つけることができます。よく開くアプリが先に表示されます。\n\n\"Enter\"を押すと開くことができます。</string>
 
@@ -269,4 +269,11 @@
     <string name="error_changelog_missing_folder">変更履歴フォルダが見つかりません。</string>
     <string name="error_changelog_missing_file">%1$sを開くことができません。</string>
 
+    <string name="new_folder_title">新しいフォルダ</string>
+    <string name="new_folder_default_name">フォルダ</string>
+    <string name="button_create">作成</string>
+    <string name="set_sort_drawer_alphabetically">アルファベット順に並べ替え</string>
+    <string name="set_sort_drawer_alphabetically_help">アプリ一覧でドラッグして決めた順序を消去します</string>
+    <string name="set_sort_drawer_alphabetically_confirm">アプリ一覧をアルファベット順に並べ替えますか？ドラッグで決めた順序は失われます。</string>
+    <string name="info_drawer_sorted">アプリ一覧をアルファベット順に並べ替えました</string>
 </resources>

@@ -258,7 +258,7 @@
     <string name="help_list_update_title">Opdatering af liste</string>
     <string name="help_list_update">En pop op-meddelelse vises, når applisten og ikonerne opdateres, når du starter, tilføjer eller fjerner apps, eller hvis ikonpakken er ændret.</string>
     <string name="help_folders_title">Mapper</string>
-    <string name="help_folders">Administrer mapper eller favorit dem fra menuknappen, eller klik på titlen på en åben mappe at oprette, omdøbe og lægge apps i den.\nHvis du fjerner mapper, flyttes alle apps i dem tilbage på hovedlisten.</string>
+    <string name="help_folders">Administrer mapper eller favorit dem fra menuknappen, eller klik på titlen på en åben mappe at oprette, omdøbe og lægge apps i den.\nHvis du fjerner mapper, flyttes alle apps i dem tilbage på hovedlisten.\nTryk længe på en app og træk den for at flytte den: slip den på en mappe for at lægge den i, eller hold den over en anden app for at oprette en ny mappe.</string>
     <string name="help_search_title">Søg</string>
     <string name="help_search">Find enhver app fra søgeikonet. Det kan også vælges at være tilgængeligt fra meddelelsen eller skjules.\n\nDu kan også bruge søgefeltet på startskærmen. Søgningen finder enhver del af navnet, forbogstaverne i dets ord (\"gm\" for Google Maps) og navnet på de mapper, der indeholder appen. Apps, du ofte åbner, vises først.\n\nTryk på \"Enter\" åbner det første søgeresultat.</string>
 
@@ -269,4 +269,11 @@
     <string name="error_changelog_missing_folder">Kunne ikke finde mappen med liste med opdateringer</string>
     <string name="error_changelog_missing_file">Kunne ikke åbne %1$s</string>
 
+    <string name="new_folder_title">Ny mappe</string>
+    <string name="new_folder_default_name">Mappe</string>
+    <string name="button_create">Opret</string>
+    <string name="set_sort_drawer_alphabetically">Sortér alfabetisk</string>
+    <string name="set_sort_drawer_alphabetically_help">Glem rækkefølgen valgt ved at trække i app-listen</string>
+    <string name="set_sort_drawer_alphabetically_confirm">Sortér app-listen alfabetisk? Rækkefølgen valgt ved at trække går tabt.</string>
+    <string name="info_drawer_sorted">App-listen er sorteret alfabetisk</string>
 </resources>

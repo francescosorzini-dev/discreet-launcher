@@ -258,7 +258,7 @@
     <string name="help_list_update_title">Liste güncellemesi</string>
     <string name="help_list_update">Uygulama listesini ve simgelerini yenilerken, uygulamaları başlatırken, eklerken veya kaldırırken ya da simge paketi değiştirilirken bir açılır mesaj gösterilir.</string>
     <string name="help_folders_title">Klasörler</string>
-    <string name="help_folders">Menü düğmesinden klasörleri yönetin veya favorilere ekleyin veya açık bir klasörün başlığına tıklayın uygulamalar oluşturmak, yeniden adlandırmak ve yerleştirmek için.\nKlasörlerin kaldırılması, içindeki tüm uygulamaları ana listeye geri getirir.</string>
+    <string name="help_folders">Menü düğmesinden klasörleri yönetin veya favorilere ekleyin veya açık bir klasörün başlığına tıklayın uygulamalar oluşturmak, yeniden adlandırmak ve yerleştirmek için.\nKlasörlerin kaldırılması, içindeki tüm uygulamaları ana listeye geri getirir.\nBir uygulamaya uzun basıp sürükleyerek taşıyın: bir klasörün üzerine bırakarak içine koyun ya da başka bir uygulamanın üzerinde tutarak yeni klasör oluşturun.</string>
     <string name="help_search_title">Ara</string>
     <string name="help_search">Arama simgesinden herhangi bir uygulamayı bulun. Ayrıca kullanılabilir olması için favorilere de eklenebilir bildirimden veya gizli.\n\nAna ekrandaki arama alanını da kullanabilirsiniz. Arama, adın herhangi bir bölümünü, kelimelerinin baş harflerini (Google Maps için \"gm\") ve uygulamayı içeren klasörlerin adını bulur. Sık açtığınız uygulamalar önce gösterilir.\n\nTuşuna \"Enter\" basıldığında ilk arama sonucu açılır.</string>
 
@@ -269,4 +269,11 @@
     <string name="error_changelog_missing_folder">Değişiklik günlüğü klasörü bulunamadı</string>
     <string name="error_changelog_missing_file">Açılamadı %1$s</string>
 
+    <string name="new_folder_title">Yeni klasör</string>
+    <string name="new_folder_default_name">Klasör</string>
+    <string name="button_create">Oluştur</string>
+    <string name="set_sort_drawer_alphabetically">Alfabetik sırala</string>
+    <string name="set_sort_drawer_alphabetically_help">Uygulama listesinde sürükleyerek seçilen sırayı unut</string>
+    <string name="set_sort_drawer_alphabetically_confirm">Uygulama listesi alfabetik sıralansın mı? Sürükleyerek seçilen sıra kaybolacak.</string>
+    <string name="info_drawer_sorted">Uygulama listesi alfabetik sıralandı</string>
 </resources>

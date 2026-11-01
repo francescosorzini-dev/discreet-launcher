@@ -265,6 +265,113 @@ shot 71_favorites_after_long_pull
 adb shell "run-as $PKG sh -c 'rm -f files/favorites.txt'"
 adb shell am force-stop "$PKG"
 
+# ---------- Drag to organize (favorites, app list, folders) ----------
+DR="$OUT/drag.txt"
+# Long press then move in one go: <x1> <y1> <x2> <y2> <seconds held at the end>
+drag_to() {
+	adb shell "input motionevent DOWN $1 $2 ; sleep 0.9 ; input motionevent MOVE $(($1 + 25)) $(($2 + 25)) ; input motionevent MOVE $3 $4 ; sleep $5 ; input motionevent MOVE $(($3 + 2)) $4 ; input motionevent UP $(($3 + 2)) $4"
+	sleep 2
+}
+open_drawer() { adb shell input swipe $((W / 2)) $((H * 2 / 3)) $((W / 2)) $((H / 4)) 150 ; sleep 2 ; }
+files_list() { adb shell "run-as $PKG sh -c 'ls files'" | tr '\n' ' ' ; }
+file_lines() { adb shell "run-as $PKG sh -c 'cat files/$1 2>/dev/null'" | tr -d '\r' ; }
+# Half of a cell of the app list (4 columns by default): used to aim at the border of an element
+CELL_HALF=$((W / 8))
+adb shell "run-as $PKG sh -c 'rm -f files/drawer_order.txt files/folder_*.txt'"
+restart_home
+
+# A) Long press and release without moving: the usual menu opens
+open_drawer
+T=$(center_of "Calendar")
+if [ -n "$T" ] ; then
+	read -r TX TY <<< "$T"
+	adb shell "input motionevent DOWN $TX $TY ; sleep 1.2 ; input motionevent UP $TX $TY"
+	shot 80_menu_on_release
+	adb shell uiautomator dump /sdcard/ui.xml > /dev/null 2>&1 ; adb pull /sdcard/ui.xml "$OUT/ui_menu.xml" > /dev/null 2>&1
+	echo "A menu on release, texts: $(grep -oE ' text="[^"]+"' "$OUT/ui_menu.xml" | head -12 | tr '\n' ' ')" >> "$DR"
+	echo "A order file after menu: $(files_list) (expected no drawer_order.txt)" >> "$DR"
+	adb shell input keyevent KEYCODE_BACK ; sleep 1
+fi
+
+# B) Reorder: drag Calendar to the border of Settings and rest there
+restart_home ; open_drawer
+shot 81_drawer_before
+C=$(center_of "Calendar") ; S=$(center_of "Settings")
+echo "B Calendar at $C, Settings at $S" >> "$DR"
+if [ -n "$C" ] && [ -n "$S" ] ; then
+	read -r CX CY <<< "$C" ; read -r SX SY <<< "$S"
+	drag_to "$CX" "$CY" $((SX - CELL_HALF + 8)) "$SY" 1.0
+	shot 82_drawer_after_reorder
+	echo "B order file: $(file_lines drawer_order.txt | tr '\n' ' ')" >> "$DR"
+	echo "B Calendar now at $(center_of "Calendar") (was $C)" >> "$DR"
+fi
+
+# C) Hold an app over another one: new folder dialog, then create
+restart_home ; open_drawer
+A1=$(center_of "Camera") ; A2=$(center_of "Clock")
+echo "C Camera at $A1, Clock at $A2" >> "$DR"
+if [ -n "$A1" ] && [ -n "$A2" ] ; then
+	read -r X1 Y1 <<< "$A1" ; read -r X2 Y2 <<< "$A2"
+	drag_to "$X1" "$Y1" "$X2" "$Y2" 1.5
+	shot 83_new_folder_dialog
+	B=$(center_of "Create")
+	[ -z "$B" ] && B=$(center_of "CREATE")
+	echo "C dialog create button: ${B:-missing}" >> "$DR"
+	if [ -n "$B" ] ; then adb shell input tap $B ; sleep 3 ; fi
+	shot 84_after_folder_created
+	echo "C files: $(files_list)" >> "$DR"
+	echo "C folder content: $(file_lines folder_Folder.txt | tr '\n' ' ')" >> "$DR"
+	echo "C order file: $(file_lines drawer_order.txt | tr '\n' ' ')" >> "$DR"
+fi
+
+# D) Drag an app out of the folder popup, back to the app list
+F=$(center_of "Folder")
+echo "D folder at: ${F:-missing}" >> "$DR"
+if [ -n "$F" ] ; then
+	adb shell input tap $F ; sleep 2
+	shot 85_folder_open
+	P=$(center_of "Camera")
+	echo "D Camera in popup at: ${P:-missing}" >> "$DR"
+	if [ -n "$P" ] ; then
+		read -r PX PY <<< "$P"
+		# Leave the popup (it closes), then rest on the border of an element at the bottom of the list
+		drag_to "$PX" "$PY" $((W / 8 + 4)) $((H * 4 / 5)) 1.0
+		shot 86_after_drag_out
+		echo "D folder content: $(file_lines folder_Folder.txt | tr '\n' ' ') (expected Clock only)" >> "$DR"
+		echo "D Camera in list at: $(center_of "Camera")" >> "$DR"
+	fi
+fi
+
+# E) Favorites: drag the first favorite to the border of the third one
+adb shell am force-stop "$PKG"
+head -4 "$OUT/favorites_input.txt" > "$OUT/favorites_drag.txt"
+FAV_B64=$(base64 -w0 "$OUT/favorites_drag.txt")
+adb shell "run-as $PKG sh -c 'echo $FAV_B64 | base64 -d > files/favorites.txt'"
+echo "E favorites before: $(file_lines favorites.txt | tr '\n' ' ')" >> "$DR"
+restart_home ; open_favorites
+shot 87_favorites_before_drag
+adb shell uiautomator dump /sdcard/ui.xml > /dev/null 2>&1 ; adb pull /sdcard/ui.xml "$OUT/ui_fav.xml" > /dev/null 2>&1
+# Names of the favorites in screen order (items of the favorites list have a text and no resource id)
+python3 - "$OUT/ui_fav.xml" > "$OUT/fav_items.txt" <<'PYEOF'
+import re, sys
+xml = open(sys.argv[1], encoding="utf-8").read()
+for n in re.findall(r'<node [^>]*>', xml):
+    t = re.search(r' text="([^"]+)"', n) ; b = re.search(r'bounds="([^"]*)"', n)
+    if t and b and 'class="android.widget.TextView"' in n and t.group(1) not in ("Menu",):
+        v = list(map(int, re.findall(r'\d+', b.group(1)))) ; print((v[0]+v[2])//2, (v[1]+v[3])//2, v[2]-v[0], t.group(1))
+PYEOF
+cat "$OUT/fav_items.txt" >> "$DR"
+if [ "$(wc -l < "$OUT/fav_items.txt")" -ge 3 ] ; then
+	read -r FX FY _ _ <<< "$(sed -n 1p "$OUT/fav_items.txt")"
+	read -r GX GY GW _ <<< "$(sed -n 3p "$OUT/fav_items.txt")"
+	drag_to "$FX" "$FY" $((GX - GW / 2 + 6)) "$GY" 1.0
+	shot 88_favorites_after_drag
+	echo "E favorites after: $(file_lines favorites.txt | tr '\n' ' ')" >> "$DR"
+fi
+adb shell "run-as $PKG sh -c 'rm -f files/favorites.txt files/drawer_order.txt files/folder_*.txt'"
+adb shell am force-stop "$PKG"
+cat "$DR"
+
 # ---------- Optimized (R8) release APK: smoke test ----------
 if [ -n "$RELEASE_APK" ] ; then
 	adb install -r "$RELEASE_APK" && echo "release installed"

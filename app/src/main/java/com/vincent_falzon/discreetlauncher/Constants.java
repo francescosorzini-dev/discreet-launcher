@@ -29,6 +29,7 @@ public interface Constants
 {
 	// Constants related to internal files
 	String FILE_FAVORITES = "favorites.txt" ;
+	String FILE_DRAWER_ORDER = "drawer_order.txt" ;
 	String FILE_FOLDER_PREFIX = "folder_" ;
 	String FILE_FOLDERS_COLORS = "folders_colors.txt" ;
 	String FILE_HIDDEN = "hidden.txt" ;
@@ -81,6 +82,7 @@ public interface Constants
 	String HOME_SEARCH_FIELD = "home_search_field" ;
 	String RESET_USAGE_STATS = "reset_usage_stats" ;
 	String ONE_HANDED = "one_handed" ;
+	String SORT_DRAWER_ALPHABETICALLY = "sort_drawer_alphabetically" ;
 	String INTERACTIVE_CLOCK = "interactive_clock" ;
 	String CLOCK_APP = "clock_app" ;
 	String HIDE_MENU_BUTTON = "hide_menu_button" ;

@@ -52,6 +52,13 @@
             app:iconSpaceReserved="false"
             app:persistent="false"/>
 
+        <Preference
+            app:key="sort_drawer_alphabetically"
+            app:title="@string/set_sort_drawer_alphabetically"
+            app:summary="@string/set_sort_drawer_alphabetically_help"
+            app:iconSpaceReserved="false"
+            app:persistent="false"/>
+
         <SwitchPreference
             app:key="always_show_favorites"
             app:title="@string/set_always_show_favorites"

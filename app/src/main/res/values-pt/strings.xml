@@ -258,7 +258,7 @@
     <string name="help_list_update_title">Atualização de listas</string>
     <string name="help_list_update">Uma pop-up é mostrado ao se atualizar a lista de apps e de ícones, ao se inicializar o app, ao adicionar ou remover apps, ou se o pacote de ícones for modificado.</string>
     <string name="help_folders_title">Pastas</string>
-    <string name="help_folders">Administre as pastas ou marque-as como favoritas a partir do botão de menu, ou clique no título de uma pasta aberta para criar ou renomear pastas, ou colocar apps nelas.\nRemover uma pasta devolve todos os seus apps à lista principal.</string>
+    <string name="help_folders">Administre as pastas ou marque-as como favoritas a partir do botão de menu, ou clique no título de uma pasta aberta para criar ou renomear pastas, ou colocar apps nelas.\nRemover uma pasta devolve todos os seus apps à lista principal.\nMantenha premida uma aplicação e arraste-a para a mover: largue-a numa pasta para a colocar lá, ou mantenha-a sobre outra aplicação para criar uma nova pasta.</string>
     <string name="help_search_title">Buscar</string>
     <string name="help_search">Encontre qualquer app com o ícone de busca. Também pode ser marcado como favorito (para tê-lo disponível mais facilmente), ou escondido.\n\nVocê também pode usar o campo de busca da tela inicial. A busca encontra qualquer parte do nome, as iniciais das suas palavras (\"gm\" para Google Maps) e o nome das pastas que contêm o app. Os apps que você abre com frequência aparecem primeiro.\n\nPressione \"Enter\" para abrir o primeiro resultado da busca.</string>
 
@@ -269,4 +269,11 @@
     <string name="error_changelog_missing_folder">A pasta com o registro de alterações não pôde ser encontrada</string>
     <string name="error_changelog_missing_file">Não foi possível abrir %1$s</string>
 
+    <string name="new_folder_title">Nova pasta</string>
+    <string name="new_folder_default_name">Pasta</string>
+    <string name="button_create">Criar</string>
+    <string name="set_sort_drawer_alphabetically">Ordenar alfabeticamente</string>
+    <string name="set_sort_drawer_alphabetically_help">Esquecer a ordem escolhida arrastando na lista de aplicações</string>
+    <string name="set_sort_drawer_alphabetically_confirm">Ordenar alfabeticamente a lista de aplicações? A ordem escolhida arrastando será perdida.</string>
+    <string name="info_drawer_sorted">Lista de aplicações ordenada alfabeticamente</string>
 </resources>

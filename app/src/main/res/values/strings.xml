@@ -259,7 +259,7 @@
     <string name="help_list_update_title">List update</string>
     <string name="help_list_update">A popup message is shown when refreshing the app list and icons, when starting, adding or removing apps, or if the icon pack is modified.</string>
     <string name="help_folders_title">Folders</string>
-    <string name="help_folders">Manage folders or favorite them from the menu button, or click the title of an open folder to create, rename, and put apps in it.\nRemoving folders puts all apps in them back in the main list.</string>
+    <string name="help_folders">Manage folders or favorite them from the menu button, or click the title of an open folder to create, rename, and put apps in it.\nRemoving folders puts all apps in them back in the main list.\nLong press an app and drag it to move it: drop it on a folder to put it inside, or hold it over another app to create a new folder.</string>
     <string name="help_search_title">Search</string>
     <string name="help_search">Find any app from the search icon or from the search field of the home screen. It can also be favorited to be available from the notification, or hidden.\n\nThe search matches any part of the name, the initials of its words (\"gm\" for Google Maps) and the name of the folders containing the app. Apps you open often come first.\n\nPressing \"Enter\" opens the first search result.</string>
 
@@ -270,4 +270,11 @@
     <string name="error_changelog_missing_folder">Could not find the changelog folder</string>
     <string name="error_changelog_missing_file">Could not open %1$s</string>
 
+    <string name="new_folder_title">New folder</string>
+    <string name="new_folder_default_name">Folder</string>
+    <string name="button_create">Create</string>
+    <string name="set_sort_drawer_alphabetically">Sort apps alphabetically</string>
+    <string name="set_sort_drawer_alphabetically_help">Forget the order chosen by dragging in the app list</string>
+    <string name="set_sort_drawer_alphabetically_confirm">Sort the app list alphabetically? The order chosen by dragging will be lost.</string>
+    <string name="info_drawer_sorted">App list sorted alphabetically</string>
 </resources>

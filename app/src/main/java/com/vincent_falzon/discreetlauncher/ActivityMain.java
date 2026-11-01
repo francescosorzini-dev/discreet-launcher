@@ -235,6 +235,10 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 		drawer.setLayoutManager(drawerLayout) ;
 		drawer.addOnScrollListener(new ScrollListener(Constants.APP_DRAWER)) ;
 
+		// Organize by dragging: reorder favorites, reorder the drawer and manage folders
+		DragAndDrop.attachToFavorites(favorites, favoritesAdapter, findViewById(R.id.favorites_scroll)) ;
+		DragAndDrop.attachToDrawer(drawer, drawerAdapter, this::refreshLists) ;
+
 		// Close the drawer and the favorites panel by pulling them beyond the edge of their list
 		drawer.addOnItemTouchListener(new PullToClose(drawer, reverse_interface ? -1 : 1, () -> displayDrawer(false), drawer)) ;
 		// (favorites: pulled downwards beyond the beginning of the list, available as soon as it opens;
@@ -915,6 +919,16 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 		applicationsList.update(context) ;
 		adapters_update_needed = true ;
 		Utils.displayToast(context, R.string.info_list_apps_refreshed) ;
+	}
+
+
+	/**
+	 * Rebuild the applications list and refresh the display at once (after organizing by dragging).
+	 */
+	private void refreshLists()
+	{
+		applicationsList.update(this) ;
+		updateAdapters() ;
 	}
 
 

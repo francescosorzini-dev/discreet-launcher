@@ -258,7 +258,7 @@
     <string name="help_list_update_title">Aggiornamento della lista</string>
     <string name="help_list_update">Viene visualizzato un messaggio pop-up quando la lista delle applicazioni e le icone vengono aggiornate, quando le applicazioni vengono avviate, aggiunte o rimosse, oppure se il pacchetto icone viene modificato.</string>
     <string name="help_folders_title">Cartelle</string>
-    <string name="help_folders">Gestisci le cartelle o aggiungile ai preferiti dal pulsante menu, oppure clicca il titolo di una cartella aperta per creare, rinominare, e inserirci applicazioni.\nRimuovere cartelle ricolloca tutte le applicazioni contenute nella lista principale.</string>
+    <string name="help_folders">Gestisci le cartelle o aggiungile ai preferiti dal pulsante menu, oppure clicca il titolo di una cartella aperta per creare, rinominare, e inserirci applicazioni.\nRimuovere cartelle ricolloca tutte le applicazioni contenute nella lista principale.\nTieni premuta un\'app e trascinala per spostarla: rilasciala su una cartella per inserirla, o tienila sopra un\'altra app per creare una nuova cartella.</string>
     <string name="help_search_title">Cerca</string>
     <string name="help_search">Trova qualsiasi applicazione tramite l\'icona cerca o il campo di ricerca della schermata home. Può anche essere inserita tra i preferiti in modo da essere disponibile nella notifica permanente, oppure nascosta.\n\nLa ricerca trova qualsiasi parte del nome, le iniziali delle parole (\"gm\" per Google Maps) e il nome delle cartelle che contengono l\'app. Le app che apri più spesso compaiono per prime.\n\nPremere \"Invio\" apre il primo risultato di ricerca.</string>
 
@@ -269,4 +269,11 @@
     <string name="error_changelog_missing_folder">Impossibile trovare la cartella del registro dei cambiamenti</string>
     <string name="error_changelog_missing_file">Impossibile aprire %1$s</string>
 
+    <string name="new_folder_title">Nuova cartella</string>
+    <string name="new_folder_default_name">Cartella</string>
+    <string name="button_create">Crea</string>
+    <string name="set_sort_drawer_alphabetically">Riordina alfabeticamente</string>
+    <string name="set_sort_drawer_alphabetically_help">Dimentica l\'ordine scelto trascinando nella lista delle app</string>
+    <string name="set_sort_drawer_alphabetically_confirm">Riordinare alfabeticamente la lista delle app? L\'ordine scelto trascinando andrà perso.</string>
+    <string name="info_drawer_sorted">Lista delle app riordinata alfabeticamente</string>
 </resources>

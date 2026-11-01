@@ -1,0 +1,12 @@
+v7.15.0 (94) - 01/11/2026
+NEW THINGS
+   - Drag to organize: long press an app or folder, it gets picked up; release without moving to open the usual menu, or drag it
+   - Favorites: drag to change their position
+   - App list: drag apps and folders to reorder them freely
+   - App list: drop an app on a folder to put it inside
+   - App list: hold an app over another one for half a second to create a new folder with both
+   - Folders: drag an app out of an open folder to put it back in the list or move it to another folder
+   - Once the list has been reordered by dragging, newly installed apps appear at its top
+   - Settings > Operation: "Sort apps alphabetically" to forget the order chosen by dragging
+IMPROVEMENTS
+   - The order of the list is included in the export / import of settings
