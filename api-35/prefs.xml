@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <string name="icon_pack">none</string>
+    <boolean name="disable_app_drawer" value="false" />
+    <string name="double_tap">none</string>
+    <boolean name="remove_padding" value="false" />
+    <string name="forced_orientation">none</string>
+    <string name="text_color_drawer">#FFFFFFFF</string>
+    <string name="one_handed">off</string>
+    <boolean name="dark_status_bar_icons" value="false" />
+    <boolean name="notification" value="false" />
+    <boolean name="hide_app_names" value="false" />
+    <string name="clock_position">middle</string>
+    <string name="background_color_drawer">#66000000</string>
+    <string name="swipe_rightwards">none</string>
+    <boolean name="transparent_status_bar" value="true" />
+    <string name="icon_size_dp">48</string>
+    <string name="text_color_folders">#FFFFFFFF</string>
+    <string name="clock_color">#FFFFFFFF</string>
+    <boolean name="hide_folder_names" value="false" />
+    <string name="background_color_favorites">#66000000</string>
+    <string name="icon_pack_secondary">none</string>
+    <string name="text_color_favorites">#FFFFFFFF</string>
+    <string name="clock_format">none</string>
+    <string name="clock_shadow_color">#66000000</string>
+    <boolean name="home_search_field" value="true" />
+    <string name="clock_size">medium</string>
+    <boolean name="interactive_clock" value="false" />
+    <boolean name="hide_menu_button" value="false" />
+    <boolean name="reverse_interface" value="false" />
+    <string name="swipe_leftwards">none</string>
+    <string name="application_theme">none</string>
+    <boolean name="immersive_mode" value="false" />
+    <string name="background_color_folders">#EB333333</string>
+    <boolean name="always_show_favorites" value="false" />
+    <string name="clock_app">none</string>
+    <boolean name="touch_targets" value="false" />
+    <string name="icon_color_filter">#00000000</string>
+</map>

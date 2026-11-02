@@ -1,0 +1,4 @@
+{com.android.chrome/com.google.android.apps.chrome.Main}
+{com.android.contacts/com.android.contacts.activities.PeopleActivity}
+{com.android.dialer/com.android.dialer.main.impl.MainActivity}
+{com.android.settings/com.android.settings.Settings}

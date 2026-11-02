@@ -1,0 +1,5 @@
+--------- beginning of main
+11-02 07:39:41.841  6972  6972 I DLSearch: results list shown after 239 ms (keyboard detected)
+11-02 07:39:46.999  6972  6972 I DLSearch: results list shown after 141 ms (keyboard detected)
+11-02 07:39:52.129  6972  6972 I DLSearch: results list shown after 148 ms (keyboard detected)
+11-02 07:39:57.260  6972  6972 I DLSearch: results list shown after 142 ms (keyboard detected)

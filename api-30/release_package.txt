@@ -1,0 +1,2 @@
+    versionName=v7.15.1
+    flags=[ HAS_CODE ALLOW_CLEAR_USER_DATA ]

@@ -1,0 +1,4 @@
+after opening: open
+small slide: open (expected open)
+short pull: open (expected open)
+long pull: closed (expected closed)

@@ -1,0 +1,27 @@
+A menu on release, texts:  text="What do you want to do?"  text="Access its settings"  text="View store page"  text="Rename"  text="Add to favorites"  text="Add to a folder" 
+A order file after menu:  (expected no drawer_order.txt)
+B Calendar at 121 69, Settings at 276 363
+B order file: {discreetlauncher.search/discreetlauncher.search} {com.android.chrome/com.google.android.apps.chrome.Main} {com.google.android.deskclock/com.android.deskclock.DeskClock} {com.android.contacts/com.android.contacts.activities.PeopleActivity} {com.vincent_falzon.discreetlauncher/com.vincent_falzon.discreetlauncher.ActivityMain} {com.google.android.apps.docs/com.google.android.apps.docs.app.NewMainProxyActivity} {com.google.android.documentsui/com.android.documentsui.LauncherActivity} {com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} {com.google.android.googlequicksearchbox/com.google.android.googlequicksearchbox.SearchActivity} {com.google.android.apps.maps/com.google.android.maps.MapsActivity} {com.google.android.apps.messaging/com.google.android.apps.messaging.ui.ConversationListActivity} {com.android.dialer/com.android.dialer.main.impl.MainActivity} {com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} {com.google.android.videos/com.google.android.youtube.videos.EntryPoint} {com.android.settings/com.android.settings.Settings} {com.google.android.calendar/com.android.calendar.AllInOneActivity} {com.google.android.googlequicksearchbox/com.google.android.googlequicksearchbox.VoiceSearchActivity} {com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} {com.google.android.apps.youtube.music/com.google.android.apps.youtube.music.activities.MusicActivity} 
+B Calendar now at 276 363 (was 121 69)
+C Contacts at 276 69, Clock at 198 69
+C dialog create button: 246 383
+C files: drawer_order.txt folder_Folder.txt 
+C folder content: {com.google.android.deskclock/com.android.deskclock.DeskClock} {com.android.contacts/com.android.contacts.activities.PeopleActivity} 
+C order file: {discreetlauncher.search/discreetlauncher.search} {com.android.chrome/com.google.android.apps.chrome.Main} {discreetlauncher.folder/discreetlauncher.folderFolder} {com.vincent_falzon.discreetlauncher/com.vincent_falzon.discreetlauncher.ActivityMain} {com.google.android.apps.docs/com.google.android.apps.docs.app.NewMainProxyActivity} {com.google.android.documentsui/com.android.documentsui.LauncherActivity} {com.google.android.gm/com.google.android.gm.ConversationListActivityGmail} {com.google.android.googlequicksearchbox/com.google.android.googlequicksearchbox.SearchActivity} {com.google.android.apps.maps/com.google.android.maps.MapsActivity} {com.google.android.apps.messaging/com.google.android.apps.messaging.ui.ConversationListActivity} {com.android.dialer/com.android.dialer.main.impl.MainActivity} {com.google.android.apps.photos/com.google.android.apps.photos.home.HomeActivity} {com.google.android.videos/com.google.android.youtube.videos.EntryPoint} {com.android.settings/com.android.settings.Settings} {com.google.android.calendar/com.android.calendar.AllInOneActivity} {com.google.android.googlequicksearchbox/com.google.android.googlequicksearchbox.VoiceSearchActivity} {com.google.android.youtube/com.google.android.youtube.app.honeycomb.Shell$HomeActivity} {com.google.android.apps.youtube.music/com.google.android.apps.youtube.music.activities.MusicActivity} 
+D folder at: 198 77
+D Contacts in popup at: 121 239
+D folder content: {com.google.android.deskclock/com.android.deskclock.DeskClock}  (expected Clock only)
+D Contacts in list at: 198 461
+--------- beginning of kernel
+--------- beginning of main
+--------- beginning of system
+11-02 07:37:36.169  8423  8423 I DLDrag  : start Calendar from 1: true
+11-02 07:38:00.966  8633  8633 I DLDrag  : start Contacts from 1: true
+11-02 07:38:26.720  8633  8633 I DLDrag  : start Contacts from 2: true
+E favorites before: {com.android.chrome/com.google.android.apps.chrome.Main} {com.android.contacts/com.android.contacts.activities.PeopleActivity} {com.android.dialer/com.android.dialer.main.impl.MainActivity} {com.android.settings/com.android.settings.Settings} 
+43 69 77 Chrome
+121 69 78 Contacts
+198 69 77 Phone
+276 69 78 Settings
+160 619 103 Search…
+E favorites after: {com.android.contacts/com.android.contacts.activities.PeopleActivity} {com.android.dialer/com.android.dialer.main.impl.MainActivity} {com.android.chrome/com.google.android.apps.chrome.Main} {com.android.settings/com.android.settings.Settings} 

@@ -1,0 +1,8 @@
+favorites: 17
+after opening: open
+tap with drift: com.google.android.calendar/.launch.oobe.WhatsNewFullScreen (expected calendar)
+small slide: open (expected open)
+short pull: open (expected open)
+long pull: closed (expected closed)
+flick from a favorite: closed (expected closed)
+slow pull from a favorite: closed (expected closed)

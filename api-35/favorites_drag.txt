@@ -1,0 +1,4 @@
+{com.android.camera2/com.android.camera.CameraLauncher}
+{com.android.chrome/com.google.android.apps.chrome.Main}
+{com.android.settings/com.android.settings.Settings}
+{com.google.android.apps.docs/com.google.android.apps.docs.app.NewMainProxyActivity}

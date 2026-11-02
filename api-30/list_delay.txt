@@ -1,0 +1,7 @@
+--------- beginning of main
+--------- beginning of system
+--------- beginning of kernel
+11-02 07:39:55.298  9729  9729 I DLSearch: results list shown after 137 ms (keyboard detected)
+11-02 07:40:01.950  9729  9729 I DLSearch: results list shown after 144 ms (keyboard detected)
+11-02 07:40:08.517  9729  9729 I DLSearch: results list shown after 146 ms (keyboard detected)
+11-02 07:40:15.067  9729  9729 I DLSearch: results list shown after 149 ms (keyboard detected)

@@ -1,0 +1,2 @@
+right:     mResumedActivity: ActivityRecord{a3b6196 u0 com.google.android.calendar/.launch.oobe.WhatsNewFullScreen t18}
+left:     mResumedActivity: ActivityRecord{e33a1a9 u0 com.google.android.calendar/.launch.oobe.WhatsNewFullScreen t20}

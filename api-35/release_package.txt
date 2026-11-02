@@ -1,0 +1,2 @@
+    flags=0x0
+    versionName=v7.15.1
