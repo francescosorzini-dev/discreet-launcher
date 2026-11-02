@@ -261,6 +261,28 @@ echo "short pull: $(fav_state) (expected open)" >> "$OUT/favorites_pull.txt"
 adb shell input swipe $((W / 2)) $((H / 5)) $((W / 2)) $((H * 4 / 5)) 700 ; sleep 2
 echo "long pull: $(fav_state) (expected closed)" >> "$OUT/favorites_pull.txt"
 shot 71_favorites_after_long_pull
+# Gestures which could leave the panel stuck: quick flick starting on a favorite, pull right after
+# scrolling the list (it is still settling), slow pull starting on a favorite
+open_favorites
+T=$(center_of "Calendar")
+if [ -n "$T" ] ; then
+	read -r TX TY <<< "$T"
+	adb shell input swipe "$TX" "$TY" "$TX" $((TY + H / 3)) 90 ; sleep 2
+	echo "flick from a favorite: $(fav_state) (expected closed)" >> "$OUT/favorites_pull.txt"
+fi
+open_favorites
+adb shell input swipe $((W / 2)) $((H / 2)) $((W / 2)) $((H / 5)) 80
+adb shell input swipe $((W / 2)) $((H / 5)) $((W / 2)) $((H * 4 / 5)) 300 ; sleep 1
+adb shell input swipe $((W / 2)) $((H / 5)) $((W / 2)) $((H * 4 / 5)) 300 ; sleep 2
+echo "pull right after scrolling: $(fav_state) (expected closed)" >> "$OUT/favorites_pull.txt"
+open_favorites
+T=$(center_of "Calendar")
+if [ -n "$T" ] ; then
+	read -r TX TY <<< "$T"
+	adb shell input swipe "$TX" "$TY" "$TX" $((TY + H / 2)) 1500 ; sleep 2
+	echo "slow pull from a favorite: $(fav_state) (expected closed)" >> "$OUT/favorites_pull.txt"
+fi
+shot 72_favorites_after_gestures
 adb shell "run-as $PKG sh -c 'rm -f files/favorites.txt'"
 adb shell am force-stop "$PKG"
 

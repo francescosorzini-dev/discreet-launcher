@@ -24,23 +24,24 @@ package com.vincent_falzon.discreetlauncher ;
 
 // Imports
 import android.view.MotionEvent ;
+import android.view.VelocityTracker ;
 import android.view.View ;
 import android.view.ViewConfiguration ;
 import android.view.animation.DecelerateInterpolator ;
-import androidx.annotation.NonNull ;
-import androidx.recyclerview.widget.RecyclerView ;
 
 /**
  * "Pull and release" closure of a panel containing a list: once the list cannot scroll further
  * towards the closing direction, the panel follows the finger with resistance; releasing beyond a
- * threshold closes it, otherwise it goes back in place. Small finger slides while tapping are
- * therefore never taken as a closure.
+ * threshold, or with a quick flick, closes it, otherwise it goes back in place.
+ * The touches are watched by the activity itself (dispatchTouchEvent), before any view: the lists,
+ * the ScrollView or a pressed element can therefore never keep the gesture for themselves.
  */
-public class PullToClose implements RecyclerView.OnItemTouchListener
+public class PullToClose
 {
 	// Constants
 	private static final float RESISTANCE = 0.5f ;
 	private static final float THRESHOLD_DP = 72 ;
+	private static final float FLING_DP_PER_SECOND = 700 ;
 	private static final long SPRING_BACK_DURATION = 200 ;
 
 	// Attributes
@@ -49,8 +50,9 @@ public class PullToClose implements RecyclerView.OnItemTouchListener
 	private final int direction ;
 	private final Runnable closeAction ;
 	private final float threshold ;
+	private final float fling_velocity ;
 	private final int touch_slop ;
-	private boolean enabled ;
+	private VelocityTracker tracker ;
 	private boolean pulling ;
 	private float down_y ;
 	private float anchor_y ;
@@ -70,20 +72,20 @@ public class PullToClose implements RecyclerView.OnItemTouchListener
 		this.direction = direction ;
 		this.closeAction = closeAction ;
 		this.scrollables = scrollables ;
-		threshold = THRESHOLD_DP * panel.getResources().getDisplayMetrics().density ;
+		float density = panel.getResources().getDisplayMetrics().density ;
+		threshold = THRESHOLD_DP * density ;
+		fling_velocity = FLING_DP_PER_SECOND * density ;
 		touch_slop = ViewConfiguration.get(panel.getContext()).getScaledTouchSlop() ;
-		enabled = true ;
 		pulling = false ;
 	}
 
 
 	/**
-	 * Allow or forbid the pulling (ex: forbidden while the panel is closing).
+	 * Return the panel which this gesture can close.
 	 */
-	public void setEnabled(boolean enabled)
+	public View getPanel()
 	{
-		this.enabled = enabled ;
-		if(!enabled) pulling = false ;
+		return panel ;
 	}
 
 
@@ -100,21 +102,24 @@ public class PullToClose implements RecyclerView.OnItemTouchListener
 
 
 	/**
-	 * Watch an event before the list and its items: return <code>true</code> when the pulling starts
-	 * and the following events must be given to handleTouch(). The pulling only starts once the
-	 * finger has moved more than the touch slop (so a tap is never taken as a pull).
+	 * Watch an event of the gesture: return <code>true</code> when the pulling starts (the views must
+	 * then receive a cancellation, and the following events must be given to handleTouch()). The
+	 * pulling only starts once the finger has moved more than the touch slop, mainly vertically.
 	 */
 	public boolean shouldIntercept(MotionEvent event)
 	{
-		if(!enabled) return false ;
 		if(pulling) return true ;
 		switch(event.getActionMasked())
 		{
 			case MotionEvent.ACTION_DOWN :
 				down_y = event.getRawY() ;
 				last_y = down_y ;
+				if(tracker != null) tracker.recycle() ;
+				tracker = VelocityTracker.obtain() ;
+				tracker.addMovement(event) ;
 				return false ;
 			case MotionEvent.ACTION_MOVE :
+				if(tracker != null) tracker.addMovement(event) ;
 				float y = event.getRawY() ;
 				float dy = y - last_y ;
 				last_y = y ;
@@ -149,6 +154,7 @@ public class PullToClose implements RecyclerView.OnItemTouchListener
 	public void handleTouch(MotionEvent event)
 	{
 		if(!pulling) return ;
+		if(tracker != null) tracker.addMovement(event) ;
 		switch(event.getActionMasked())
 		{
 			case MotionEvent.ACTION_MOVE :
@@ -156,29 +162,46 @@ public class PullToClose implements RecyclerView.OnItemTouchListener
 				break ;
 			case MotionEvent.ACTION_UP :
 				pulling = false ;
-				if(Math.abs(panel.getTranslationY()) >= threshold) closeAction.run() ;
+				float velocity = 0 ;
+				if(tracker != null)
+					{
+						tracker.computeCurrentVelocity(1000) ;
+						velocity = tracker.getYVelocity() * direction ;
+					}
+				// Far enough, or released with a quick flick in the closing direction (after a short pull,
+				// so that a small slide of the finger while tapping never closes the panel)
+				float pulled = Math.abs(panel.getTranslationY()) ;
+				if((pulled >= threshold) || ((velocity >= fling_velocity) && (pulled >= threshold / 3))) closeAction.run() ;
 					else springBack() ;
+				release() ;
 				break ;
 			case MotionEvent.ACTION_CANCEL :
 				pulling = false ;
 				springBack() ;
+				release() ;
 				break ;
 		}
 	}
 
 
-	// RecyclerView.OnItemTouchListener (used for the app drawer)
-	@Override
-	public boolean onInterceptTouchEvent(@NonNull RecyclerView recycler, @NonNull MotionEvent event)
+	/**
+	 * Abandon the gesture (ex: a second finger is put on the screen).
+	 */
+	public void abort()
 	{
-		return shouldIntercept(event) ;
+		if(pulling) springBack() ;
+		pulling = false ;
+		release() ;
 	}
 
 
-	@Override
-	public void onTouchEvent(@NonNull RecyclerView recycler, @NonNull MotionEvent event)
+	/**
+	 * Free the velocity tracker.
+	 */
+	private void release()
 	{
-		handleTouch(event) ;
+		if(tracker != null) tracker.recycle() ;
+		tracker = null ;
 	}
 
 
@@ -196,14 +219,9 @@ public class PullToClose implements RecyclerView.OnItemTouchListener
 	/**
 	 * Put the panel back in place.
 	 */
-	private void springBack()
+	public void springBack()
 	{
 		panel.animate().cancel() ;
 		panel.animate().translationY(0).alpha(1).setDuration(SPRING_BACK_DURATION).setInterpolator(new DecelerateInterpolator(2f)).start() ;
 	}
-
-
-	// Needed to implement OnItemTouchListener
-	@Override
-	public void onRequestDisallowInterceptTouchEvent(boolean disallow) { }
 }

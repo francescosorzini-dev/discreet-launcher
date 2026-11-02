@@ -3,6 +3,16 @@
 Changes made in this personal fork of [falzonv/discreet-launcher](https://github.com/falzonv/discreet-launcher) (last original version: v7.8.4).
 Newest first. The same notes are shown inside the app (*About > Changelog*) and in each [release](https://github.com/francescosorzini-dev/discreet-launcher/releases).
 
+## v7.15.1 (95) - 02/11/2026
+
+**CORRECTIONS**
+
+- Favorites panel and app list: pulling to close could get stuck (the list or a touched favorite kept the gesture); the pull is now watched before any element of the screen
+
+**IMPROVEMENTS**
+
+- A quick flick downwards also closes the panel, without pulling it far
+
 ## v7.15.0 (94) - 01/11/2026
 
 **NEW THINGS**

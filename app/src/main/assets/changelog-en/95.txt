@@ -1,0 +1,5 @@
+v7.15.1 (95) - 02/11/2026
+CORRECTIONS
+   - Favorites panel and app list: pulling to close could get stuck (the list or a touched favorite kept the gesture); the pull is now watched before any element of the screen
+IMPROVEMENTS
+   - A quick flick downwards also closes the panel, without pulling it far

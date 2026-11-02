@@ -23,65 +23,20 @@ package com.vincent_falzon.discreetlauncher ;
  */
 
 // Imports
-import android.annotation.SuppressLint ;
 import android.content.Context ;
 import android.util.AttributeSet ;
-import android.view.MotionEvent ;
 import android.widget.ScrollView ;
 
 /**
- * ScrollView supporting "pull and release" closure: as the parent of its content, it sees every
- * touch first, so the pulling is not stolen by the list inside or by its own scrolling.
+ * ScrollView of the favorites panel (the "pull and release" closure is now handled by the activity,
+ * see PullToClose and ActivityMain.dispatchTouchEvent()).
  */
 public class PullScrollView extends ScrollView
 {
-	// Attributes
-	private PullToClose pullToClose ;
-
-
 	/**
 	 * Constructors.
 	 */
 	public PullScrollView(Context context) { super(context) ; }
 	public PullScrollView(Context context, AttributeSet attrs) { super(context, attrs) ; }
 	public PullScrollView(Context context, AttributeSet attrs, int defStyleAttr) { super(context, attrs, defStyleAttr) ; }
-
-
-	/**
-	 * Define the pulling behavior.
-	 */
-	public void setPullToClose(PullToClose pullToClose)
-	{
-		this.pullToClose = pullToClose ;
-	}
-
-
-	/**
-	 * Take the touch when the pulling starts, before the content and the scrolling.
-	 */
-	@Override
-	public boolean onInterceptTouchEvent(MotionEvent event)
-	{
-		if((pullToClose != null) && pullToClose.shouldIntercept(event)) return true ;
-		return super.onInterceptTouchEvent(event) ;
-	}
-
-
-	/**
-	 * Follow the finger while pulling, otherwise scroll normally (and start pulling at the edge).
-	 */
-	@SuppressLint("ClickableViewAccessibility")
-	@Override
-	public boolean onTouchEvent(MotionEvent event)
-	{
-		if(pullToClose != null)
-			{
-				if(pullToClose.isPulling() || pullToClose.shouldIntercept(event))
-					{
-						pullToClose.handleTouch(event) ;
-						return true ;
-					}
-			}
-		return super.onTouchEvent(event) ;
-	}
 }

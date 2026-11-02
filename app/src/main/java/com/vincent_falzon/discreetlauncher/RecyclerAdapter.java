@@ -60,6 +60,17 @@ import java.util.ArrayList ;
  */
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ApplicationView>
 {
+	// An element is currently picked up by a long press (the finger moves it, not the panel)
+	private static boolean picking = false ;
+
+	/**
+	 * Return <code>true</code> while an element is picked up by a long press.
+	 */
+	static boolean isPicking()
+	{
+		return picking ;
+	}
+
 	// Constants
 	private static final String TAG = "RecyclerAdapter" ;
 
@@ -281,6 +292,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Applic
 					setVisualFeedback(context, true) ;
 					touch_active = true ;
 					picked = false ;
+					picking = false ;
 					down_x = event.getRawX() ;
 					down_y = event.getRawY() ;
 					break ;
@@ -292,6 +304,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Applic
 							if(distance > android.view.ViewConfiguration.get(context).getScaledTouchSlop())
 								{
 									picked = false ;
+									picking = false ;
 									setVisualFeedback(context, false) ;
 									startDragging(view) ;
 								}
@@ -305,6 +318,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Applic
 					if(picked)
 						{
 							picked = false ;
+							picking = false ;
 							dropAppearance(view) ;
 							showMenu(view) ;
 							return true ;
@@ -317,6 +331,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Applic
 					if(picked)
 						{
 							picked = false ;
+							picking = false ;
 							dropAppearance(view) ;
 						}
 					break ;
@@ -333,6 +348,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Applic
 		private void pickUp(View view)
 		{
 			picked = true ;
+			picking = true ;
 			if(view.getParent() != null) view.getParent().requestDisallowInterceptTouchEvent(true) ;
 			view.animate().scaleX(1.15f).scaleY(1.15f).setDuration(120).start() ;
 		}

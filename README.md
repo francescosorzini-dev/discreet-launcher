@@ -24,6 +24,7 @@
 > - **v7.14.2** — pulling starts beyond the touch slop and is handled by the favorites ScrollView; search list no longer waits when the keyboard opens instantly.
 > - **v7.14.3** — search: keyboard detected by polling the popup position, results list after 0.4 s at most.
 > - **v7.15.0** — drag to organize: reorder favorites, apps and folders by dragging; drop an app on a folder, or hold it over another app to create a folder; drag apps out of folders; new apps at the top; option to sort alphabetically again.
+> - **v7.15.1** — pulling the favorites panel or the app list to close it no longer gets stuck (gesture handled before any view); a quick flick also closes it.
 >
 > The full list of changes, version by version, is in [FORK_CHANGELOG.md](FORK_CHANGELOG.md).
 >

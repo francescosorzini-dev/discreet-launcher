@@ -1,0 +1,5 @@
+v7.15.1 (95) - 02/11/2026
+CORRECTIONS
+   - Panneau des favoris et liste des applications : tirer pour fermer pouvait rester bloqué (la liste ou un favori touché gardait le geste) ; le geste est maintenant suivi avant tout élément de l'écran
+AMÉLIORATIONS
+   - Un mouvement rapide vers le bas ferme aussi le panneau, sans avoir à le tirer loin

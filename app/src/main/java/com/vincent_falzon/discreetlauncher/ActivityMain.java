@@ -122,6 +122,10 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 	private boolean closing_favorites ;
 	private int favorites_close_direction ;
 	private boolean closing_drawer ;
+	private PullToClose drawerPull ;
+	private PullToClose favoritesPull ;
+	private PullToClose activePull ;
+	private final Rect pull_hit = new Rect() ;
 
 	// Attributes related to the drawer
 	private RecyclerView drawer ;
@@ -240,15 +244,15 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 		DragAndDrop.attachToDrawer(drawer, drawerAdapter, this::refreshLists) ;
 
 		// Close the drawer and the favorites panel by pulling them beyond the edge of their list
-		drawer.addOnItemTouchListener(new PullToClose(drawer, reverse_interface ? -1 : 1, () -> displayDrawer(false), drawer)) ;
-		// (favorites: pulled downwards beyond the beginning of the list, available as soon as it opens;
-		// handled by its ScrollView, which sees the touches before the list and its own scrolling)
-		PullScrollView favoritesPullScroll = findViewById(R.id.favorites_scroll) ;
-		favoritesPullScroll.setPullToClose(new PullToClose(favoritesPullScroll, 1, () -> {
+		// (favorites: pulled downwards beyond the beginning of the list, available as soon as it opens).
+		// The gesture is watched in dispatchTouchEvent(), before any view can keep it for itself
+		drawerPull = new PullToClose(drawer, reverse_interface ? -1 : 1, () -> displayDrawer(false), drawer) ;
+		View favoritesPanel = findViewById(R.id.favorites_scroll) ;
+		favoritesPull = new PullToClose(favoritesPanel, 1, () -> {
 				favorites_close_direction = 1 ;
 				displayFavorites(false) ;
 				favorites_close_direction = 0 ;
-			}, favoritesPullScroll)) ;
+			}, favoritesPanel, favorites) ;
 		applyOneHandedDrawer() ;
 
 		// Load the favorites panel if it should always be shown
@@ -404,6 +408,74 @@ public class ActivityMain extends AppCompatActivity implements View.OnClickListe
 				SharedPreferences.Editor editor = settings.edit() ;
 				editor.putBoolean(Constants.ALWAYS_SHOW_FAVORITES, false).apply() ;
 			}
+	}
+
+
+	/**
+	 * Watch every touch before the views: once a panel is pulled beyond the edge of its list, the
+	 * views receive a cancellation and the gesture only moves the panel. No list, ScrollView or pressed
+	 * element can keep the gesture for itself (which left the favorites stuck half pulled).
+	 */
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent event)
+	{
+		switch(event.getActionMasked())
+		{
+			case MotionEvent.ACTION_DOWN :
+				activePull = choosePull(event) ;
+				break ;
+			case MotionEvent.ACTION_POINTER_DOWN :
+				// Two fingers: not a pull
+				if(activePull != null) activePull.abort() ;
+				activePull = null ;
+				break ;
+		}
+
+		if(activePull != null)
+			{
+				if(activePull.isPulling())
+					{
+						activePull.handleTouch(event) ;
+						if(!activePull.isPulling()) activePull = null ;
+						return true ;
+					}
+				// An element picked up by a long press is moved by the finger, not the panel
+				if(!RecyclerAdapter.isPicking() && activePull.shouldIntercept(event))
+					{
+						MotionEvent cancel = MotionEvent.obtain(event) ;
+						cancel.setAction(MotionEvent.ACTION_CANCEL) ;
+						super.dispatchTouchEvent(cancel) ;
+						cancel.recycle() ;
+						return true ;
+					}
+			}
+		return super.dispatchTouchEvent(event) ;
+	}
+
+
+	/**
+	 * Return the pull gesture of the open panel under the finger (null if none).
+	 */
+	private PullToClose choosePull(MotionEvent event)
+	{
+		PullToClose pull = null ;
+		if((drawerPull != null) && (drawer.getVisibility() == View.VISIBLE) && !closing_drawer && isUnder(drawer, event))
+			pull = drawerPull ;
+		else if((favoritesPull != null) && (favorites.getVisibility() == View.VISIBLE) && !closing_favorites
+				&& !settings.getBoolean(Constants.ALWAYS_SHOW_FAVORITES, false) && isUnder(favoritesPull.getPanel(), event))
+			pull = favoritesPull ;
+		if(pull != null) pull.shouldIntercept(event) ;
+		return pull ;
+	}
+
+
+	/**
+	 * Check if the touch is on the given view.
+	 */
+	private boolean isUnder(View view, MotionEvent event)
+	{
+		if(!view.getGlobalVisibleRect(pull_hit)) return false ;
+		return pull_hit.contains((int)event.getX(), (int)event.getY()) ;
 	}
 
 
